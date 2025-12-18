@@ -349,10 +349,16 @@ def validar_skus_items(df, items_xlsx):
 
 # --- Mapeo de proveedores optimizado ---
 
-def mapear_proveedor_por_sku(df, full_xlsx, region="099"):
+def mapear_proveedor_por_sku(df, full_xlsx, region="099", apply_rules=True):
     """
     Mapea proveedores por SKU desde Full.xlsx
     Versión optimizada con mejor manejo de datos y logging
+    
+    Args:
+        df: DataFrame con datos a procesar
+        full_xlsx: Ruta al archivo Full.xlsx
+        region: Región a filtrar (default "099")
+        apply_rules: Si True, aplica reglas especiales (default True)
     """
     print(f"🔍 Mapping suppliers from: {full_xlsx}")
     print(f"📍 Using region: {region}")
@@ -360,6 +366,22 @@ def mapear_proveedor_por_sku(df, full_xlsx, region="099"):
     df = df.copy()
     df_err = pd.DataFrame(columns=df.columns.tolist() + ["OBSERVACION"])
     warnings = []
+    
+    # Cargar reglas especiales si están habilitadas
+    rules_manager = None
+    if apply_rules:
+        try:
+            from rules_manager import RulesManager
+            rules_manager = RulesManager()
+            stats = rules_manager.get_stats()
+            if stats['active_local_rules'] > 0 or stats['active_stock_blocks'] > 0:
+                warnings.append(f"⚙️ Special rules loaded: {stats['active_local_rules']} LOCAL rules, {stats['active_stock_blocks']} stock blocks")
+                print(f"⚙️ Applying special rules: {stats['active_local_rules']} LOCAL rules, {stats['active_stock_blocks']} stock blocks")
+            else:
+                rules_manager = None  # No hay reglas activas
+        except Exception as e:
+            warnings.append(f"⚠️ Could not load special rules: {e}")
+            rules_manager = None
 
     try:
         # Verificar que el archivo exista
@@ -443,31 +465,44 @@ def mapear_proveedor_por_sku(df, full_xlsx, region="099"):
             df_region = df_full.copy()
             warnings.append(f"⚠️ No region column found, using all records")
         
-        # Crear diccionario de mapeo SKU -> Proveedor
+        # Crear diccionario de mapeo SKU -> Lista de Proveedores (puede haber múltiples)
         df_region_clean = df_region.dropna(subset=[col_sku_full, col_proveedor])
-        sku_to_proveedor = {}
+        sku_to_proveedores = {}  # SKU -> lista de proveedores disponibles
         
         for _, row in df_region_clean.iterrows():
             sku = str(row[col_sku_full]).strip().upper()
             proveedor = str(row[col_proveedor]).strip()
+            # Normalizar código de proveedor eliminando .0 si existe
+            proveedor = proveedor.replace('.0', '') if proveedor.endswith('.0') else proveedor
             
             if sku and proveedor and sku != 'NAN' and proveedor != 'NAN':
-                sku_to_proveedor[sku] = proveedor
+                if sku not in sku_to_proveedores:
+                    sku_to_proveedores[sku] = []
+                if proveedor not in sku_to_proveedores[sku]:
+                    sku_to_proveedores[sku].append(proveedor)
         
-        warnings.append(f"📋 Created mapping for {len(sku_to_proveedor)} SKUs")
+        warnings.append(f"📋 Created mapping for {len(sku_to_proveedores)} SKUs")
         
-        # Aplicar mapeo
+        # Mostrar SKUs con múltiples proveedores
+        multi_prov = {sku: provs for sku, provs in sku_to_proveedores.items() if len(provs) > 1}
+        if multi_prov:
+            warnings.append(f"🔀 {len(multi_prov)} SKUs have multiple suppliers:")
+            for sku, provs in list(multi_prov.items())[:3]:  # Mostrar solo 3 ejemplos
+                warnings.append(f"   • {sku}: {len(provs)} suppliers → {provs}")
+        
+        # Aplicar mapeo con reglas especiales
         df_mapped = []
         df_errors = []
+        reglas_aplicadas_local = 0
+        reglas_aplicadas_bloqueo = 0
         
         for _, row in df.iterrows():
             sku = str(row["SKU"]).strip().upper()
+            local = str(row.get("CENTRO_COSTO", "")).strip()
             
-            if sku in sku_to_proveedor:
-                row_mapped = row.copy()
-                row_mapped["PROVEEDOR"] = sku_to_proveedor[sku]
-                df_mapped.append(row_mapped)
-            else:
+            # Verificar si el SKU existe en el mapeo
+            if sku not in sku_to_proveedores:
+                # SKU no encontrado en Full.xlsx
                 row_error = row.copy()
                 row_error["OBSERVACION"] = (
                     str(row.get("CENTRO_COSTO", "")) + 
@@ -475,12 +510,92 @@ def mapear_proveedor_por_sku(df, full_xlsx, region="099"):
                     str(row.get("NOMBRE_LUGAR", ""))
                 )
                 df_errors.append(row_error)
+                continue
+            
+            # Obtener proveedores disponibles para este SKU
+            proveedores_disponibles = sku_to_proveedores[sku].copy()
+            
+            # REGLA 1: Verificar si hay regla de LOCAL + SKU → Proveedor forzado
+            # MÁXIMA PRIORIDAD - Esta regla sobrescribe todo lo demás
+            proveedor_forzado = None
+            if rules_manager:
+                proveedor_forzado = rules_manager.get_proveedor_for_local_sku(local, sku)
+                if proveedor_forzado:
+                    # Normalizar código de proveedor forzado (eliminar .0 si existe)
+                    proveedor_forzado_norm = proveedor_forzado.replace('.0', '') if proveedor_forzado.endswith('.0') else proveedor_forzado
+                    
+                    # Verificar si el proveedor forzado existe en los disponibles
+                    if proveedor_forzado_norm in proveedores_disponibles:
+                        # FORZAR este proveedor ignorando todo lo demás
+                        proveedores_disponibles = [proveedor_forzado_norm]
+                        reglas_aplicadas_local += 1
+                        print(f"   ⚙️ LOCAL+SKU rule applied: LOCAL {local} + SKU {sku} → Proveedor {proveedor_forzado_norm} (FORCED)")
+                    else:
+                        # El proveedor forzado NO está en Full.xlsx para este SKU
+                        # IMPORTANTE: Agregar el proveedor aunque no esté en Full.xlsx
+                        # porque la regla LOCAL+SKU tiene máxima prioridad
+                        warnings.append(f"⚠️ LOCAL+SKU rule: Proveedor {proveedor_forzado_norm} not in Full.xlsx for SKU {sku}, but forcing it anyway")
+                        proveedores_disponibles = [proveedor_forzado_norm]
+                        reglas_aplicadas_local += 1
+                        print(f"   ⚙️ LOCAL+SKU rule FORCED (not in Full.xlsx): LOCAL {local} + SKU {sku} → Proveedor {proveedor_forzado_norm}")
+            
+            # REGLA 2: Aplicar bloqueos por quiebre de stock
+            # Solo si NO hay regla LOCAL+SKU forzada (si proveedor_forzado existe, ya se aplicó)
+            if rules_manager and not proveedor_forzado and len(proveedores_disponibles) > 1:
+                # Solo aplicar bloqueos si hay más de 1 proveedor y NO hay regla forzada
+                proveedores_bloqueados = rules_manager.get_blocked_proveedores_for_sku(sku)
+                
+                if proveedores_bloqueados:
+                    # Normalizar proveedores bloqueados
+                    proveedores_bloqueados_norm = [p.replace('.0', '') if p.endswith('.0') else p for p in proveedores_bloqueados]
+                    
+                    # Filtrar proveedores bloqueados
+                    proveedores_filtrados = [p for p in proveedores_disponibles if p not in proveedores_bloqueados_norm]
+                    
+                    if proveedores_filtrados:
+                        # Hay proveedores alternativos, usar los no bloqueados
+                        proveedores_disponibles = proveedores_filtrados
+                        reglas_aplicadas_bloqueo += 1
+                        print(f"   🚫 Stock block applied: SKU {sku} - blocked {proveedores_bloqueados_norm}, using {proveedores_filtrados}")
+                    else:
+                        # Todos los proveedores están bloqueados, mantener original
+                        warnings.append(f"⚠️ All suppliers blocked for SKU {sku}, keeping all: {proveedores_disponibles}")
+            
+            elif rules_manager and not proveedor_forzado and len(proveedores_disponibles) == 1:
+                # Solo 1 proveedor disponible y NO hay regla forzada - verificar si está bloqueado
+                if rules_manager.is_blocked(sku, proveedores_disponibles[0]):
+                    # Proveedor bloqueado y es el único → NO generar orden
+                    row_error = row.copy()
+                    row_error["OBSERVACION"] = (
+                        str(row.get("CENTRO_COSTO", "")) + 
+                        "//Bloqueado por Quiebre de Stock//" + 
+                        str(row.get("NOMBRE_LUGAR", ""))
+                    )
+                    df_errors.append(row_error)
+                    reglas_aplicadas_bloqueo += 1
+                    print(f"   🚫 Order blocked: SKU {sku} + Proveedor {proveedores_disponibles[0]} (only supplier, blocked by stock rule)")
+                    continue
+            
+            # Asignar proveedor (tomar el primero de los disponibles)
+            proveedor_final = proveedores_disponibles[0]
+            
+            row_mapped = row.copy()
+            row_mapped["PROVEEDOR"] = proveedor_final
+            df_mapped.append(row_mapped)
         
         df_mapped = pd.DataFrame(df_mapped) if df_mapped else pd.DataFrame(columns=df.columns.tolist() + ["PROVEEDOR"])
         df_errors = pd.DataFrame(df_errors) if df_errors else pd.DataFrame(columns=df.columns.tolist() + ["OBSERVACION"])
         
         warnings.append(f"✅ Successfully mapped: {len(df_mapped)} records")
-        warnings.append(f"⚠️ Sin precios: {len(df_errors)} registros")
+        warnings.append(f"⚠️ Sin precios/Bloqueados: {len(df_errors)} registros")
+        
+        # Resumen de reglas aplicadas
+        if rules_manager and (reglas_aplicadas_local > 0 or reglas_aplicadas_bloqueo > 0):
+            warnings.append(f"⚙️ Special rules applied:")
+            if reglas_aplicadas_local > 0:
+                warnings.append(f"   • LOCAL + SKU → Proveedor rules: {reglas_aplicadas_local} records")
+            if reglas_aplicadas_bloqueo > 0:
+                warnings.append(f"   • Stock block rules: {reglas_aplicadas_bloqueo} records")
         
     except Exception as e:
         warnings.append(f"❌ Error mapping suppliers: {e}")

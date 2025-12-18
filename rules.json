@@ -1,0 +1,64 @@
+{
+    "local_rules": [
+        {
+            "local": "30797",
+            "sku": "A312262",
+            "proveedor": "100042",
+            "descripcion": "Contrato exclusivo centro 30797",
+            "created": "2025-12-18T09:08:11.283767",
+            "active": true
+        },
+        {
+            "local": "30798",
+            "sku": "A312262",
+            "proveedor": "100042",
+            "descripcion": "Contrato exclusivo centro 30798",
+            "created": "2025-12-18T09:08:11.283767",
+            "active": true
+        },
+        {
+            "local": "12345",
+            "sku": "A12345",
+            "proveedor": "77300",
+            "descripcion": "Acuerdo comercial especial",
+            "created": "2025-12-18T09:08:11.283767",
+            "active": true
+        },
+        {
+            "local": "67890",
+            "sku": "A67890",
+            "proveedor": "55500",
+            "descripcion": "Proveedor único para este local",
+            "created": "2025-12-18T09:08:11.283767",
+            "active": true
+        }
+    ],
+    "stock_blocks": [
+        {
+            "sku": "A312261",
+            "proveedor": "100041",
+            "motivo": "Quiebre de stock hasta enero 2026",
+            "created": "2025-12-18T09:08:11.283767",
+            "active": true
+        },
+        {
+            "sku": "A67890",
+            "proveedor": "55500",
+            "motivo": "Producto descontinuado",
+            "created": "2025-12-18T09:08:11.283767",
+            "active": true
+        },
+        {
+            "sku": "A99999",
+            "proveedor": "77300",
+            "motivo": "Proveedor no puede surtir este SKU",
+            "created": "2025-12-18T09:08:11.283767",
+            "active": true
+        }
+    ],
+    "metadata": {
+        "created": "2025-12-17T10:18:26.072957",
+        "version": "1.0",
+        "last_updated": "2025-12-18T09:08:11.283767"
+    }
+}

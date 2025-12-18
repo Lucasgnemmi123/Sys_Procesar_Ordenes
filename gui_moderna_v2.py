@@ -25,6 +25,7 @@ from procesamiento_v2 import (
     formatear_excel_salida,
     obtener_nombre_archivo_salida
 )
+from rules_dialog import RulesDialog
 
 # Configuración de colores del tema elegante
 class ModernTheme:
@@ -92,8 +93,8 @@ class ModernGUI:
         self.root.configure(bg=self.theme.LIGHT_GRAY)
         self.root.minsize(1200, 750)
         
-        # Tamaño grande centrado (casi toda la pantalla)
-        self.root.geometry("1500x1000+50+30")
+        # Maximizar ventana
+        self.root.state('zoomed')
         
         # Hacer la ventana responsiva
         self.root.columnconfigure(0, weight=1)
@@ -504,6 +505,7 @@ class ModernGUI:
         quick_container.pack(fill="x", padx=10, pady=10)
         
         quick_buttons = [
+            ("⚙️ Reglas Especiales", self.abrir_reglas_especiales, "#8E44AD"),
             ("📁 Abrir Carpeta Salidas", self.abrir_carpeta_salidas, "#16A085"),
             ("📊 Abrir Items C.Calzada", self.abrir_items_xlsx, "#F39C12")
         ]
@@ -1123,6 +1125,19 @@ class ModernGUI:
             messagebox.showwarning(
                 "⚠️ File Not Found", 
                 "Items.xlsx does not exist in Full-Agenda folder."
+            )
+            
+    def abrir_reglas_especiales(self):
+        """Abrir ventana de gestión de reglas especiales"""
+        try:
+            self.log("⚙️ Opening Special Rules Manager...")
+            RulesDialog(self.root)
+            self.log("✅ Rules Manager opened successfully")
+        except Exception as e:
+            self.log(f"❌ Error opening Rules Manager: {e}")
+            messagebox.showerror(
+                "❌ Error", 
+                f"Cannot open Rules Manager:\n\n{str(e)}"
             )
             
     def ejecutar_procesamiento(self):
