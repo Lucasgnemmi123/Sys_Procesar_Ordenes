@@ -258,66 +258,33 @@ def procesar_pdfs(ordenes_dir):
 
 # --- Validación de SKUs optimizada ---
 
-def validar_skus_items(df, items_xlsx):
+def validar_skus_items(df, products_manager=None):
     """
-    Valida que los SKUs estén en la lista de items de compra calzada
-    Versión optimizada con mejor manejo de archivos Excel
+    Valida que los SKUs estén en la lista maestra de productos (compra calzada)
+    Ahora usa ProductsManager en lugar de Items.xlsx
     """
-    print(f"🔍 Validating SKUs against: {items_xlsx}")
+    from products_manager import ProductsManager
     
     df = df.copy()
     df_err = pd.DataFrame(columns=df.columns.tolist() + ["OBSERVACION"])
     warnings = []
 
     try:
-        # Verificar que el archivo exista
-        if not os.path.exists(items_xlsx):
-            warnings.append(f"❌ Items file not found: {items_xlsx}")
-            return df, df_err, warnings
-
-        # Leer archivo Items.xlsx con múltiples engines
-        try:
-            df_items = pd.read_excel(items_xlsx, dtype=str)
-        except Exception as e:
-            try:
-                df_items = pd.read_excel(items_xlsx, engine='openpyxl', dtype=str)
-            except Exception as e2:
-                warnings.append(f"❌ Error reading Items.xlsx: {e2}")
-                return df, df_err, warnings
+        # Inicializar ProductsManager si no se proporciona
+        if products_manager is None:
+            products_manager = ProductsManager()
         
-        # Limpiar nombres de columnas
-        df_items.columns = df_items.columns.str.strip()
+        print(f"🔍 Validating SKUs against Products Master List...")
         
-        # Buscar columna SKU con múltiples nombres posibles
-        possible_sku_columns = ['SKU', 'sku', 'Sku', 'CODIGO', 'codigo', 'Codigo', 'CODE', 'code', 'Code']
-        col_sku_items = None
+        # Obtener todos los SKUs válidos
+        skus_validos = products_manager.get_all_skus()
         
-        for col_name in possible_sku_columns:
-            if col_name in df_items.columns:
-                col_sku_items = col_name
-                break
-        
-        if not col_sku_items:
-            # Buscar por coincidencia parcial
-            for col in df_items.columns:
-                if any(keyword in col.lower() for keyword in ['sku', 'codigo', 'code']):
-                    col_sku_items = col
-                    break
-        
-        if not col_sku_items:
-            warnings.append(f"⚠️ SKU column not found in Items.xlsx, skipping validation")
-            warnings.append(f"📝 Available columns: {list(df_items.columns)}")
+        if not skus_validos:
+            warnings.append(f"⚠️ No products found in master list - validation skipped")
+            warnings.append(f"💡 Use Products Manager to add products")
             return df, df_err, warnings
         
-        # Preparar lista de SKUs válidos
-        skus_items = df_items[col_sku_items].astype(str).str.strip().str.upper()
-        skus_validos = set(skus_items.dropna())
-        
-        # Remover valores vacíos o inválidos
-        skus_validos = {sku for sku in skus_validos if sku and sku != 'NAN' and len(sku) > 0}
-        
-        warnings.append(f"✅ Items loaded: {len(skus_validos)} valid SKUs found")
-        warnings.append(f"📋 Using column: {col_sku_items}")
+        warnings.append(f"✅ Products loaded: {len(skus_validos)} valid SKUs found")
         
         # Validar cada SKU
         df_skus = df["SKU"].str.strip().str.upper()
@@ -336,13 +303,14 @@ def validar_skus_items(df, items_xlsx):
             skus_no_encontrados = df_skus[mask_no_en_items].unique()[:5]
             warnings.append(f"⚠️ {len(df_err_items)} SKUs faltan en Maestra C.Calzada")
             warnings.append(f"📋 Examples: {list(skus_no_encontrados)}")
+            warnings.append(f"💡 Add missing SKUs via Products Manager")
         
         # Retornar solo los válidos
         df_valid = df.loc[~mask_no_en_items].copy()
         warnings.append(f"✅ Valid SKUs: {len(df_valid)}")
         
     except Exception as e:
-        warnings.append(f"❌ Error validating Items.xlsx: {e}")
+        warnings.append(f"❌ Error validating products: {e}")
         df_valid = df.copy()  # Si hay error, continuar sin validación
     
     return df_valid, df_err, warnings

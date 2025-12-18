@@ -28,6 +28,7 @@ from procesamiento_v2 import (
 from agenda_manager import AgendaManager
 from rules_dialog import RulesDialog
 from agenda_dialog import AgendaDialog
+from products_dialog import ProductsDialog
 
 # Configuración de colores del tema elegante
 class ModernTheme:
@@ -72,6 +73,7 @@ class ModernGUI:
         # Variables para ventanas únicas
         self.ventana_agenda = None
         self.ventana_reglas = None
+        self.ventana_productos = None
         
         # Variables de progreso
         self.progress_steps = [
@@ -385,19 +387,25 @@ class ModernGUI:
             self.abrir_full_xlsx, "#9B59B6"
         )
         
-        # Paso 2: Gestión de Agenda
+        # Paso 2: Gestión de Productos
         self._create_step_button(
-            steps_container, "2", "📅 Gestión de Agenda", 
+            steps_container, "2", "📦 Gestión de Productos", 
+            self.abrir_gestion_productos, "#E67E22"
+        )
+        
+        # Paso 3: Gestión de Agenda
+        self._create_step_button(
+            steps_container, "3", "📅 Gestión de Agenda", 
             self.abrir_gestion_agenda, "#3498DB"
         )
         
-        # Paso 3: Configurar región
+        # Paso 4: Configurar región
         region_frame = tk.Frame(steps_container, bg=self.theme.WHITE)
         region_frame.pack(fill="x", pady=2)
         
         tk.Label(
             region_frame, 
-            text="3.", 
+            text="4.", 
             font=("Arial", 10, "bold"), 
             bg=self.theme.WHITE, 
             fg=self.theme.ERROR, 
@@ -435,13 +443,13 @@ class ModernGUI:
             fg=self.theme.TEXT_SECONDARY
         ).pack(side="left", padx=5)
         
-        # Paso 4: Procesar
+        # Paso 5: Procesar
         process_frame = tk.Frame(steps_container, bg=self.theme.WHITE)
         process_frame.pack(fill="x", pady=8)
         
         tk.Label(
             process_frame, 
-            text="4.", 
+            text="5.", 
             font=("Arial", 10, "bold"), 
             bg=self.theme.WHITE, 
             fg=self.theme.ERROR, 
@@ -513,7 +521,7 @@ class ModernGUI:
         quick_buttons = [
             ("⚙️ Reglas Especiales", self.abrir_reglas_especiales, "#8E44AD"),
             ("�📁 Abrir Carpeta Salidas", self.abrir_carpeta_salidas, "#16A085"),
-            ("📊 Abrir Items C.Calzada", self.abrir_items_xlsx, "#F39C12")
+            ("� Gestión de Productos", self.abrir_gestion_productos, "#E67E22")
         ]
         
         for text, command, color in quick_buttons:
@@ -1118,20 +1126,21 @@ class ModernGUI:
             self.log(f"❌ Error opening Salidas folder: {e}")
             messagebox.showerror("❌ Error", f"Cannot open Salidas folder: {e}")
             
-    def abrir_items_xlsx(self):
-        """Abrir archivo Items C.Calzada con validación"""
-        if os.path.exists(self.ITEMS_XLSX):
-            try:
-                os.startfile(self.ITEMS_XLSX)
-                self.log("📊 Opening Items C.Calzada")
-            except Exception as e:
-                self.log(f"❌ Error opening Items.xlsx: {e}")
-                messagebox.showerror("❌ Error", f"Cannot open Items.xlsx: {e}")
-        else:
-            messagebox.showwarning(
-                "⚠️ File Not Found", 
-                "Items.xlsx does not exist in Full-Agenda folder."
-            )
+    # DEPRECATED: Ya no se usa Items.xlsx, ahora se usa products.json
+    # def abrir_items_xlsx(self):
+    #     """Abrir archivo Items C.Calzada con validación"""
+    #     if os.path.exists(self.ITEMS_XLSX):
+    #         try:
+    #             os.startfile(self.ITEMS_XLSX)
+    #             self.log("📊 Opening Items C.Calzada")
+    #         except Exception as e:
+    #             self.log(f"❌ Error opening Items.xlsx: {e}")
+    #             messagebox.showerror("❌ Error", f"Cannot open Items.xlsx: {e}")
+    #     else:
+    #         messagebox.showwarning(
+    #             "⚠️ File Not Found", 
+    #             "Items.xlsx does not exist in Full-Agenda folder."
+    #         )
             
     def abrir_reglas_especiales(self):
         """Abrir ventana de gestión de reglas especiales"""
@@ -1151,6 +1160,27 @@ class ModernGUI:
             messagebox.showerror(
                 "❌ Error", 
                 f"Cannot open Rules Manager:\n\n{str(e)}",
+                parent=self.root
+            )
+    
+    def abrir_gestion_productos(self):
+        """Abrir ventana de gestión de productos (maestra SKU)"""
+        # Si ya está abierta, traerla al frente
+        if self.ventana_productos and self.ventana_productos.winfo_exists():
+            self.ventana_productos.lift()
+            self.ventana_productos.focus_force()
+            return
+        
+        try:
+            self.log("📦 Opening Products Manager...")
+            dialog = ProductsDialog(self.root)
+            self.ventana_productos = dialog.window
+            self.log("✅ Products Manager opened successfully")
+        except Exception as e:
+            self.log(f"❌ Error opening Products Manager: {e}")
+            messagebox.showerror(
+                "❌ Error", 
+                f"Cannot open Products Manager:\n\n{str(e)}",
                 parent=self.root
             )
     
@@ -1217,7 +1247,9 @@ class ModernGUI:
             # Paso 2: Validar SKUs
             self.siguiente_paso()
             self.log("🔍 Paso 2: Validando Items C.Calzada...")
-            df_items_valid, df_err_items, warnings_items = validar_skus_items(df_pdfs, self.ITEMS_XLSX)
+            from products_manager import ProductsManager
+            products_manager = ProductsManager()
+            df_items_valid, df_err_items, warnings_items = validar_skus_items(df_pdfs, products_manager)
             
             for warning in warnings_items:
                 self.log(warning)
