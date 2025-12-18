@@ -1,0 +1,588 @@
+"""
+Diálogo de Gestión de Agenda - UI
+Creado por Lucas Gnemmi
+Versión: 1.0
+
+Interfaz gráfica para gestionar la matriz de proveedores y configuración de agenda.
+"""
+
+import tkinter as tk
+from tkinter import ttk, messagebox, filedialog
+from agenda_manager import AgendaManager
+from datetime import datetime
+from proveedor_editor import crear_editor_proveedor_mejorado
+
+
+class AgendaDialog:
+    """Diálogo para gestionar la configuración de agenda de proveedores"""
+    
+    def __init__(self, parent, theme_colors=None):
+        """
+        Inicializa el diálogo de agenda
+        
+        Args:
+            parent: Ventana padre
+            theme_colors: Diccionario con colores del tema
+        """
+        self.parent = parent
+        self.manager = AgendaManager()
+        
+        # Colores del tema (por defecto si no se proporcionan)
+        self.colors = theme_colors or {
+            'bg_main': '#1e1e1e',
+            'bg_card': '#2d2d2d',
+            'fg_text': '#ffffff',
+            'accent': '#e74c3c',
+            'button_bg': '#34495e',
+            'button_hover': '#4a5f7f',
+            'success': '#27ae60',
+            'warning': '#f39c12'
+        }
+        
+        self.create_dialog()
+        self.actualizar_fechas_calculadas()
+        self.cargar_proveedores()
+    
+    def create_dialog(self):
+        """Crea la ventana del diálogo"""
+        self.dialog = tk.Toplevel(self.parent)
+        self.dialog.title("📅 Gestión de Agenda de Proveedores")
+        self.dialog.geometry("1000x850")
+        self.dialog.configure(bg=self.colors['bg_main'])
+        self.dialog.resizable(True, True)
+        
+        # Frame principal con scroll
+        main_frame = tk.Frame(self.dialog, bg=self.colors['bg_main'])
+        main_frame.pack(fill='both', expand=True, padx=10, pady=10)
+        
+        # === SECCIÓN DE CONFIGURACIÓN GENERAL ===
+        config_frame = tk.LabelFrame(
+            main_frame,
+            text=" ⚙️ Configuración General ",
+            bg=self.colors['bg_card'],
+            fg=self.colors['fg_text'],
+            font=('Segoe UI', 11, 'bold'),
+            relief='flat',
+            bd=2
+        )
+        config_frame.pack(fill='x', padx=5, pady=(0, 10))
+        
+        # Primera fila: Días de despacho
+        dias_frame = tk.Frame(config_frame, bg=self.colors['bg_card'])
+        dias_frame.pack(fill='x', padx=10, pady=5)
+        
+        tk.Label(
+            dias_frame,
+            text="Días para calcular Fecha de Despacho:",
+            bg=self.colors['bg_card'],
+            fg=self.colors['fg_text'],
+            font=('Segoe UI', 10)
+        ).pack(side='left', padx=(0, 10))
+        
+        self.dias_despacho_var = tk.StringVar(value=str(self.manager.dias_despacho))
+        dias_spinbox = tk.Spinbox(
+            dias_frame,
+            from_=1,
+            to=60,
+            textvariable=self.dias_despacho_var,
+            width=10,
+            font=('Segoe UI', 10),
+            state='readonly',
+            command=self.actualizar_fechas_calculadas
+        )
+        dias_spinbox.pack(side='left', padx=(0, 10))
+        
+        tk.Button(
+            dias_frame,
+            text="💾 Guardar",
+            command=self.guardar_dias_despacho,
+            bg=self.colors['success'],
+            fg='white',
+            font=('Segoe UI', 9, 'bold'),
+            relief='flat',
+            cursor='hand2',
+            padx=15,
+            pady=5
+        ).pack(side='left')
+        
+        # Botón importar desde Excel
+        tk.Button(
+            dias_frame,
+            text="📥 Importar desde Agenda.xlsm",
+            command=self.importar_desde_excel,
+            bg=self.colors['button_bg'],
+            fg='white',
+            font=('Segoe UI', 9, 'bold'),
+            relief='flat',
+            cursor='hand2',
+            padx=15,
+            pady=5
+        ).pack(side='right')
+        
+        # Segunda fila: Calculadora de fechas
+        calc_frame = tk.Frame(config_frame, bg=self.colors['bg_card'])
+        calc_frame.pack(fill='x', padx=10, pady=5)
+        
+        tk.Label(
+            calc_frame,
+            text="📅 Fecha de Pedido:",
+            bg=self.colors['bg_card'],
+            fg=self.colors['fg_text'],
+            font=('Segoe UI', 10, 'bold')
+        ).pack(side='left', padx=(0, 10))
+        
+        self.fecha_pedido_var = tk.StringVar(value=datetime.now().strftime("%d-%m-%Y"))
+        fecha_entry = tk.Entry(
+            calc_frame,
+            textvariable=self.fecha_pedido_var,
+            font=('Segoe UI', 10),
+            width=12,
+            relief='solid',
+            bd=1,
+            bg='#FAFAFA'
+        )
+        fecha_entry.pack(side='left', padx=(0, 10))
+        fecha_entry.bind('<Return>', lambda e: self.actualizar_fechas_calculadas())
+        
+        tk.Button(
+            calc_frame,
+            text="🔄 Calcular Fechas",
+            command=self.actualizar_fechas_calculadas,
+            bg=self.colors['button_bg'],
+            fg='white',
+            font=('Segoe UI', 9, 'bold'),
+            relief='flat',
+            cursor='hand2',
+            padx=15,
+            pady=5
+        ).pack(side='left', padx=(0, 20))
+        
+        tk.Label(
+            calc_frame,
+            text="📦 Fecha Despacho:",
+            bg=self.colors['bg_card'],
+            fg=self.colors['fg_text'],
+            font=('Segoe UI', 10, 'bold')
+        ).pack(side='left', padx=(0, 10))
+        
+        self.fecha_despacho_label = tk.Label(
+            calc_frame,
+            text="--/--/----",
+            bg=self.colors['bg_card'],
+            fg=self.colors['accent'],
+            font=('Segoe UI', 10, 'bold')
+        )
+        self.fecha_despacho_label.pack(side='left')
+        
+        # === SECCIÓN DE LISTA DE PROVEEDORES ===
+        lista_frame = tk.LabelFrame(
+            main_frame,
+            text=" 📋 Proveedores Configurados ",
+            bg=self.colors['bg_card'],
+            fg=self.colors['fg_text'],
+            font=('Segoe UI', 11, 'bold'),
+            relief='flat',
+            bd=2
+        )
+        lista_frame.pack(fill='both', expand=True, padx=5, pady=(0, 10))
+        
+        # Tabla de proveedores
+        tabla_frame = tk.Frame(lista_frame, bg=self.colors['bg_card'])
+        tabla_frame.pack(fill='both', expand=True, padx=10, pady=10)
+        
+        # Scrollbars
+        scrollbar_y = tk.Scrollbar(tabla_frame, orient='vertical')
+        scrollbar_y.pack(side='right', fill='y')
+        
+        scrollbar_x = tk.Scrollbar(tabla_frame, orient='horizontal')
+        scrollbar_x.pack(side='bottom', fill='x')
+        
+        # Configurar estilo del Treeview con bordes negros
+        style = ttk.Style()
+        style.theme_use('default')
+        style.configure('Bordered.Treeview',
+            background='white',
+            foreground='black',
+            fieldbackground='white',
+            bordercolor='black',
+            borderwidth=1,
+            rowheight=28,
+            font=('Segoe UI', 9)
+        )
+        style.configure('Bordered.Treeview.Heading',
+            background='#E3F2FD',
+            foreground='#1976D2',
+            borderwidth=1,
+            font=('Segoe UI', 9, 'bold'),
+            relief='solid'
+        )
+        style.map('Bordered.Treeview',
+            background=[('selected', '#BBDEFB')],
+            foreground=[('selected', 'black')]
+        )
+        
+        # Treeview
+        columnas = ('Código', 'Nombre', 'LUN', 'MAR', 'MIE', 'JUE', 'VIE', 'SAB', 'D-2', 'Fecha Entrega')
+        self.tree = ttk.Treeview(
+            tabla_frame,
+            columns=columnas,
+            show='headings',
+            yscrollcommand=scrollbar_y.set,
+            xscrollcommand=scrollbar_x.set,
+            height=15,
+            style='Bordered.Treeview'
+        )
+        
+        scrollbar_y.config(command=self.tree.yview)
+        scrollbar_x.config(command=self.tree.xview)
+        
+        # Configurar columnas con bordes visibles
+        anchos = {'Código': 80, 'Nombre': 250, 'LUN': 45, 'MAR': 45, 'MIE': 45, 'JUE': 45, 'VIE': 45, 'SAB': 45, 'D-2': 45, 'Fecha Entrega': 120}
+        for col in columnas:
+            self.tree.heading(col, text=col)
+            self.tree.column(col, width=anchos.get(col, 100), anchor='center' if col not in ['Nombre'] else 'w', minwidth=anchos.get(col, 100))
+        
+        # Configurar tags de filas alternadas para mejorar la separación visual
+        self.tree.tag_configure('oddrow', background='#F5F5F5')
+        self.tree.tag_configure('evenrow', background='white')
+        
+        self.tree.pack(fill='both', expand=True)
+        
+        # Agregar indicador visual de que las columnas de días son clickeables
+        tk.Label(
+            tabla_frame,
+            text="💡 Tip: Haz clic en las columnas de días (LUN-SAB, D-2) para cambiar sus valores",
+            bg=self.colors['bg_main'],
+            fg='#666666',
+            font=('Segoe UI', 9, 'italic'),
+            anchor='w'
+        ).pack(fill='x', pady=(5, 0))
+        
+        # Agregar evento de clic para editar días
+        self.tree.bind('<Button-1>', self.on_tree_click)
+        self.tree.bind('<Motion>', self.on_tree_motion)
+        
+        # === SECCIÓN DE BOTONES ===
+        botones_frame = tk.Frame(main_frame, bg=self.colors['bg_main'])
+        botones_frame.pack(fill='x', padx=5, pady=(0, 5))
+        
+        tk.Button(
+            botones_frame,
+            text="➕ Agregar Proveedor",
+            command=self.agregar_proveedor,
+            bg=self.colors['success'],
+            fg='white',
+            font=('Segoe UI', 10, 'bold'),
+            relief='flat',
+            cursor='hand2',
+            padx=20,
+            pady=10
+        ).pack(side='left', padx=5)
+        
+        tk.Button(
+            botones_frame,
+            text="✏️ Editar Seleccionado",
+            command=self.editar_proveedor,
+            bg=self.colors['button_bg'],
+            fg='white',
+            font=('Segoe UI', 10, 'bold'),
+            relief='flat',
+            cursor='hand2',
+            padx=20,
+            pady=10
+        ).pack(side='left', padx=5)
+        
+        tk.Button(
+            botones_frame,
+            text="🗑️ Eliminar Seleccionado",
+            command=self.eliminar_proveedor,
+            bg=self.colors['accent'],
+            fg='white',
+            font=('Segoe UI', 10, 'bold'),
+            relief='flat',
+            cursor='hand2',
+            padx=20,
+            pady=10
+        ).pack(side='left', padx=5)
+        
+        tk.Button(
+            botones_frame,
+            text="❌ Cerrar",
+            command=self.dialog.destroy,
+            bg=self.colors['bg_card'],
+            fg='white',
+            font=('Segoe UI', 10, 'bold'),
+            relief='flat',
+            cursor='hand2',
+            padx=20,
+            pady=10
+        ).pack(side='right', padx=5)
+    
+    def cargar_proveedores(self):
+        """Carga los proveedores en la tabla"""
+        # Limpiar tabla
+        for item in self.tree.get_children():
+            self.tree.delete(item)
+        
+        # Obtener fecha de despacho si está calculada
+        fecha_despacho = None
+        try:
+            fecha_pedido_str = self.fecha_pedido_var.get()
+            fecha_pedido = datetime.strptime(fecha_pedido_str, "%d-%m-%Y")
+            fecha_despacho = self.manager.calcular_fecha_despacho(fecha_pedido)
+        except:
+            pass
+        
+        # Cargar proveedores
+        proveedores = self.manager.obtener_todos_proveedores()
+        for codigo, datos in proveedores.items():
+            def formato_dia(valor):
+                """Convierte valor a símbolo: 1='✓', 0='○', None=''"""
+                if valor == 1 or valor is True:
+                    return '✓'
+                elif valor == 0:
+                    return '○'
+                else:
+                    return ''
+            
+            # Calcular fecha de entrega para este proveedor
+            fecha_entrega_str = ''
+            if fecha_despacho:
+                fecha_entrega = self.manager.calcular_fecha_entrega(codigo, fecha_despacho)
+                if fecha_entrega:
+                    fecha_entrega_str = fecha_entrega.strftime("%d-%m-%Y")
+                elif datos.get('fecha_manual'):
+                    fecha_entrega_str = datos.get('fecha_manual') + ' (Manual)'
+            elif datos.get('fecha_manual'):
+                fecha_entrega_str = datos.get('fecha_manual') + ' (Manual)'
+            
+            valores = (
+                codigo,
+                datos.get('nombre', ''),
+                formato_dia(datos.get('LUN')),
+                formato_dia(datos.get('MAR')),
+                formato_dia(datos.get('MIE')),
+                formato_dia(datos.get('JUE')),
+                formato_dia(datos.get('VIE')),
+                formato_dia(datos.get('SAB')),
+                formato_dia(datos.get('D-2')),
+                fecha_entrega_str
+            )
+            
+            # Determinar tag según los valores de días
+            dias_valores = [
+                datos.get('LUN'),
+                datos.get('MAR'),
+                datos.get('MIE'),
+                datos.get('JUE'),
+                datos.get('VIE'),
+                datos.get('SAB'),
+                datos.get('D-2')
+            ]
+            
+            # Contar tipos de valores para determinar el color predominante
+            tiene_si = any(v == 1 or v is True for v in dias_valores)
+            tiene_no = any(v == 0 for v in dias_valores)
+            todos_none = all(v is None for v in dias_valores)
+            
+            # Determinar tag de fila alternada para mejor legibilidad
+            num_items = len(self.tree.get_children())
+            tag_fila = 'evenrow' if num_items % 2 == 0 else 'oddrow'
+            
+            self.tree.insert('', 'end', values=valores, tags=(tag_fila,))
+    
+    def guardar_dias_despacho(self):
+        """Guarda los días de despacho configurados"""
+        try:
+            dias = int(self.dias_despacho_var.get())
+            if dias < 1:
+                messagebox.showerror("Error", "Los días deben ser mayor a 0", parent=self.dialog)
+                return
+            
+            self.manager.dias_despacho = dias
+            self.manager.guardar_configuracion()
+            self.actualizar_fechas_calculadas()
+            messagebox.showinfo("✅ Guardado", f"Días de despacho configurados: {dias}", parent=self.dialog)
+        except ValueError:
+            messagebox.showerror("Error", "Ingrese un número válido", parent=self.dialog)
+    
+    def actualizar_fechas_calculadas(self):
+        """Actualiza las fechas de despacho y entrega calculadas"""
+        try:
+            # Validar y parsear fecha de pedido
+            fecha_pedido_str = self.fecha_pedido_var.get()
+            fecha_pedido = datetime.strptime(fecha_pedido_str, "%d-%m-%Y")
+            
+            # Actualizar días de despacho si cambió
+            try:
+                dias = int(self.dias_despacho_var.get())
+                if dias > 0:
+                    self.manager.dias_despacho = dias
+            except:
+                pass
+            
+            # Calcular fecha de despacho
+            fecha_despacho = self.manager.calcular_fecha_despacho(fecha_pedido)
+            self.fecha_despacho_label.config(text=fecha_despacho.strftime("%d-%m-%Y"))
+            
+            # Recargar proveedores para mostrar fechas de entrega calculadas
+            self.cargar_proveedores()
+            
+        except ValueError:
+            self.fecha_despacho_label.config(text="Formato inválido")
+            messagebox.showerror("Error", "Formato de fecha inválido. Use dd-mm-yyyy", parent=self.dialog)
+        except Exception as e:
+            self.fecha_despacho_label.config(text="Error")
+            messagebox.showerror("Error", f"Error calculando fechas: {e}", parent=self.dialog)
+    
+    def on_tree_click(self, event):
+        """Maneja clic en la tabla para editar días directamente"""
+        region = self.tree.identify_region(event.x, event.y)
+        if region != "cell":
+            return
+        
+        # Identificar columna y fila
+        column_id = self.tree.identify_column(event.x)
+        item_id = self.tree.identify_row(event.y)
+        
+        if not item_id:
+            return
+        
+        # Obtener índice de columna (empiezan en #1)
+        col_index = int(column_id.replace('#', '')) - 1
+        columnas = ('Código', 'Nombre', 'LUN', 'MAR', 'MIE', 'JUE', 'VIE', 'SAB', 'D-2', 'Fecha Entrega')
+        
+        if col_index < 0 or col_index >= len(columnas):
+            return
+        
+        col_name = columnas[col_index]
+        
+        # Solo permitir edición en columnas de días
+        dias_editables = ['LUN', 'MAR', 'MIE', 'JUE', 'VIE', 'SAB', 'D-2']
+        if col_name not in dias_editables:
+            return
+        
+        # Obtener datos del proveedor
+        valores = self.tree.item(item_id)['values']
+        codigo_prov = valores[0]
+        
+        # Obtener valor actual
+        valor_actual_str = valores[col_index]
+        
+        # Convertir símbolo a valor: ✓=1, ○=0, vacío=None
+        if valor_actual_str == '✓':
+            valor_actual = 1
+        elif valor_actual_str == '○':
+            valor_actual = 0
+        else:
+            valor_actual = None
+        
+        # Ciclar al siguiente estado: None → 1 → 0 → None
+        if valor_actual is None:
+            nuevo_valor = 1
+        elif valor_actual == 1:
+            nuevo_valor = 0
+        else:
+            nuevo_valor = None
+        
+        # Actualizar en el manager
+        proveedor_data = self.manager.obtener_proveedor(codigo_prov)
+        if proveedor_data:
+            proveedor_data[col_name] = nuevo_valor
+            self.manager.agregar_proveedor(
+                codigo_prov,
+                proveedor_data['nombre'],
+                {dia: proveedor_data.get(dia) for dia in ['LUN', 'MAR', 'MIE', 'JUE', 'VIE', 'SAB']},
+                proveedor_data.get('D-2'),
+                proveedor_data.get('fecha_manual')
+            )
+            
+            # Recargar la tabla para reflejar el cambio
+            self.cargar_proveedores()
+    
+    def on_tree_motion(self, event):
+        """Cambia el cursor cuando está sobre columnas editables"""
+        region = self.tree.identify_region(event.x, event.y)
+        if region != "cell":
+            self.tree.config(cursor="")
+            return
+        
+        column_id = self.tree.identify_column(event.x)
+        col_index = int(column_id.replace('#', '')) - 1
+        columnas = ('Código', 'Nombre', 'LUN', 'MAR', 'MIE', 'JUE', 'VIE', 'SAB', 'D-2', 'Fecha Entrega')
+        
+        if col_index >= 0 and col_index < len(columnas):
+            col_name = columnas[col_index]
+            dias_editables = ['LUN', 'MAR', 'MIE', 'JUE', 'VIE', 'SAB', 'D-2']
+            if col_name in dias_editables:
+                self.tree.config(cursor="hand2")
+            else:
+                self.tree.config(cursor="")
+    
+    def agregar_proveedor(self):
+        """Abre diálogo para agregar un nuevo proveedor"""
+        self.abrir_editor_proveedor()
+    
+    def editar_proveedor(self):
+        """Edita el proveedor seleccionado"""
+        seleccion = self.tree.selection()
+        if not seleccion:
+            messagebox.showwarning("Selección", "Seleccione un proveedor para editar", parent=self.dialog)
+            return
+        
+        item = self.tree.item(seleccion[0])
+        codigo = item['values'][0]
+        self.abrir_editor_proveedor(codigo)
+    
+    def eliminar_proveedor(self):
+        """Elimina el proveedor seleccionado"""
+        seleccion = self.tree.selection()
+        if not seleccion:
+            messagebox.showwarning("Selección", "Seleccione un proveedor para eliminar", parent=self.dialog)
+            return
+        
+        item = self.tree.item(seleccion[0])
+        codigo = item['values'][0]
+        nombre = item['values'][1]
+        
+        if messagebox.askyesno("Confirmar", f"¿Eliminar proveedor {codigo} - {nombre}?", parent=self.dialog):
+            self.manager.eliminar_proveedor(codigo)
+            self.cargar_proveedores()
+            messagebox.showinfo("✅ Eliminado", "Proveedor eliminado correctamente", parent=self.dialog)
+    
+    def abrir_editor_proveedor(self, codigo_editar=None):
+        """Abre diálogo para agregar/editar proveedor usando el editor mejorado"""
+        crear_editor_proveedor_mejorado(
+            dialog=self.dialog,
+            manager=self.manager,
+            colors=self.colors,
+            codigo_editar=codigo_editar,
+            callback_actualizar=self.cargar_proveedores
+        )
+    
+    def importar_desde_excel(self):
+        """Importa proveedores desde un archivo Agenda.xlsm"""
+        archivo = filedialog.askopenfilename(
+            title="Seleccionar Agenda.xlsm",
+            filetypes=[("Excel Macro", "*.xlsm"), ("Todos los archivos", "*.*")]
+        )
+        
+        if archivo:
+            if self.manager.importar_desde_excel(archivo):
+                self.cargar_proveedores()
+                messagebox.showinfo("✅ Importado", "Proveedores importados correctamente desde Excel", parent=self.dialog)
+            else:
+                messagebox.showerror("Error", "No se pudo importar la configuración desde Excel", parent=self.dialog)
+
+
+def abrir_dialogo_agenda(parent, theme_colors=None):
+    """Función de utilidad para abrir el diálogo"""
+    AgendaDialog(parent, theme_colors)
+
+
+if __name__ == "__main__":
+    # Prueba del diálogo
+    root = tk.Tk()
+    root.withdraw()
+    abrir_dialogo_agenda(root)
+    root.mainloop()

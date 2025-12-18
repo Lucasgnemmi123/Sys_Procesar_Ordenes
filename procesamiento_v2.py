@@ -664,15 +664,147 @@ def _fallback_fecha_processing(df, agenda_xlsm):
         df["OBSERVACION"] = df.get("OBSERVACION", "") + f"//Error processing agenda, using {fecha_fallback}//"
         return df, pd.DataFrame(columns=df.columns.tolist() + ["OBSERVACION"] if "OBSERVACION" not in df.columns else df.columns)
 
-def rellenar_fecha_entrega_y_observacion(df, agenda_xlsm):
+def rellenar_fecha_entrega_y_observacion_con_agenda_manager(df, fecha_pedido=None):
     """
-    Rellena fecha de entrega y observación desde Agenda.xlsm
-    PROCESO CORRECTO: 
-    - Busca cada proveedor en la matriz de agenda
-    - Asigna fecha específica de entrega por proveedor
-    - Observación con fecha M2 en formato dd-mm + BOD. + lugar
+    Rellena fecha de entrega y observación usando AgendaManager (sistema nuevo)
+    
+    Args:
+        df: DataFrame con columnas PROVEEDOR, CENTRO_COSTO, NOMBRE_LUGAR
+        fecha_pedido: Fecha del pedido (opcional, usa fecha actual si no se proporciona)
+    
+    Returns:
+        Tuple (df_valid, df_err): DataFrames con registros válidos y con errores
     """
-    print(f"📅 Processing dates and observations from: {agenda_xlsm}")
+    try:
+        from agenda_manager import AgendaManager
+        
+        print("📅 Processing dates with new AgendaManager system...")
+        manager = AgendaManager()
+        
+        # Usar fecha actual si no se proporciona
+        if fecha_pedido is None:
+            fecha_pedido = datetime.now()
+        elif isinstance(fecha_pedido, str):
+            try:
+                fecha_pedido = datetime.strptime(fecha_pedido, "%d-%m-%Y")
+            except:
+                try:
+                    fecha_pedido = datetime.strptime(fecha_pedido, "%Y-%m-%d")
+                except:
+                    fecha_pedido = datetime.now()
+        
+        # Calcular fecha de despacho
+        fecha_despacho = manager.calcular_fecha_despacho(fecha_pedido)
+        dd_mm = fecha_despacho.strftime("%d-%m")
+        
+        print(f"📅 Order Date: {fecha_pedido.strftime('%d-%m-%Y')}")
+        print(f"📅 Dispatch Date: {fecha_despacho.strftime('%d-%m-%Y')} (adding {manager.dias_despacho} days)")
+        
+        df = df.copy()
+        df['FECHA_ENTREGA'] = None
+        df['OBSERVACION'] = ''
+        
+        df_err = pd.DataFrame(columns=df.columns.tolist())
+        df_valid_list = []
+        df_err_list = []
+        
+        # Procesar cada registro
+        proveedores_sin_config = set()
+        
+        for idx, row in df.iterrows():
+            codigo_prov = str(row.get('PROVEEDOR', '')).strip()
+            
+            # Normalizar código (eliminar .0 si existe)
+            codigo_prov = codigo_prov.replace('.0', '')
+            
+            if codigo_prov:
+                fecha_entrega = manager.calcular_fecha_entrega(codigo_prov, fecha_despacho)
+                
+                if fecha_entrega:
+                    # Proveedor configurado - registro válido
+                    row_copy = row.copy()
+                    row_copy['FECHA_ENTREGA'] = fecha_entrega.strftime("%d-%m-%Y")
+                    
+                    # Generar observación
+                    centro_costo = str(row.get('CENTRO_COSTO', '')).strip()
+                    nombre_lugar = limpiar_nombre_lugar(str(row.get('NOMBRE_LUGAR', '')))
+                    row_copy['OBSERVACION'] = f"{centro_costo}//{dd_mm}//{nombre_lugar}"
+                    
+                    df_valid_list.append(row_copy)
+                else:
+                    # Proveedor no configurado - va a errores
+                    proveedores_sin_config.add(codigo_prov)
+                    row_copy = row.copy()
+                    centro_costo = str(row.get('CENTRO_COSTO', '')).strip()
+                    nombre_lugar = str(row.get('NOMBRE_LUGAR', '')).strip()
+                    row_copy['OBSERVACION'] = f"{centro_costo}//Falta Agenda//{nombre_lugar}"
+                    df_err_list.append(row_copy)
+            else:
+                # Sin código de proveedor - va a errores
+                row_copy = row.copy()
+                row_copy['OBSERVACION'] = "//Sin código de proveedor//"
+                df_err_list.append(row_copy)
+        
+        if proveedores_sin_config:
+            print(f"⚠️ Suppliers not configured in agenda ({len(proveedores_sin_config)}):")
+            for prov in sorted(proveedores_sin_config):
+                print(f"   • {prov}")
+        
+        # Crear DataFrames de resultados con índices únicos
+        if df_valid_list:
+            df_valid = pd.DataFrame(df_valid_list).reset_index(drop=True)
+            print(f"✅ {len(df_valid)} records with valid delivery dates")
+        else:
+            df_valid = pd.DataFrame(columns=df.columns.tolist() + ['FECHA_ENTREGA', 'OBSERVACION'])
+        
+        if df_err_list:
+            df_err = pd.DataFrame(df_err_list).reset_index(drop=True)
+            print(f"⚠️ {len(df_err)} records with errors (no agenda config)")
+        else:
+            df_err = pd.DataFrame(columns=df.columns.tolist() + ['OBSERVACION'])
+        
+        return df_valid, df_err
+        
+    except Exception as e:
+        print(f"❌ Error using AgendaManager: {e}")
+        # Retornar todos como errores
+        df_err = df.copy()
+        df_err['OBSERVACION'] = "//Error en sistema de agenda//"
+        return pd.DataFrame(columns=df.columns.tolist() + ['FECHA_ENTREGA', 'OBSERVACION']), df_err
+
+
+def rellenar_fecha_entrega_y_observacion(df, agenda_xlsm=None):
+    """
+    Rellena fecha de entrega y observación usando el nuevo sistema AgendaManager
+    
+    PROCESO:
+    - Busca cada proveedor en la configuración de agenda (agenda_config.json)
+    - Calcula fecha de entrega automáticamente según días configurados
+    - Si hay fecha manual, la usa en lugar del cálculo
+    - Observación con fecha de despacho en formato dd-mm + BOD. + lugar
+    
+    Args:
+        df: DataFrame con columnas PROVEEDOR, CENTRO_COSTO, NOMBRE_LUGAR
+        agenda_xlsm: Parámetro legacy para compatibilidad (ya no se usa)
+    
+    Returns:
+        Tuple (df_valid, df_err): DataFrames con registros válidos y con errores
+    
+    NOTA: El parámetro agenda_xlsm se mantiene para compatibilidad pero ya no se usa.
+          Todo el procesamiento se hace con AgendaManager (agenda_config.json)
+    """
+    print("📅 Processing dates with AgendaManager system (Python-based)...")
+    
+    # Usar directamente el nuevo sistema
+    try:
+        df_valid, df_err = rellenar_fecha_entrega_y_observacion_con_agenda_manager(df)
+        return df_valid, df_err
+    except Exception as e:
+        print(f"❌ Error in AgendaManager: {e}")
+        # Si falla, retornar todo como errores
+        df_err = df.copy()
+        df_err['OBSERVACION'] = "//Error en sistema de agenda//"
+        return pd.DataFrame(columns=df.columns.tolist() + ['FECHA_ENTREGA', 'OBSERVACION']), df_err
     
     df = df.copy()
     df_err = pd.DataFrame(columns=df.columns.tolist() + ["OBSERVACION"] if "OBSERVACION" not in df.columns else df.columns)

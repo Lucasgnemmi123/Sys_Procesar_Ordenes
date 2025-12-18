@@ -35,8 +35,59 @@ class RulesDialog:
         self.WHITE = "#ffffff"
         self.LIGHT_GRAY = "#f5f7fa"
         
+        # Inicializar estilos de tablas
+        self.style = ttk.Style()
+        self.style.theme_use('default')
+        self.configure_table_styles()
+        
         self.setup_ui()
         self.refresh_all()
+    
+    def configure_table_styles(self):
+        """Configura los estilos para las tablas del diálogo"""
+        # Estilo para tabla de reglas LOCAL
+        self.style.configure('LocalRules.Treeview',
+            background='white',
+            foreground='black',
+            fieldbackground='white',
+            bordercolor='black',
+            borderwidth=1,
+            rowheight=30,
+            font=('Segoe UI', 9)
+        )
+        self.style.configure('LocalRules.Treeview.Heading',
+            background='#E8F5E9',
+            foreground='#2E7D32',
+            borderwidth=1,
+            font=('Segoe UI', 10, 'bold'),
+            relief='solid'
+        )
+        self.style.map('LocalRules.Treeview',
+            background=[('selected', '#C8E6C9')],
+            foreground=[('selected', 'black')]
+        )
+        
+        # Estilo para tabla de bloqueos de stock
+        self.style.configure('StockBlocks.Treeview',
+            background='white',
+            foreground='black',
+            fieldbackground='white',
+            bordercolor='black',
+            borderwidth=1,
+            rowheight=30,
+            font=('Segoe UI', 9)
+        )
+        self.style.configure('StockBlocks.Treeview.Heading',
+            background='#FFEBEE',
+            foreground='#C62828',
+            borderwidth=1,
+            font=('Segoe UI', 10, 'bold'),
+            relief='solid'
+        )
+        self.style.map('StockBlocks.Treeview',
+            background=[('selected', '#FFCDD2')],
+            foreground=[('selected', 'black')]
+        )
         
     def setup_ui(self):
         """Configura la interfaz de usuario"""
@@ -102,7 +153,7 @@ class RulesDialog:
             anchor="w"
         ).pack(side="left", padx=5)
         
-        self.local_entry = tk.Entry(row1, font=("Arial", 10), width=12)
+        self.local_entry = tk.Entry(row1, font=("Arial", 10), width=12, relief='solid', bd=1, bg='#FAFAFA')
         self.local_entry.pack(side="left", padx=5)
         
         tk.Label(
@@ -121,7 +172,7 @@ class RulesDialog:
             anchor="w"
         ).pack(side="left", padx=5)
         
-        self.local_sku_entry = tk.Entry(row1, font=("Arial", 10), width=12)
+        self.local_sku_entry = tk.Entry(row1, font=("Arial", 10), width=12, relief='solid', bd=1, bg='#FAFAFA')
         self.local_sku_entry.pack(side="left", padx=5)
         
         # Fila 2: Proveedor
@@ -144,7 +195,7 @@ class RulesDialog:
             anchor="w"
         ).pack(side="left", padx=5)
         
-        self.local_prov_entry = tk.Entry(row1b, font=("Arial", 10), width=15)
+        self.local_prov_entry = tk.Entry(row1b, font=("Arial", 10), width=15, relief='solid', bd=1, bg='#FAFAFA')
         self.local_prov_entry.pack(side="left", padx=5)
         
         # Descripción
@@ -160,7 +211,7 @@ class RulesDialog:
             anchor="w"
         ).pack(side="left", padx=5)
         
-        self.local_desc_entry = tk.Entry(row2, font=("Arial", 10), width=50)
+        self.local_desc_entry = tk.Entry(row2, font=("Arial", 10), width=50, relief='solid', bd=1, bg='#FAFAFA')
         self.local_desc_entry.pack(side="left", padx=5, fill="x", expand=True)
         
         # Botón agregar
@@ -193,7 +244,8 @@ class RulesDialog:
             list_frame, 
             columns=columns, 
             show="headings",
-            height=10
+            height=12,
+            style='LocalRules.Treeview'
         )
         
         # Configurar columnas
@@ -203,11 +255,15 @@ class RulesDialog:
         self.local_tree.heading("Descripción", text="Descripción")
         self.local_tree.heading("Fecha Creación", text="Fecha Creación")
         
-        self.local_tree.column("LOCAL", width=100, anchor="center")
-        self.local_tree.column("SKU", width=100, anchor="center")
-        self.local_tree.column("Proveedor", width=120, anchor="center")
-        self.local_tree.column("Descripción", width=250, anchor="w")
-        self.local_tree.column("Fecha Creación", width=130, anchor="center")
+        self.local_tree.column("LOCAL", width=120, anchor="center")
+        self.local_tree.column("SKU", width=120, anchor="center")
+        self.local_tree.column("Proveedor", width=140, anchor="center")
+        self.local_tree.column("Descripción", width=280, anchor="w")
+        self.local_tree.column("Fecha Creación", width=140, anchor="center")
+        
+        # Configurar tags de filas alternadas
+        self.local_tree.tag_configure('oddrow', background='#F5F5F5')
+        self.local_tree.tag_configure('evenrow', background='white')
         
         # Scrollbar
         scrollbar = ttk.Scrollbar(list_frame, orient="vertical", command=self.local_tree.yview)
@@ -238,14 +294,14 @@ class RulesDialog:
             messagebox.showwarning(
                 "⚠️ Campos Incompletos",
                 "Por favor ingrese el código LOCAL, SKU y código de Proveedor."
-            )
+            , parent=self.window)
             return
         
         if self.rules_manager.add_local_rule(local, sku, proveedor, descripcion):
             messagebox.showinfo(
                 "✅ Éxito",
                 f"Regla agregada:\nLOCAL {local} + SKU {sku} → Proveedor {proveedor}"
-            )
+            , parent=self.window)
             
             # Limpiar campos
             self.local_entry.delete(0, tk.END)
@@ -259,7 +315,7 @@ class RulesDialog:
             messagebox.showerror(
                 "❌ Error",
                 f"No se pudo agregar la regla.\nPosiblemente ya existe una regla para LOCAL {local} + SKU {sku}."
-            )
+            , parent=self.window)
     
     def remove_local_rule(self):
         """Elimina la regla de LOCAL + SKU seleccionada"""
@@ -268,7 +324,7 @@ class RulesDialog:
             messagebox.showwarning(
                 "⚠️ Sin Selección",
                 "Por favor seleccione una regla para eliminar."
-            )
+            , parent=self.window)
             return
         
         item = self.local_tree.item(selection[0])
@@ -278,13 +334,13 @@ class RulesDialog:
         if messagebox.askyesno(
             "🗑️ Confirmar Eliminación",
             f"¿Está seguro que desea eliminar la regla?\n\nLOCAL {local} + SKU {sku}"
-        ):
+        , parent=self.window):
             if self.rules_manager.remove_local_rule(local, sku):
-                messagebox.showinfo("✅ Éxito", f"Regla eliminada: LOCAL {local} + SKU {sku}")
+                messagebox.showinfo("✅ Éxito", f"Regla eliminada: LOCAL {local} + SKU {sku}", parent=self.window)
                 self.refresh_local_rules()
                 self.refresh_stats()
             else:
-                messagebox.showerror("❌ Error", "No se pudo eliminar la regla.")
+                messagebox.showerror("❌ Error", "No se pudo eliminar la regla.", parent=self.window)
     
     def refresh_local_rules(self):
         """Actualiza la lista de reglas de LOCAL"""
@@ -299,6 +355,10 @@ class RulesDialog:
             if "T" in fecha:
                 fecha = fecha.split("T")[0]  # Solo fecha, sin hora
             
+            # Determinar tag de fila alternada
+            num_items = len(self.local_tree.get_children())
+            tag_fila = 'evenrow' if num_items % 2 == 0 else 'oddrow'
+            
             self.local_tree.insert(
                 "", 
                 "end", 
@@ -308,7 +368,8 @@ class RulesDialog:
                     rule["proveedor"],
                     rule.get("descripcion", ""),
                     fecha
-                )
+                ),
+                tags=(tag_fila,)
             )
     
     # --- TAB 2: BLOQUEOS DE STOCK ---
@@ -351,7 +412,7 @@ class RulesDialog:
             anchor="w"
         ).pack(side="left", padx=5)
         
-        self.stock_sku_entry = tk.Entry(row1, font=("Arial", 10), width=15)
+        self.stock_sku_entry = tk.Entry(row1, font=("Arial", 10), width=15, relief='solid', bd=1, bg='#FAFAFA')
         self.stock_sku_entry.pack(side="left", padx=5)
         
         tk.Label(
@@ -370,7 +431,7 @@ class RulesDialog:
             anchor="w"
         ).pack(side="left", padx=5)
         
-        self.stock_prov_entry = tk.Entry(row1, font=("Arial", 10), width=15)
+        self.stock_prov_entry = tk.Entry(row1, font=("Arial", 10), width=15, relief='solid', bd=1, bg='#FAFAFA')
         self.stock_prov_entry.pack(side="left", padx=5)
         
         # Motivo
@@ -386,7 +447,7 @@ class RulesDialog:
             anchor="w"
         ).pack(side="left", padx=5)
         
-        self.stock_motivo_entry = tk.Entry(row2, font=("Arial", 10), width=50)
+        self.stock_motivo_entry = tk.Entry(row2, font=("Arial", 10), width=50, relief='solid', bd=1, bg='#FAFAFA')
         self.stock_motivo_entry.insert(0, "Quiebre de stock")
         self.stock_motivo_entry.pack(side="left", padx=5, fill="x", expand=True)
         
@@ -420,7 +481,8 @@ class RulesDialog:
             list_frame, 
             columns=columns, 
             show="headings",
-            height=10
+            height=12,
+            style='StockBlocks.Treeview'
         )
         
         # Configurar columnas
@@ -429,10 +491,14 @@ class RulesDialog:
         self.stock_tree.heading("Motivo", text="Motivo del Bloqueo")
         self.stock_tree.heading("Fecha Creación", text="Fecha Creación")
         
-        self.stock_tree.column("SKU", width=120, anchor="center")
-        self.stock_tree.column("Proveedor", width=150, anchor="center")
-        self.stock_tree.column("Motivo", width=250, anchor="w")
+        self.stock_tree.column("SKU", width=140, anchor="center")
+        self.stock_tree.column("Proveedor", width=180, anchor="center")
+        self.stock_tree.column("Motivo", width=280, anchor="w")
         self.stock_tree.column("Fecha Creación", width=150, anchor="center")
+        
+        # Configurar tags de filas alternadas
+        self.stock_tree.tag_configure('oddrow', background='#F5F5F5')
+        self.stock_tree.tag_configure('evenrow', background='white')
         
         # Scrollbar
         scrollbar = ttk.Scrollbar(list_frame, orient="vertical", command=self.stock_tree.yview)
@@ -462,7 +528,7 @@ class RulesDialog:
             messagebox.showwarning(
                 "⚠️ Campos Incompletos",
                 "Por favor ingrese el código SKU y el código de Proveedor."
-            )
+            , parent=self.window)
             return
         
         if self.rules_manager.add_stock_block(sku, proveedor, motivo):
@@ -470,7 +536,7 @@ class RulesDialog:
                 "✅ Éxito",
                 f"Bloqueo agregado:\nSKU {sku} + Proveedor {proveedor}\n\n"
                 f"Este proveedor no generará órdenes para este SKU."
-            )
+            , parent=self.window)
             
             # Limpiar campos
             self.stock_sku_entry.delete(0, tk.END)
@@ -485,7 +551,7 @@ class RulesDialog:
                 "❌ Error",
                 f"No se pudo agregar el bloqueo.\n"
                 f"Posiblemente ya existe un bloqueo para SKU {sku} + Proveedor {proveedor}."
-            )
+            , parent=self.window)
     
     def remove_stock_block(self):
         """Elimina el bloqueo de stock seleccionado"""
@@ -494,7 +560,7 @@ class RulesDialog:
             messagebox.showwarning(
                 "⚠️ Sin Selección",
                 "Por favor seleccione un bloqueo para eliminar."
-            )
+            , parent=self.window)
             return
         
         item = self.stock_tree.item(selection[0])
@@ -504,16 +570,16 @@ class RulesDialog:
         if messagebox.askyesno(
             "✅ Confirmar Desbloqueo",
             f"¿Está seguro que desea desbloquear?\n\nSKU: {sku}\nProveedor: {proveedor}"
-        ):
+        , parent=self.window):
             if self.rules_manager.remove_stock_block(sku, proveedor):
                 messagebox.showinfo(
                     "✅ Éxito", 
                     f"Bloqueo eliminado:\nSKU {sku} + Proveedor {proveedor}"
-                )
+                , parent=self.window)
                 self.refresh_stock_blocks()
                 self.refresh_stats()
             else:
-                messagebox.showerror("❌ Error", "No se pudo eliminar el bloqueo.")
+                messagebox.showerror("❌ Error", "No se pudo eliminar el bloqueo.", parent=self.window)
     
     def refresh_stock_blocks(self):
         """Actualiza la lista de bloqueos de stock"""
@@ -528,6 +594,10 @@ class RulesDialog:
             if "T" in fecha:
                 fecha = fecha.split("T")[0]  # Solo fecha, sin hora
             
+            # Determinar tag de fila alternada
+            num_items = len(self.stock_tree.get_children())
+            tag_fila = 'evenrow' if num_items % 2 == 0 else 'oddrow'
+            
             self.stock_tree.insert(
                 "", 
                 "end", 
@@ -536,7 +606,8 @@ class RulesDialog:
                     block["proveedor"],
                     block.get("motivo", ""),
                     fecha
-                )
+                ),
+                tags=(tag_fila,)
             )
     
     # --- TAB 3: ESTADÍSTICAS ---
@@ -692,12 +763,12 @@ class RulesDialog:
                 messagebox.showinfo(
                     "✅ Éxito",
                     f"Reglas exportadas exitosamente a:\n{filename}"
-                )
+                , parent=self.window)
             else:
                 messagebox.showerror(
                     "❌ Error",
                     "No se pudieron exportar las reglas."
-                )
+                , parent=self.window)
     
     def export_to_excel(self):
         """Exporta las reglas a Excel para edición masiva"""
@@ -720,13 +791,13 @@ class RulesDialog:
                     f"• Hoja 'Stock_Blocks': Bloqueos de stock\n"
                     f"• Hoja 'INSTRUCCIONES': Guía de edición\n\n"
                     f"Después de editar, use 'Importar desde Excel' para cargar los cambios."
-                )
+                , parent=self.window)
             else:
                 messagebox.showerror(
                     "❌ Error",
                     "No se pudieron exportar las reglas a Excel.\n\n"
                     "Asegúrese de que pandas y openpyxl están instalados."
-                )
+                , parent=self.window)
     
     def import_from_excel(self):
         """Importa reglas desde un archivo Excel"""
@@ -743,7 +814,7 @@ class RulesDialog:
                 "📥 Modo de Importación",
                 "¿Desea FUSIONAR las reglas del Excel con las existentes?\n\n"
                 "• SÍ: Agregar nuevas reglas sin eliminar las actuales\n"
-                "• NO: REEMPLAZAR todas las reglas (se perderán las actuales)\n\n"
+                "• NO: REEMPLAZAR todas las reglas (se perderán las actuales, parent=self.window)\n\n"
                 "¿Fusionar reglas?"
             )
             
@@ -753,7 +824,7 @@ class RulesDialog:
                     "⚠️ Confirmar Reemplazo",
                     "ATENCIÓN: Se eliminarán TODAS las reglas actuales.\n\n"
                     "¿Está completamente seguro?"
-                ):
+                , parent=self.window):
                     return
             
             stats = self.rules_manager.import_from_excel(filename, merge=merge)
@@ -763,7 +834,7 @@ class RulesDialog:
                     "❌ Error",
                     f"No se pudieron importar las reglas:\n\n{stats['error']}\n\n"
                     "Asegúrese de que pandas y openpyxl están instalados."
-                )
+                , parent=self.window)
             else:
                 # Mostrar resumen
                 msg = "✅ Importación completada:\n\n"
@@ -778,7 +849,7 @@ class RulesDialog:
                     msg += f"\n⚠️ Errores encontrados: {len(stats['errors'])}\n"
                     msg += "Revise la consola para más detalles."
                 
-                messagebox.showinfo("✅ Importación Completada", msg)
+                messagebox.showinfo("✅ Importación Completada", msg, parent=self.window)
                 
                 # Actualizar todas las vistas
                 self.refresh_all()
@@ -793,7 +864,7 @@ class RulesDialog:
             "• Todas las reglas de LOCAL + SKU → Proveedor\n"
             "• Todos los bloqueos por quiebre de stock\n\n"
             "Esta acción NO se puede deshacer."
-        ):
+        , parent=self.window):
             return
         
         # Segunda confirmación más fuerte
@@ -805,7 +876,7 @@ class RulesDialog:
             "¿Está COMPLETAMENTE seguro?\n\n"
             "TIP: Use 'Exportar a Excel' o 'Exportar JSON'\n"
             "antes de limpiar para tener un respaldo."
-        ):
+        , parent=self.window):
             return
         
         # Obtener estadísticas antes de limpiar
@@ -825,7 +896,7 @@ class RulesDialog:
             f"• {stats['total_stock_blocks']} bloqueos de stock\n"
             f"• Total: {total_rules} reglas eliminadas\n\n"
             f"El sistema está ahora limpio."
-        )
+        , parent=self.window)
     
     def refresh_all(self):
         """Actualiza todas las vistas"""
@@ -841,3 +912,4 @@ if __name__ == "__main__":
     
     dialog = RulesDialog(root)
     root.mainloop()
+

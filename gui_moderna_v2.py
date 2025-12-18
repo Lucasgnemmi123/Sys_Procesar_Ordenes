@@ -25,7 +25,9 @@ from procesamiento_v2 import (
     formatear_excel_salida,
     obtener_nombre_archivo_salida
 )
+from agenda_manager import AgendaManager
 from rules_dialog import RulesDialog
+from agenda_dialog import AgendaDialog
 
 # Configuración de colores del tema elegante
 class ModernTheme:
@@ -66,6 +68,10 @@ class ModernGUI:
     def __init__(self):
         self.root = tk.Tk()
         self.theme = ModernTheme()
+        
+        # Variables para ventanas únicas
+        self.ventana_agenda = None
+        self.ventana_reglas = None
         
         # Variables de progreso
         self.progress_steps = [
@@ -379,10 +385,10 @@ class ModernGUI:
             self.abrir_full_xlsx, "#9B59B6"
         )
         
-        # Paso 2: Abrir Agenda
+        # Paso 2: Gestión de Agenda
         self._create_step_button(
-            steps_container, "2", "📅 Abrir Agenda.xlsm", 
-            self.abrir_agenda_xlsm, "#E67E22"
+            steps_container, "2", "📅 Gestión de Agenda", 
+            self.abrir_gestion_agenda, "#3498DB"
         )
         
         # Paso 3: Configurar región
@@ -506,7 +512,7 @@ class ModernGUI:
         
         quick_buttons = [
             ("⚙️ Reglas Especiales", self.abrir_reglas_especiales, "#8E44AD"),
-            ("📁 Abrir Carpeta Salidas", self.abrir_carpeta_salidas, "#16A085"),
+            ("�📁 Abrir Carpeta Salidas", self.abrir_carpeta_salidas, "#16A085"),
             ("📊 Abrir Items C.Calzada", self.abrir_items_xlsx, "#F39C12")
         ]
         
@@ -1129,15 +1135,54 @@ class ModernGUI:
             
     def abrir_reglas_especiales(self):
         """Abrir ventana de gestión de reglas especiales"""
+        # Si ya está abierta, traerla al frente
+        if self.ventana_reglas and self.ventana_reglas.winfo_exists():
+            self.ventana_reglas.lift()
+            self.ventana_reglas.focus_force()
+            return
+        
         try:
             self.log("⚙️ Opening Special Rules Manager...")
-            RulesDialog(self.root)
+            dialog = RulesDialog(self.root)
+            self.ventana_reglas = dialog.window
             self.log("✅ Rules Manager opened successfully")
         except Exception as e:
             self.log(f"❌ Error opening Rules Manager: {e}")
             messagebox.showerror(
                 "❌ Error", 
-                f"Cannot open Rules Manager:\n\n{str(e)}"
+                f"Cannot open Rules Manager:\n\n{str(e)}",
+                parent=self.root
+            )
+    
+    def abrir_gestion_agenda(self):
+        """Abrir ventana de gestión de agenda de proveedores"""
+        # Si ya está abierta, traerla al frente
+        if self.ventana_agenda and self.ventana_agenda.winfo_exists():
+            self.ventana_agenda.lift()
+            self.ventana_agenda.focus_force()
+            return
+        
+        try:
+            self.log("📅 Opening Supplier Delivery Schedule Manager...")
+            theme_colors = {
+                'bg_main': self.theme.LIGHT_GRAY,
+                'bg_card': self.theme.WHITE,
+                'fg_text': self.theme.TEXT_PRIMARY,
+                'accent': self.theme.SECONDARY,
+                'button_bg': self.theme.PRIMARY,
+                'button_hover': '#2980b9',
+                'success': self.theme.SUCCESS,
+                'warning': self.theme.WARNING
+            }
+            dialog = AgendaDialog(self.root, theme_colors)
+            self.ventana_agenda = dialog.dialog
+            self.log("✅ Agenda Manager opened successfully")
+        except Exception as e:
+            self.log(f"❌ Error opening Agenda Manager: {e}")
+            messagebox.showerror(
+                "❌ Error", 
+                f"Cannot open Agenda Manager:\n\n{str(e)}",
+                parent=self.root
             )
             
     def ejecutar_procesamiento(self):
@@ -1197,13 +1242,34 @@ class ModernGUI:
                 
             # Paso 4: Fechas y observaciones
             self.siguiente_paso()
-            self.log("📅 Paso 4: Procesando fechas y observaciones desde Agenda.xlsm...")
-            df_final_valid, df_err_fecha = rellenar_fecha_entrega_y_observacion(df_map, self.AGENDA_XLSM)
+            self.log("📅 Paso 4: Procesando fechas y observaciones con AgendaManager...")
+            df_final_valid, df_err_fecha = rellenar_fecha_entrega_y_observacion(df_map)
+            
+            # Asegurar índices únicos después del procesamiento
+            df_final_valid = df_final_valid.reset_index(drop=True)
+            df_err_fecha = df_err_fecha.reset_index(drop=True)
             
             self.log(f"✅ Registros con fecha asignada: {len(df_final_valid)}")
             if len(df_err_fecha) > 0:
                 self.log(f"⚠️ Registros con errores de agenda: {len(df_err_fecha)}")
                 
+            # Asegurar índices únicos en todos los DataFrames de errores antes del concat
+            df_err_items = df_err_items.reset_index(drop=True)
+            df_err_prov = df_err_prov.reset_index(drop=True)
+            
+            # Eliminar columnas duplicadas si existen
+            if len(df_err_items.columns) != len(set(df_err_items.columns)):
+                self.log("⚠️ Columnas duplicadas en df_err_items, eliminando...")
+                df_err_items = df_err_items.loc[:, ~df_err_items.columns.duplicated()]
+            
+            if len(df_err_prov.columns) != len(set(df_err_prov.columns)):
+                self.log("⚠️ Columnas duplicadas en df_err_prov, eliminando...")
+                df_err_prov = df_err_prov.loc[:, ~df_err_prov.columns.duplicated()]
+            
+            if len(df_err_fecha.columns) != len(set(df_err_fecha.columns)):
+                self.log("⚠️ Columnas duplicadas en df_err_fecha, eliminando...")
+                df_err_fecha = df_err_fecha.loc[:, ~df_err_fecha.columns.duplicated()]
+            
             # Combinar todos los errores
             df_errores = pd.concat([df_err_items, df_err_prov, df_err_fecha], ignore_index=True)
             
@@ -1265,8 +1331,13 @@ class ModernGUI:
                 self.abrir_salida_xlsx()
                 
         except Exception as e:
+            import traceback
             error_msg = f"❌ ERROR CRÍTICO: {str(e)}"
             self.log(error_msg)
+            self.log("📋 Traceback completo:")
+            for line in traceback.format_exc().split('\n'):
+                if line.strip():
+                    self.log(line)
             self.status_bar.config(text="❌ Error en procesamiento")
             messagebox.showerror(
                 "❌ Error Crítico", 
