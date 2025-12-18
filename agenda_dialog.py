@@ -105,9 +105,12 @@ class AgendaDialog:
             pady=5
         ).pack(side='left')
         
-        # Botón importar desde Excel
+        # Botones de importación
+        import_buttons_frame = tk.Frame(dias_frame, bg=self.colors['bg_card'])
+        import_buttons_frame.pack(side='right')
+        
         tk.Button(
-            dias_frame,
+            import_buttons_frame,
             text="📥 Importar desde Agenda.xlsm",
             command=self.importar_desde_excel,
             bg=self.colors['button_bg'],
@@ -117,7 +120,20 @@ class AgendaDialog:
             cursor='hand2',
             padx=15,
             pady=5
-        ).pack(side='right')
+        ).pack(side='left', padx=(0, 5))
+        
+        tk.Button(
+            import_buttons_frame,
+            text="📄 Descargar Template",
+            command=self.descargar_template,
+            bg='#ef6c00',
+            fg='white',
+            font=('Segoe UI', 9, 'bold'),
+            relief='flat',
+            cursor='hand2',
+            padx=15,
+            pady=5
+        ).pack(side='left')
         
         # Segunda fila: Calculadora de fechas
         calc_frame = tk.Frame(config_frame, bg=self.colors['bg_card'])
@@ -245,6 +261,8 @@ class AgendaDialog:
         # Configurar tags de filas alternadas para mejorar la separación visual
         self.tree.tag_configure('oddrow', background='#F5F5F5')
         self.tree.tag_configure('evenrow', background='white')
+        # Tag especial para proveedores con fecha manual (amarillo claro)
+        self.tree.tag_configure('fecha_manual', background='#FFEB3B')
         
         self.tree.pack(fill='both', expand=True)
         
@@ -385,9 +403,12 @@ class AgendaDialog:
             tiene_no = any(v == 0 for v in dias_valores)
             todos_none = all(v is None for v in dias_valores)
             
-            # Determinar tag de fila alternada para mejor legibilidad
-            num_items = len(self.tree.get_children())
-            tag_fila = 'evenrow' if num_items % 2 == 0 else 'oddrow'
+            # Determinar tag de fila: amarillo si tiene fecha manual, sino alternado
+            if datos.get('fecha_manual'):
+                tag_fila = 'fecha_manual'
+            else:
+                num_items = len(self.tree.get_children())
+                tag_fila = 'evenrow' if num_items % 2 == 0 else 'oddrow'
             
             self.tree.insert('', 'end', values=valores, tags=(tag_fila,))
     
@@ -573,6 +594,85 @@ class AgendaDialog:
                 messagebox.showinfo("✅ Importado", "Proveedores importados correctamente desde Excel", parent=self.dialog)
             else:
                 messagebox.showerror("Error", "No se pudo importar la configuración desde Excel", parent=self.dialog)
+    
+    def descargar_template(self):
+        """Descarga un template de Excel con la estructura esperada"""
+        import pandas as pd
+        from openpyxl import Workbook
+        from openpyxl.styles import Font, PatternFill, Alignment
+        
+        # Pedir ubicación de guardado
+        archivo = filedialog.asksaveasfilename(
+            title="Guardar Template",
+            defaultextension=".xlsx",
+            filetypes=[("Excel files", "*.xlsx"), ("All files", "*.*")],
+            initialfile="Agenda_Template.xlsx"
+        )
+        
+        if not archivo:
+            return
+        
+        try:
+            # Crear workbook
+            wb = Workbook()
+            ws = wb.active
+            ws.title = "Matriz"
+            
+            # Encabezado principal (fila 1)
+            ws['A1'] = "AGENDA DE PROVEEDORES"
+            ws.merge_cells('A1:K1')
+            ws['A1'].font = Font(size=14, bold=True)
+            ws['A1'].fill = PatternFill(start_color="1F4E78", end_color="1F4E78", fill_type="solid")
+            ws['A1'].font = Font(size=14, bold=True, color="FFFFFF")
+            ws['A1'].alignment = Alignment(horizontal='center', vertical='center')
+            
+            # Encabezados de columnas (fila 2)
+            headers = ['CODIGO', 'PROVEEDOR', '', 'LUN', 'MAR', 'MIE', 'JUE', 'VIE', 'SAB', 'D+2']
+            for col, header in enumerate(headers, start=1):
+                cell = ws.cell(row=2, column=col)
+                cell.value = header
+                cell.font = Font(bold=True, color="FFFFFF")
+                cell.fill = PatternFill(start_color="4472C4", end_color="4472C4", fill_type="solid")
+                cell.alignment = Alignment(horizontal='center', vertical='center')
+            
+            # Datos de ejemplo (fila 3 en adelante)
+            ejemplos = [
+                ['PROV001', 'PROVEEDOR EJEMPLO 1', '', 1, 0, 1, 0, 1, 0, 0],
+                ['PROV002', 'PROVEEDOR EJEMPLO 2', '', 0, 1, 0, 1, 0, 0, 1],
+                ['PROV003', 'PROVEEDOR EJEMPLO 3', '', 1, 1, 1, 1, 1, 0, 0]
+            ]
+            
+            for row_idx, ejemplo in enumerate(ejemplos, start=3):
+                for col_idx, valor in enumerate(ejemplo, start=1):
+                    ws.cell(row=row_idx, column=col_idx, value=valor)
+            
+            # Ajustar anchos de columnas
+            ws.column_dimensions['A'].width = 12
+            ws.column_dimensions['B'].width = 30
+            ws.column_dimensions['C'].width = 3
+            for col in ['D', 'E', 'F', 'G', 'H', 'I', 'J']:
+                ws.column_dimensions[col].width = 6
+            
+            # Guardar
+            wb.save(archivo)
+            
+            messagebox.showinfo(
+                "✅ Template Descargado",
+                f"Template guardado en:\n{archivo}\n\n"
+                "Estructura:\n"
+                "- CODIGO: Código del proveedor\n"
+                "- PROVEEDOR: Nombre del proveedor\n"
+                "- Columna vacía (separador)\n"
+                "- LUN-SAB: Días de entrega (1=entrega, 0=no entrega)\n"
+                "- D+2: Entrega D+2 (1=sí, 0=no)",
+                parent=self.dialog
+            )
+        except Exception as e:
+            messagebox.showerror(
+                "❌ Error",
+                f"No se pudo crear el template:\n{str(e)}",
+                parent=self.dialog
+            )
 
 
 def abrir_dialogo_agenda(parent, theme_colors=None):
