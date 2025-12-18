@@ -387,25 +387,19 @@ class ModernGUI:
             self.abrir_full_xlsx, "#9B59B6"
         )
         
-        # Paso 2: Gestión de Productos
+        # Paso 2: Gestión de Agenda
         self._create_step_button(
-            steps_container, "2", "📦 Gestión de Productos", 
-            self.abrir_gestion_productos, "#E67E22"
-        )
-        
-        # Paso 3: Gestión de Agenda
-        self._create_step_button(
-            steps_container, "3", "📅 Gestión de Agenda", 
+            steps_container, "2", "📅 Gestión de Agenda", 
             self.abrir_gestion_agenda, "#3498DB"
         )
         
-        # Paso 4: Configurar región
+        # Paso 3: Configurar región
         region_frame = tk.Frame(steps_container, bg=self.theme.WHITE)
         region_frame.pack(fill="x", pady=2)
         
         tk.Label(
             region_frame, 
-            text="4.", 
+            text="3.", 
             font=("Arial", 10, "bold"), 
             bg=self.theme.WHITE, 
             fg=self.theme.ERROR, 
@@ -443,13 +437,13 @@ class ModernGUI:
             fg=self.theme.TEXT_SECONDARY
         ).pack(side="left", padx=5)
         
-        # Paso 5: Procesar
+        # Paso 4: Procesar
         process_frame = tk.Frame(steps_container, bg=self.theme.WHITE)
         process_frame.pack(fill="x", pady=8)
         
         tk.Label(
             process_frame, 
-            text="5.", 
+            text="4.", 
             font=("Arial", 10, "bold"), 
             bg=self.theme.WHITE, 
             fg=self.theme.ERROR, 
@@ -520,10 +514,9 @@ class ModernGUI:
         
         quick_buttons = [
             ("⚙️ Reglas Especiales", self.abrir_reglas_especiales, "#8E44AD"),
+            ("📦 Maestra C.Calzada", self.abrir_gestion_productos, "#E67E22"),
             ("�📁 Abrir Carpeta Salidas", self.abrir_carpeta_salidas, "#16A085"),
-            ("� Gestión de Productos", self.abrir_gestion_productos, "#E67E22")
         ]
-        
         for text, command, color in quick_buttons:
             btn = tk.Button(
                 quick_container, 
@@ -1172,15 +1165,15 @@ class ModernGUI:
             return
         
         try:
-            self.log("📦 Opening Products Manager...")
+            self.log("📦 Opening Maestra C.Calzada...")
             dialog = ProductsDialog(self.root)
             self.ventana_productos = dialog.window
-            self.log("✅ Products Manager opened successfully")
+            self.log("✅ Maestra C.Calzada opened successfully")
         except Exception as e:
-            self.log(f"❌ Error opening Products Manager: {e}")
+            self.log(f"❌ Error opening Maestra C.Calzada: {e}")
             messagebox.showerror(
                 "❌ Error", 
-                f"Cannot open Products Manager:\n\n{str(e)}",
+                f"Cannot open Maestra C.Calzada:\n\n{str(e)}",
                 parent=self.root
             )
     

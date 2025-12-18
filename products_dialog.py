@@ -23,8 +23,8 @@ class ProductsDialog:
         
         # Crear ventana
         self.window = tk.Toplevel(parent)
-        self.window.title("📦 Gestión de Lista Maestra de Productos")
-        self.window.geometry("1200x750")
+        self.window.title("📦 Maestra C.Calzada")
+        self.window.geometry("1200x900")
         self.window.configure(bg="#f5f7fa")
         
         # Colores tema
@@ -76,7 +76,7 @@ class ProductsDialog:
         
         tk.Label(
             header, 
-            text="📦 LISTA MAESTRA DE PRODUCTOS", 
+            text="📦 MAESTRA C.CALZADA - PRODUCTOS", 
             font=("Segoe UI", 16, "bold"),
             fg=self.WHITE, 
             bg=self.PRIMARY
@@ -156,13 +156,25 @@ class ProductsDialog:
         
         tk.Button(
             btn_frame,
-            text="✏️ Actualizar Seleccionado",
+            text=" Verificar si Existe",
             font=("Arial", 10, "bold"),
-            bg=self.SECONDARY,
+            bg=self.WARNING,
             fg=self.WHITE,
-            command=self.update_selected,
+            command=self.check_if_exists,
             cursor="hand2",
             padx=20,
+            pady=8
+        ).pack(side="left", padx=5)
+        
+        tk.Button(
+            btn_frame,
+            text="🧹 Limpiar Campos",
+            font=("Arial", 9),
+            bg="#757575",
+            fg=self.WHITE,
+            command=self.clear_fields,
+            cursor="hand2",
+            padx=15,
             pady=8
         ).pack(side="left", padx=5)
     
@@ -264,6 +276,16 @@ class ProductsDialog:
             bg='#FAFAFA'
         )
         search_entry.pack(side="left", padx=5)
+        
+        # Label de resultados de búsqueda
+        self.search_result_label = tk.Label(
+            search_frame,
+            text="",
+            font=("Arial", 9, 'italic'),
+            bg=self.WHITE,
+            fg=self.SECONDARY
+        )
+        self.search_result_label.pack(side="left", padx=10)
         
         # Treeview
         columns = ("SKU", "Descripción")
@@ -367,17 +389,8 @@ class ProductsDialog:
                 parent=self.window
             )
     
-    def update_selected(self):
-        """Actualiza el producto seleccionado"""
-        selection = self.products_tree.selection()
-        if not selection:
-            messagebox.showwarning(
-                "⚠️ Sin Selección",
-                "Por favor seleccione un producto para actualizar.",
-                parent=self.window
-            )
-            return
-        
+    def update_product_from_fields(self):
+        """Actualiza el producto usando los campos del formulario"""
         sku = self.sku_entry.get().strip().upper()
         nueva_descripcion = self.desc_entry.get().strip()
         
@@ -407,6 +420,58 @@ class ProductsDialog:
                 f"No se pudo actualizar el producto.\nEl SKU {sku} no existe.",
                 parent=self.window
             )
+    
+    def check_if_exists(self):
+        """Verifica si un SKU existe y muestra información detallada"""
+        sku = self.sku_entry.get().strip().upper()
+        
+        if not sku:
+            messagebox.showwarning(
+                "⚠️ Campo Vacío",
+                "Por favor ingrese un código SKU para verificar.",
+                parent=self.window
+            )
+            return
+        
+        producto = self.products_manager.get_product(sku)
+        
+        if producto:
+            # El producto existe - mostrar información
+            messagebox.showinfo(
+                "✅ Producto Encontrado",
+                f"El SKU ya existe en el sistema:\n\n"
+                f"SKU: {producto['sku']}\n"
+                f"Descripción: {producto['descripcion']}\n"
+                f"Creado: {producto.get('created', 'N/A')}\n"
+                f"Última actualización: {producto.get('updated', 'N/A')}",
+                parent=self.window
+            )
+            
+            # Buscar y seleccionar el producto en la tabla
+            for item in self.products_tree.get_children():
+                values = self.products_tree.item(item)["values"]
+                if values[0] == sku:
+                    self.products_tree.selection_set(item)
+                    self.products_tree.see(item)
+                    break
+        else:
+            # El producto NO existe
+            respuesta = messagebox.askyesno(
+                "❌ Producto No Encontrado",
+                f"El SKU '{sku}' NO existe en el sistema.\n\n"
+                f"¿Desea agregarlo ahora?",
+                parent=self.window
+            )
+            
+            if respuesta:
+                # Mantener el SKU en el campo y enfocar descripción
+                self.desc_entry.focus_set()
+    
+    def clear_fields(self):
+        """Limpia todos los campos del formulario"""
+        self.sku_entry.delete(0, tk.END)
+        self.desc_entry.delete(0, tk.END)
+        self.sku_entry.focus_set()
     
     def delete_selected(self):
         """Elimina el producto seleccionado"""
@@ -454,6 +519,7 @@ class ProductsDialog:
         query = self.search_var.get().strip()
         
         if not query:
+            self.search_result_label.config(text="")
             self.refresh_products()
             return
         
@@ -472,6 +538,14 @@ class ProductsDialog:
                 values=(product["sku"], product["descripcion"]),
                 tags=(tag_fila,)
             )
+        
+        # Actualizar label de resultados
+        if len(results) == 0:
+            self.search_result_label.config(text="❌ No se encontraron resultados", fg=self.ERROR)
+        elif len(results) == 1:
+            self.search_result_label.config(text=f"✅ 1 producto encontrado", fg=self.SUCCESS)
+        else:
+            self.search_result_label.config(text=f"✅ {len(results)} productos encontrados", fg=self.SUCCESS)
         
         # Actualizar stats
         self.update_stats(len(results))
