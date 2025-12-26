@@ -54,7 +54,46 @@ class RulesDialog:
         self.refresh_all()
     
     def configure_table_styles(self):
-        """Configura los estilos para las tablas del diálogo"""
+        """Configura los estilos para las tablas y pestañas del diálogo"""
+        # ============ ESTILOS DE PESTAÑAS (NOTEBOOK) ============
+        # Configurar estilo personalizado para el Notebook
+        self.style.configure('Rules.TNotebook',
+            background=self.LIGHT_GRAY,
+            borderwidth=0,
+            tabmargins=[5, 5, 5, 0]
+        )
+        
+        # Estilo para las pestañas (tabs)
+        self.style.configure('Rules.TNotebook.Tab',
+            background='#e3f2fd',  # Azul muy claro cuando no está seleccionada
+            foreground='#1565c0',  # Texto azul oscuro
+            padding=[15, 8],  # Espacio interno moderado
+            font=('Segoe UI', 10, 'bold'),
+            borderwidth=2,
+            relief='raised'
+        )
+        
+        # Estilo cuando el mouse pasa sobre la pestaña
+        self.style.map('Rules.TNotebook.Tab',
+            background=[
+                ('selected', self.PRIMARY),  # Azul índigo cuando está seleccionada
+                ('active', '#bbdefb')  # Azul claro cuando el mouse está encima
+            ],
+            foreground=[
+                ('selected', self.WHITE),  # Texto blanco cuando está seleccionada
+                ('active', '#0d47a1')  # Texto azul oscuro cuando el mouse está encima
+            ],
+            relief=[
+                ('selected', 'flat'),  # Sin relieve cuando está seleccionada
+                ('!selected', 'raised')  # Con relieve cuando no está seleccionada
+            ],
+            borderwidth=[
+                ('selected', 3),  # Borde más grueso cuando está seleccionada
+                ('!selected', 2)
+            ]
+        )
+        
+        # ============ ESTILOS DE TABLAS ============
         # Estilo para tabla de reglas LOCAL
         self.style.configure('LocalRules.Treeview',
             background='white',
@@ -114,8 +153,8 @@ class RulesDialog:
             bg=self.PRIMARY
         ).pack(expand=True)
         
-        # Notebook para tabs
-        self.notebook = ttk.Notebook(self.window)
+        # Notebook para tabs con estilo personalizado
+        self.notebook = ttk.Notebook(self.window, style='Rules.TNotebook')
         self.notebook.pack(fill="both", expand=True, padx=10, pady=10)
         
         # Tab 1: Reglas de LOCAL + SKU
@@ -126,9 +165,9 @@ class RulesDialog:
         self.tab_stock = tk.Frame(self.notebook, bg=self.WHITE)
         self.notebook.add(self.tab_stock, text="🚫 Bloqueos por Quiebre de Stock")
         
-        # Tab 3: Estadísticas
+        # Tab 3: Gestión de reglas
         self.tab_stats = tk.Frame(self.notebook, bg=self.WHITE)
-        self.notebook.add(self.tab_stats, text="📊 Estadísticas")
+        self.notebook.add(self.tab_stats, text="⚙️ Gestión de reglas")
         
         # Configurar cada tab
         self.setup_local_tab()

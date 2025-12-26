@@ -161,7 +161,10 @@ class ProductsDialog:
             command=self.add_product,
             cursor="hand2",
             padx=20,
-            pady=8
+            pady=10,
+            relief="flat",
+            bd=0,
+            highlightthickness=0
         ).pack(side="left", padx=5)
         
         tk.Button(
@@ -173,7 +176,10 @@ class ProductsDialog:
             command=self.check_if_exists,
             cursor="hand2",
             padx=20,
-            pady=8
+            pady=10,
+            relief="flat",
+            bd=0,
+            highlightthickness=0
         ).pack(side="left", padx=5)
         
         tk.Button(
@@ -185,7 +191,10 @@ class ProductsDialog:
             command=self.clear_fields,
             cursor="hand2",
             padx=15,
-            pady=8
+            pady=10,
+            relief="flat",
+            bd=0,
+            highlightthickness=0
         ).pack(side="left", padx=5)
     
     def create_bulk_panel(self, parent):
@@ -217,38 +226,47 @@ class ProductsDialog:
         tk.Button(
             btn_frame,
             text="📥 Importar desde Excel",
-            font=("Arial", 10, "bold"),
+            font=("Arial", 11, "bold"),
             bg=self.SECONDARY,
             fg=self.WHITE,
             command=self.import_from_excel,
             cursor="hand2",
-            padx=20,
-            pady=8
-        ).pack(side="left", padx=5)
+            padx=30,
+            pady=12,
+            relief="flat",
+            bd=0,
+            highlightthickness=0
+        ).pack(side="left", padx=8)
         
         tk.Button(
             btn_frame,
             text="📤 Exportar a Excel",
-            font=("Arial", 10, "bold"),
+            font=("Arial", 11, "bold"),
             bg=self.SUCCESS,
             fg=self.WHITE,
             command=self.export_to_excel,
             cursor="hand2",
-            padx=20,
-            pady=8
-        ).pack(side="left", padx=5)
+            padx=30,
+            pady=12,
+            relief="flat",
+            bd=0,
+            highlightthickness=0
+        ).pack(side="left", padx=8)
         
         tk.Button(
             btn_frame,
             text="📄 Descargar Template",
-            font=("Arial", 10, "bold"),
+            font=("Arial", 11, "bold"),
             bg=self.WARNING,
             fg=self.WHITE,
             command=self.download_template,
             cursor="hand2",
-            padx=20,
-            pady=8
-        ).pack(side="left", padx=5)
+            padx=30,
+            pady=12,
+            relief="flat",
+            bd=0,
+            highlightthickness=0
+        ).pack(side="left", padx=8)
     
     def create_list_panel(self, parent):
         """Crea el panel de lista de productos"""

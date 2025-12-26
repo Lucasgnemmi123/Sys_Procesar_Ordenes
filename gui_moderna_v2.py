@@ -59,6 +59,11 @@ class ModernTheme:
     # Gradiente para efectos
     GRADIENT_START = "#1a237e"
     GRADIENT_END = "#3949ab"
+    
+    # Estilos de botones redondeados
+    BUTTON_RADIUS = 8  # Radio de borde visual
+    BUTTON_PADDING_X = 15
+    BUTTON_PADDING_Y = 8
 
 class ModernGUI:
     """
@@ -364,11 +369,15 @@ class ModernGUI:
                 fg=self.theme.WHITE, 
                 font=("Arial", 9, "bold"),
                 relief="flat",
-                padx=12,
-                pady=4,
-                cursor="hand2"
+                padx=15,
+                pady=8,
+                cursor="hand2",
+                bd=0,
+                highlightthickness=0,
+                activebackground=self._darken_color(color),
+                activeforeground=self.theme.WHITE
             )
-            btn.pack(side="left", padx=3, pady=2)
+            btn.pack(side="left", padx=5, pady=2)
             
             # Efectos hover
             self._add_hover_effect(btn, color)
@@ -466,8 +475,13 @@ class ModernGUI:
             fg=self.theme.WHITE, 
             font=("Arial", 12, "bold"),
             relief="flat",
-            pady=8,
-            cursor="hand2"
+            padx=20,
+            pady=10,
+            cursor="hand2",
+            bd=0,
+            highlightthickness=0,
+            activebackground=self.theme.SECONDARY,
+            activeforeground=self.theme.WHITE
         )
         self.btn_procesar.pack(side="left", fill="x", expand=True)
         
@@ -496,10 +510,15 @@ class ModernGUI:
             fg=self.theme.WHITE, 
             font=("Arial", 9, "bold"),
             relief="flat",
-            pady=3,
-            cursor="hand2"
+            padx=12,
+            pady=6,
+            cursor="hand2",
+            bd=0,
+            highlightthickness=0,
+            activebackground=self._darken_color(color),
+            activeforeground=self.theme.WHITE
         )
-        btn.pack(side="left", fill="x", expand=True)
+        btn.pack(side="left", fill="x", expand=True, padx=2)
         
         # Efecto hover
         self._add_hover_effect(btn, color)
@@ -534,10 +553,15 @@ class ModernGUI:
                 fg=self.theme.WHITE, 
                 font=("Arial", 9, "bold"),
                 relief="flat",
-                pady=3,
-                cursor="hand2"
+                padx=15,
+                pady=8,
+                cursor="hand2",
+                bd=0,
+                highlightthickness=0,
+                activebackground=self._darken_color(color),
+                activeforeground=self.theme.WHITE
             )
-            btn.pack(fill="x", pady=2)
+            btn.pack(fill="x", pady=3)
             
             # Efecto hover
             self._add_hover_effect(btn, color)
@@ -790,6 +814,33 @@ class ModernGUI:
             return "#F8C471"
         elif color == "#2E8B57":
             return "#3CB371"  # Verde más claro para hover
+        elif color == "#8E44AD":
+            return "#A569BD"
+        else:
+            return color
+    
+    def _darken_color(self, color):
+        """Crear una versión más oscura del color para efectos de click"""
+        if color == self.theme.PRIMARY:
+            return "#0d1421"
+        elif color == self.theme.SUCCESS:
+            return "#1e5a24"
+        elif color == self.theme.ERROR:
+            return "#a01f1f"
+        elif color == self.theme.INFO:
+            return "#115293"
+        elif color == "#9B59B6":
+            return "#7D3C98"
+        elif color == "#E67E22":
+            return "#BA4A00"
+        elif color == "#16A085":
+            return "#117864"
+        elif color == "#F39C12":
+            return "#B9770E"
+        elif color == "#2E8B57":
+            return "#1e5f3b"
+        elif color == "#8E44AD":
+            return "#6C3483"
         else:
             return color
         
