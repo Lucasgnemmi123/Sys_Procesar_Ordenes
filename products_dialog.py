@@ -24,7 +24,17 @@ class ProductsDialog:
         # Crear ventana
         self.window = tk.Toplevel(parent)
         self.window.title("📦 Maestra C.Calzada")
-        self.window.geometry("1200x900")
+        
+        # Adaptar altura a la pantalla del usuario
+        screen_height = self.window.winfo_screenheight()
+        window_height = int(screen_height * 0.85)  # 85% de la altura de pantalla
+        window_width = 1200
+        
+        # Centrar ventana
+        x_position = int((self.window.winfo_screenwidth() - window_width) / 2)
+        y_position = int((screen_height - window_height) / 2)
+        
+        self.window.geometry(f"{window_width}x{window_height}+{x_position}+{y_position}")
         self.window.configure(bg="#f5f7fa")
         
         # Colores tema

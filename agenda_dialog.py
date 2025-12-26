@@ -47,7 +47,17 @@ class AgendaDialog:
         """Crea la ventana del diálogo"""
         self.dialog = tk.Toplevel(self.parent)
         self.dialog.title("📅 Gestión de Agenda de Proveedores")
-        self.dialog.geometry("1000x850")
+        
+        # Adaptar altura a la pantalla del usuario
+        screen_height = self.dialog.winfo_screenheight()
+        window_height = int(screen_height * 0.85)  # 85% de la altura de pantalla
+        window_width = 1000
+        
+        # Centrar ventana
+        x_position = int((self.dialog.winfo_screenwidth() - window_width) / 2)
+        y_position = int((screen_height - window_height) / 2)
+        
+        self.dialog.geometry(f"{window_width}x{window_height}+{x_position}+{y_position}")
         self.dialog.configure(bg=self.colors['bg_main'])
         self.dialog.resizable(True, True)
         

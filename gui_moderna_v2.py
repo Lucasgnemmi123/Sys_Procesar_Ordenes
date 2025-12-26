@@ -101,8 +101,16 @@ class ModernGUI:
         self.root.configure(bg=self.theme.LIGHT_GRAY)
         self.root.minsize(1200, 750)
         
-        # Maximizar ventana
-        self.root.state('zoomed')
+        # Adaptar altura a la pantalla del usuario
+        screen_height = self.root.winfo_screenheight()
+        window_height = int(screen_height * 0.9)  # 90% de la altura de pantalla
+        window_width = 1400
+        
+        # Centrar ventana
+        x_position = int((self.root.winfo_screenwidth() - window_width) / 2)
+        y_position = int((screen_height - window_height) / 2)
+        
+        self.root.geometry(f"{window_width}x{window_height}+{x_position}+{y_position}")
         
         # Hacer la ventana responsiva
         self.root.columnconfigure(0, weight=1)

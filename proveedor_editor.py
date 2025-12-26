@@ -27,7 +27,17 @@ def crear_editor_proveedor_mejorado(dialog, manager, colors, codigo_editar=None,
     # Ventana principal
     editor = tk.Toplevel(dialog)
     editor.title("✏️ Editar Proveedor" if codigo_editar else "➕ Nuevo Proveedor")
-    editor.geometry("600x550")
+    
+    # Adaptar altura a la pantalla del usuario (ventana más pequeña)
+    screen_height = editor.winfo_screenheight()
+    window_height = min(550, int(screen_height * 0.6))  # Máximo 550 o 60% de pantalla
+    window_width = 600
+    
+    # Centrar ventana
+    x_position = int((editor.winfo_screenwidth() - window_width) / 2)
+    y_position = int((screen_height - window_height) / 2)
+    
+    editor.geometry(f"{window_width}x{window_height}+{x_position}+{y_position}")
     editor.configure(bg=colors['bg_main'])
     editor.resizable(True, True)
     editor.grab_set()
