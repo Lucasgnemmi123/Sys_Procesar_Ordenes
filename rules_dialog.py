@@ -644,31 +644,7 @@ class RulesDialog:
         
         tk.Button(
             btn_frame,
-            text="🔄 Actualizar Estadísticas",
-            font=("Arial", 10, "bold"),
-            bg=self.SECONDARY,
-            fg=self.WHITE,
-            command=self.refresh_stats,
-            cursor="hand2",
-            padx=15,
-            pady=8
-        ).pack(side="left", padx=5)
-        
-        tk.Button(
-            btn_frame,
-            text="💾 Exportar JSON",
-            font=("Arial", 10, "bold"),
-            bg=self.SUCCESS,
-            fg=self.WHITE,
-            command=self.export_rules,
-            cursor="hand2",
-            padx=15,
-            pady=8
-        ).pack(side="left", padx=5)
-        
-        tk.Button(
-            btn_frame,
-            text="📊 Exportar a Excel",
+            text="� Exportar a Excel",
             font=("Arial", 10, "bold"),
             bg="#16A085",
             fg=self.WHITE,
@@ -685,6 +661,18 @@ class RulesDialog:
             bg="#E67E22",
             fg=self.WHITE,
             command=self.import_from_excel,
+            cursor="hand2",
+            padx=15,
+            pady=8
+        ).pack(side="left", padx=5)
+        
+        tk.Button(
+            btn_frame,
+            text="📄 Descargar Template",
+            font=("Arial", 10, "bold"),
+            bg="#ef6c00",
+            fg=self.WHITE,
+            command=self.descargar_template,
             cursor="hand2",
             padx=15,
             pady=8
@@ -853,6 +841,90 @@ class RulesDialog:
                 
                 # Actualizar todas las vistas
                 self.refresh_all()
+    
+    def descargar_template(self):
+        """Descarga un template de Excel con la estructura esperada para las reglas"""
+        from tkinter import filedialog
+        import pandas as pd
+        
+        # Pedir ubicación de guardado
+        filename = filedialog.asksaveasfilename(
+            title="Guardar Template",
+            defaultextension=".xlsx",
+            filetypes=[("Excel files", "*.xlsx"), ("All files", "*.*")],
+            initialfile="Reglas_Template.xlsx"
+        )
+        
+        if not filename:
+            return
+        
+        try:
+            # Crear datos de ejemplo para LOCAL_SKU_Rules
+            local_rules_ejemplo = pd.DataFrame({
+                'local': ['12345', '67890', '11111'],
+                'sku': ['A12345', 'B67890', 'C11111'],
+                'proveedor': ['77300', '77301', '77302'],
+                'descripcion': ['Regla ejemplo 1', 'Regla ejemplo 2', 'Regla ejemplo 3'],
+                'active': [True, True, True]
+            })
+            
+            # Crear datos de ejemplo para Stock_Blocks
+            stock_blocks_ejemplo = pd.DataFrame({
+                'sku': ['A12345', 'B67890', 'C11111'],
+                'proveedor': ['77300', '77301', '77302'],
+                'motivo': ['Quiebre de stock temporal', 'Calidad deficiente', 'Descontinuado por proveedor'],
+                'active': [True, True, True]
+            })
+            
+            # Crear hoja de instrucciones
+            instrucciones = pd.DataFrame({
+                'INSTRUCCIONES': [
+                    '=== REGLAS LOCAL + SKU ===',
+                    'Editar en hoja "LOCAL_SKU_Rules"',
+                    'Columnas requeridas:',
+                    '  - local: Código del local (ej: 12345)',
+                    '  - sku: Código del producto (ej: A12345)',
+                    '  - proveedor: Código del proveedor forzado (ej: 77300)',
+                    '  - descripcion: Descripción opcional',
+                    '  - active: true/false (dejar vacío = true)',
+                    '',
+                    '=== BLOQUEOS DE STOCK ===',
+                    'Editar en hoja "Stock_Blocks"',
+                    'Columnas requeridas:',
+                    '  - sku: Código del producto (ej: A12345)',
+                    '  - proveedor: Código del proveedor a bloquear (ej: 77300)',
+                    '  - motivo: Razón del bloqueo',
+                    '  - active: true/false (dejar vacío = true)',
+                    '',
+                    '=== IMPORTANTE ===',
+                    '1. Después de llenar, usar "Importar desde Excel"',
+                    '2. Las reglas duplicadas serán ignoradas',
+                    '3. Eliminar las filas de ejemplo antes de importar'
+                ]
+            })
+            
+            # Guardar en Excel con tres hojas
+            with pd.ExcelWriter(filename, engine='openpyxl') as writer:
+                local_rules_ejemplo.to_excel(writer, sheet_name='LOCAL_SKU_Rules', index=False)
+                stock_blocks_ejemplo.to_excel(writer, sheet_name='Stock_Blocks', index=False)
+                instrucciones.to_excel(writer, sheet_name='INSTRUCCIONES', index=False)
+            
+            messagebox.showinfo(
+                "✅ Template Descargado",
+                f"Template guardado en:\n{filename}\n\n"
+                "El template contiene:\n"
+                "• Hoja 'LOCAL_SKU_Rules': Para reglas LOCAL + SKU\n"
+                "• Hoja 'Stock_Blocks': Para bloqueos por quiebre\n"
+                "• Hoja 'INSTRUCCIONES': Guía de uso\n\n"
+                "Edite las hojas y luego use 'Importar desde Excel'",
+                parent=self.window
+            )
+        except Exception as e:
+            messagebox.showerror(
+                "❌ Error",
+                f"No se pudo crear el template:\n{str(e)}",
+                parent=self.window
+            )
     
     def clear_all_rules(self):
         """Limpia todas las reglas del sistema con doble confirmación"""

@@ -1712,11 +1712,6 @@
       "created": "2025-12-18T15:22:24.648978"
     },
     {
-      "sku": "A002677",
-      "descripcion": "SKU-VACUNO PLATEADA CONG KG",
-      "created": "2025-12-18T15:22:24.653972"
-    },
-    {
       "sku": "A002684",
       "descripcion": "SKU-VACUNO POLLO GANSO CONG KG",
       "created": "2025-12-18T15:22:24.658974"
@@ -2903,11 +2898,21 @@
       "sku": "A312261",
       "descripcion": "nan",
       "created": "2025-12-18T15:22:26.559518"
+    },
+    {
+      "sku": "A312262",
+      "descripcion": "AA",
+      "created": "2025-12-18T16:25:03.068623"
+    },
+    {
+      "sku": "A002677",
+      "descripcion": "ASD",
+      "created": "2025-12-18T17:06:12.701455"
     }
   ],
   "metadata": {
-    "total_count": 580,
-    "last_updated": "2025-12-18T15:30:36.342714",
+    "total_count": 581,
+    "last_updated": "2025-12-18T17:06:12.701455",
     "version": "1.0"
   }
 }

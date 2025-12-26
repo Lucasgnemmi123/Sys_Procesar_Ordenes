@@ -81,12 +81,12 @@
         "21013": {
             "nombre": "AGROSUPER COMERCIALIZADORA DE ALIMENTO",
             "LUN": 1,
-            "MAR": null,
+            "MAR": 1,
             "MIE": 1,
-            "JUE": null,
+            "JUE": 1,
             "VIE": 1,
-            "SAB": null,
-            "D-2": null,
+            "SAB": 1,
+            "D-2": 1,
             "fecha_manual": null
         },
         "81644": {
@@ -208,6 +208,17 @@
             "VIE": 1,
             "SAB": null,
             "D-2": null,
+            "fecha_manual": null
+        },
+        "11111": {
+            "nombre": "aaaaaaa",
+            "LUN": 1,
+            "MAR": null,
+            "MIE": null,
+            "JUE": null,
+            "VIE": null,
+            "SAB": null,
+            "D-2": 1,
             "fecha_manual": null
         }
     }

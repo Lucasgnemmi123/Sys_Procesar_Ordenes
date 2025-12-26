@@ -1,4 +1,4 @@
-# 🚚 DHL Order Processing System v2.0
+# 🚚 DHL Order Processing System v2.5
 
 **Professional Order Management Solution**  
 *Created by Lucas Gnemmi*
@@ -9,14 +9,22 @@
 
 The DHL Order Processing System is a comprehensive solution designed to automate and streamline the processing of DHL orders. This professional-grade application features a modern graphical interface built with Python Tkinter and optimized processing algorithms for handling PDF order files, SKU validation, supplier mapping, and Excel report generation.
 
+**Latest Updates (v2.5)**:
+- ✨ Sistema de Gestión de Productos integrado (JSON-based)
+- 📅 Gestor de Agenda avanzado con múltiples fechas de entrega
+- 📋 Sistema de Reglas Especiales para SKUs con proveedores personalizados
+- 🎨 Interfaz moderna con tema azul índigo elegante
+- ⚡ Mejoras de rendimiento y usabilidad
+
 ## ✨ Key Features
 
 ### 🎨 Modern Professional Interface
-- **DHL Corporate Branding**: Authentic DHL color scheme (Red #D40511, Yellow #FFCC00)
+- **Elegant Theme**: Professional deep indigo theme (#1a237e) with modern design
 - **Responsive Design**: Optimized 1400x900 window with professional layout
 - **Real-time Activity Logging**: Terminal-style log with timestamps
 - **Results Preview**: Live preview of processed data
 - **Hover Effects**: Interactive buttons with smooth transitions
+- **Integrated Managers**: Built-in dialogs for Products, Agenda, and Special Rules
 
 ### 📄 Advanced PDF Processing
 - **Multi-format Support**: Handles various PDF order formats
@@ -26,10 +34,29 @@ The DHL Order Processing System is a comprehensive solution designed to automate
 - **File Size Tracking**: Display file sizes and processing statistics
 
 ### 🔍 Smart Validation System
-- **SKU Validation**: Cross-reference with Items C.Calzada database
+- **SKU Validation**: Cross-reference with integrated Products database (JSON-based)
 - **Supplier Mapping**: Automatic supplier assignment from Full.xlsx
+- **Special Rules**: Custom supplier assignments for specific SKUs
 - **Region Filtering**: Configurable region-based processing (default: 099)
 - **Duplicate Detection**: Intelligent consolidation of duplicate orders
+
+### 📅 Advanced Agenda Management
+- **Multiple Delivery Dates**: Support for multiple suppliers and delivery dates
+- **Date Configuration**: Visual interface to manage delivery schedules
+- **Auto-detection**: Automatic SKU-to-supplier mapping
+- **Export/Import**: Save and load agenda configurations (JSON)
+
+### 📦 Integrated Product Management
+- **JSON-based Database**: Modern replacement for Items.xlsx
+- **Real-time Search**: Filter products by SKU or description
+- **Bulk Import**: Import from Excel files (auto-detects columns)
+- **Export Capability**: Export product catalog to Excel
+- **Visual Editor**: Add, edit, and delete products with intuitive interface
+
+### 📋 Special Rules System
+- **Custom Supplier Mapping**: Override default supplier for specific SKUs
+- **Visual Management**: Dedicated dialog to manage special rules
+- **Import/Export**: Save configurations in JSON format
 
 ### 📊 Professional Excel Output
 - **Dynamic Naming**: Automatic filename based on agenda dates
@@ -59,12 +86,23 @@ tkinter (included with Python)
 📁 DHL Order Processing System/
 ├── 📄 gui_moderna_v2.py          # Main GUI application
 ├── 📄 procesamiento_v2.py        # Optimized processing module
+├── 📄 products_manager.py        # Product database manager
+├── 📄 products_dialog.py         # Product management UI
+├── 📄 agenda_manager.py          # Agenda configuration manager
+├── 📄 agenda_dialog.py           # Agenda management UI
+├── 📄 rules_manager.py           # Special rules manager
+├── 📄 rules_dialog.py            # Special rules UI
+├── 📄 proveedor_editor.py        # Supplier editor component
+├── 📄 config.py                  # Configuration settings
+├── 📄 products.json              # Products database
+├── 📄 agenda_config.json         # Agenda configurations
+├── 📄 rules.json                 # Special rules configurations
 ├── 📄 README.md                  # This documentation
+├── 📄 PRODUCTOS_README.md        # Products system documentation
+├── 📄 MEJORAS_AGENDA.md          # Agenda improvements documentation
 ├── 📁 Ordenes/                   # PDF input folder
 ├── 📁 Full-Agenda/              # Excel configuration files
-│   ├── 📊 Agenda.xlsm           # Schedule and dates
-│   ├── 📊 Full.xlsx             # Supplier database
-│   └── 📊 Items.xlsx            # Valid SKU catalog
+│   └── 📊 Full.xlsx             # Supplier database
 └── 📁 Salidas/                  # Output folder for processed files
 ```
 
@@ -80,9 +118,14 @@ tkinter (included with Python)
 
 ### 2. Configuration
 1. Place your Excel configuration files in `Full-Agenda/` folder:
-   - `Agenda.xlsm`: Contains delivery dates and supplier information
    - `Full.xlsx`: Supplier database with region mapping
-   - `Items.xlsx`: Valid SKU catalog for C.Calzada items
+2. Configure your products database:
+   - Use the built-in Product Manager (🔧 Tools menu)
+   - Or import from Excel files
+3. Set up your agenda:
+   - Use the built-in Agenda Manager (🔧 Tools menu)
+   - Configure delivery dates for each supplier
+4. Optional: Define special rules for specific SKUs (🔧 Tools menu)
 
 ### 3. Running the Application
 ```bash
@@ -90,12 +133,16 @@ python gui_moderna_v2.py
 ```
 
 ### 4. Processing Workflow
-1. **Add PDF Files**: Click "➕ Add PDFs" to upload order files
-2. **Open Configuration**: Use steps 1-2 to open and configure Excel files
-3. **Set Region**: Configure target region (default: 099)
-4. **Process Orders**: Click "🚀 PROCESS ORDERS" to start automated processing
-5. **Review Results**: Check the activity log and results preview
-6. **Access Output**: Use "📁 Open Output Folder" to view generated files
+1. **Configure Tools**: Access 🔧 Tools menu to set up:
+   - Products database (replaces Items.xlsx)
+   - Agenda with delivery dates
+   - Special rules for SKUs (optional)
+2. **Add PDF Files**: Click "➕ Add PDFs" to upload order files
+3. **Open Configuration**: Use step 1 to open Full.xlsx
+4. **Set Region**: Configure target region (default: 099)
+5. **Process Orders**: Click "🚀 PROCESS ORDERS" to start automated processing
+6. **Review Results**: Check the activity log and results preview
+7. **Access Output**: Use "📁 Open Output Folder" to view generated files
 
 ## 📖 Detailed Usage
 
@@ -136,9 +183,34 @@ self.AGENDA_XLSM = "custom/agenda/path.xlsm"
 
 ### Excel Template Customization
 The system supports various Excel formats. Key requirements:
-- **Items.xlsx**: Must contain a column with 'SKU', 'codigo', or 'code' in the name
+- **products.json**: JSON database with SKU and description fields (replaces Items.xlsx)
 - **Full.xlsx**: Requires supplier and SKU columns
-- **Agenda.xlsm**: Date must be in cell M1 of "Matriz" sheet
+- **agenda_config.json**: Delivery dates configuration per supplier
+- **rules.json**: Special rules for SKU-to-supplier overrides
+
+## 🔧 Integrated Management Tools
+
+### 📦 Product Manager
+Access via 🔧 Tools → "Manage Products"
+- **Add Products**: Enter SKU and description
+- **Search/Filter**: Real-time search by SKU or description
+- **Bulk Import**: Import from Excel files (auto-detects columns)
+- **Export**: Generate Excel file with all products
+- **Statistics**: View total products and last update date
+
+### 📅 Agenda Manager
+Access via 🔧 Tools → "Manage Agenda"
+- **Configure Dates**: Set delivery dates for each supplier
+- **Multiple Suppliers**: Support for multiple suppliers and dates
+- **Visual Interface**: Easy-to-use calendar and date pickers
+- **Export/Import**: Save and load agenda configurations
+
+### 📋 Special Rules Manager
+Access via 🔧 Tools → "Manage Special Rules"
+- **Custom Mappings**: Override default supplier for specific SKUs
+- **Visual Editor**: Add, edit, and delete rules with intuitive interface
+- **Bulk Operations**: Import rules from Excel templates
+- **Export**: Save rules to JSON format
 
 ## 🐛 Troubleshooting
 
@@ -194,7 +266,17 @@ def log_processing_step(step_name, status="DEBUG", details=""):
 
 ## 🆕 Version History
 
-### v2.0 (Current) - Professional Release
+### v2.5 (Current) - Advanced Integration Release
+- ✨ Sistema de Gestión de Productos (JSON-based, replaces Items.xlsx)
+- 📅 Gestor de Agenda avanzado con soporte multi-fecha
+- 📋 Sistema de Reglas Especiales para mapeos personalizados
+- 🎨 Nuevo tema elegante azul índigo (#1a237e)
+- 🔧 Menú de herramientas integrado con 3 gestores
+- 📊 Mejoras en la interfaz de usuario y usabilidad
+- ⚡ Optimizaciones de rendimiento y estabilidad
+- 💻 Created by Lucas Gnemmi
+
+### v2.0 - Professional Release
 - ✨ Complete UI redesign with DHL corporate branding
 - 🚀 Optimized processing engine with 50% performance improvement
 - 📊 Enhanced Excel formatting with professional layouts
@@ -210,10 +292,16 @@ def log_processing_step(step_name, status="DEBUG", details=""):
 ## 👨‍💻 Developer Information
 
 **Created by**: Lucas Gnemmi  
-**Version**: 2.0  
-**Last Updated**: September 2025  
+**Version**: 2.5  
+**Last Updated**: December 2025  
 **Language**: Python 3.8+  
 **Framework**: Tkinter GUI + Pandas + OpenPyXL
+
+### Architecture
+- **Modern JSON-based storage**: Products, Agenda, and Rules stored in JSON format
+- **Modular design**: Separate managers for each functionality
+- **Event-driven GUI**: Responsive interface with real-time updates
+- **Professional theme**: Elegant indigo design with modern components
 
 ### Contributing
 This is a professional solution developed by Lucas Gnemmi. For feature requests or issues, please contact the developer directly.
@@ -234,4 +322,12 @@ Specialized in Business Process Automation
 
 ---
 
-*🚚 DHL Order Processing System v2.0 - Streamlining logistics with professional excellence*
+*🚚 DHL Order Processing System v2.5 - Streamlining logistics with professional excellence*
+
+---
+
+## 📚 Additional Documentation
+
+- [PRODUCTOS_README.md](PRODUCTOS_README.md) - Complete Product Management System guide
+- [MEJORAS_AGENDA.md](MEJORAS_AGENDA.md) - Agenda System improvements and features
+- [PRODUCTOS_IMPLEMENTACION_COMPLETA.md](PRODUCTOS_IMPLEMENTACION_COMPLETA.md) - Technical implementation details
