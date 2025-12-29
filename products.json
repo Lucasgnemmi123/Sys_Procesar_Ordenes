@@ -1,0 +1,2918 @@
+{
+  "products": [
+    {
+      "sku": "TEST001",
+      "descripcion": "Producto Modificado",
+      "created": "2025-12-18T15:12:27.315414",
+      "updated": "2025-12-18T15:12:27.334706"
+    },
+    {
+      "sku": "TEST002",
+      "descripcion": "Producto de Prueba 2",
+      "created": "2025-12-18T15:12:27.319412"
+    },
+    {
+      "sku": "A255097",
+      "descripcion": "SKU-ACEITE MARAVILLA BOTELLA 900CC",
+      "created": "2025-12-18T15:22:22.871909"
+    },
+    {
+      "sku": "A278942",
+      "descripcion": "SKU-ACEITE MARAVILLA SACHET 8CC CAJA 300UN",
+      "created": "2025-12-18T15:22:22.874915"
+    },
+    {
+      "sku": "A091057",
+      "descripcion": "SKU-ACEITE OLIVA BIDON 5LT",
+      "created": "2025-12-18T15:22:22.875920"
+    },
+    {
+      "sku": "A307656",
+      "descripcion": "SKU-ACEITE DE OLIVA EXTRA VIRGEN 1 LT CAJA 6 UN",
+      "created": "2025-12-18T15:22:22.878917"
+    },
+    {
+      "sku": "A019530",
+      "descripcion": "SKU-ACEITE VEGETAL SIN MARCA 900CC X 12 UN",
+      "created": "2025-12-18T15:22:22.879917"
+    },
+    {
+      "sku": "A020147",
+      "descripcion": "SKU-ADEREZO JUGO LIMON BYT BIDON 5LT",
+      "created": "2025-12-18T15:22:22.881919"
+    },
+    {
+      "sku": "A278881",
+      "descripcion": "SKU-JUGO LIMON SACHET RELKON 10CC CAJA 300UN",
+      "created": "2025-12-18T15:22:22.883918"
+    },
+    {
+      "sku": "A303622",
+      "descripcion": "SKU-ADEREZO KETCHUP CAROZZI 1KG X 10UN",
+      "created": "2025-12-18T15:22:22.885917"
+    },
+    {
+      "sku": "A303623",
+      "descripcion": "SKU-ADEREZO KETCHUP CAROZZI PORCION IND 8GR X 500UN",
+      "created": "2025-12-18T15:22:22.886919"
+    },
+    {
+      "sku": "A304792",
+      "descripcion": "SKU-SACHET LIMONETA INNOVA ALIMENTOS 10CC X 300 UNIDADES",
+      "created": "2025-12-18T15:22:22.888917"
+    },
+    {
+      "sku": "A303625",
+      "descripcion": "SKU-ADEREZO MAYONESA CAROZZI 1KG X 10UN",
+      "created": "2025-12-18T15:22:22.890918"
+    },
+    {
+      "sku": "A303624",
+      "descripcion": "SKU-ADEREZO MAYONESA CAROZZI PORCION IND 8GR X 500UN",
+      "created": "2025-12-18T15:22:22.892916"
+    },
+    {
+      "sku": "A305622",
+      "descripcion": "SKU-ADEREZO MOSTAZA CAROZZI 1 KILO 10UN",
+      "created": "2025-12-18T15:22:22.893918"
+    },
+    {
+      "sku": "A303994",
+      "descripcion": "SKU-ADEREZO MOSTAZA CAROZZI 8GR X 500 UN",
+      "created": "2025-12-18T15:22:22.895919"
+    },
+    {
+      "sku": "A308532",
+      "descripcion": "SKU-ADEREZO ACETO VINAGRE BALSAMICO 250CC PACK 12UN SANTIAGO",
+      "created": "2025-12-18T15:22:22.897922"
+    },
+    {
+      "sku": "A020794",
+      "descripcion": "SKU-ADEREZO VINAGRE BLANCO BIDON 5LT",
+      "created": "2025-12-18T15:22:22.900922"
+    },
+    {
+      "sku": "A020819",
+      "descripcion": "SKU-ADEREZO VINAGRE BLANCO BOTELLA 500CC",
+      "created": "2025-12-18T15:22:22.903923"
+    },
+    {
+      "sku": "A020846",
+      "descripcion": "SKU-ADEREZO VINAGRE MANZANA TRAVERSO BOTELLA 500CC",
+      "created": "2025-12-18T15:22:22.906921"
+    },
+    {
+      "sku": "A020855",
+      "descripcion": "SKU-ADEREZO VINAGRE TINTO BOTELLA 500CC",
+      "created": "2025-12-18T15:22:22.908917"
+    },
+    {
+      "sku": "A033141",
+      "descripcion": "SKU-AGUA MINERAL VITAL C/G PET NR 600 CC PACK 12 UN",
+      "created": "2025-12-18T15:22:22.910921"
+    },
+    {
+      "sku": "A033336",
+      "descripcion": "SKU-AGUA MINERAL VITAL S/G PET NR 600 CC PACK 12 UN",
+      "created": "2025-12-18T15:22:22.912916"
+    },
+    {
+      "sku": "A303664",
+      "descripcion": "SKU-AGUA PURIFICADA BIDON 20 LT",
+      "created": "2025-12-18T15:22:22.915459"
+    },
+    {
+      "sku": "A033558",
+      "descripcion": "SKU-AGUA PURIFICADA BENEDICTINO C/G PET NR 1500 CC PACK 6 UN",
+      "created": "2025-12-18T15:22:22.917472"
+    },
+    {
+      "sku": "A311915",
+      "descripcion": "SKU-AGUA SABORIZADA BENEDICTINO MANZANA PET 500CC DISPLAY 6UN",
+      "created": "2025-12-18T15:22:22.919458"
+    },
+    {
+      "sku": "A311917",
+      "descripcion": "SKU-AGUA SABORIZADA BENEDICTINO PERA PET 500CC DISPLAY 6UN",
+      "created": "2025-12-18T15:22:22.921456"
+    },
+    {
+      "sku": "A272742",
+      "descripcion": "SKU-PASTELERIA ALFAJOR CHILENO PORCION IND NUTRABIEN 45GR DISPLAY 24 UN",
+      "created": "2025-12-18T15:22:22.923459"
+    },
+    {
+      "sku": "A021003",
+      "descripcion": "SKU-ARROZ BLANCO LARGO GRADO 1 L.M.C 1KG",
+      "created": "2025-12-18T15:22:22.925457"
+    },
+    {
+      "sku": "A311910",
+      "descripcion": "SKU-AVENA INSTANTANEA BOLSA 1KG",
+      "created": "2025-12-18T15:22:22.927470"
+    },
+    {
+      "sku": "A299558",
+      "descripcion": "SKU-AZUCAR FLOR IANSA 1 KG CJ 12UN",
+      "created": "2025-12-18T15:22:22.930463"
+    },
+    {
+      "sku": "A300864",
+      "descripcion": "SKU-AZUCAR GRANULADA 5KG",
+      "created": "2025-12-18T15:22:22.931465"
+    },
+    {
+      "sku": "A032726",
+      "descripcion": "SKU-AZUCAR BLANCA GRANULADA 1KG",
+      "created": "2025-12-18T15:22:22.933605"
+    },
+    {
+      "sku": "A311862",
+      "descripcion": "SKU-AZUCAR BLANCA GRANULADA SACHET 5GR CAJA 1000UN ONZA",
+      "created": "2025-12-18T15:22:22.935464"
+    },
+    {
+      "sku": "A043546",
+      "descripcion": "SKU-BARQUILLO ARTESANAL DULCONO CAJA 300UN",
+      "created": "2025-12-18T15:22:22.937466"
+    },
+    {
+      "sku": "A078418",
+      "descripcion": "SKU-PAN RALLADO JAPONES PANKO 1X1 KG",
+      "created": "2025-12-18T15:22:22.938466"
+    },
+    {
+      "sku": "A035848",
+      "descripcion": "SKU-BEBIDA COCA COLA LATA 350 CC PACK 6 UN",
+      "created": "2025-12-18T15:22:22.940469"
+    },
+    {
+      "sku": "A035750",
+      "descripcion": "SKU-BEBIDA COCA COLA PET NO RETOR 3000 CC PACK 6 UN",
+      "created": "2025-12-18T15:22:22.941976"
+    },
+    {
+      "sku": "A035884",
+      "descripcion": "SKU-BEBIDA COCA LIGHT LATA 350 CC PACK 6 UN",
+      "created": "2025-12-18T15:22:22.943993"
+    },
+    {
+      "sku": "A034344",
+      "descripcion": "SKU-BEBIDA COCA LIGHT PET NO RETOR LIGHT 3000 CC PACK 6 UN",
+      "created": "2025-12-18T15:22:22.945988"
+    },
+    {
+      "sku": "A035927",
+      "descripcion": "SKU-BEBIDA COCA ZERO LATA 350 CC PACK 6 UN",
+      "created": "2025-12-18T15:22:22.947987"
+    },
+    {
+      "sku": "A070887",
+      "descripcion": "SKU-BEBIDA COCA ZERO PET NO RETOR 1500 CC PACK 6U",
+      "created": "2025-12-18T15:22:22.949987"
+    },
+    {
+      "sku": "A034797",
+      "descripcion": "SKU-BEBIDA FANTA LATA 350 CC PACK 6 UN",
+      "created": "2025-12-18T15:22:22.952986"
+    },
+    {
+      "sku": "A036032",
+      "descripcion": "SKU-BEBIDA FANTA PET NO RETOR 1500 CC PACK 6 UN",
+      "created": "2025-12-18T15:22:22.953986"
+    },
+    {
+      "sku": "A036120",
+      "descripcion": "SKU-BEBIDA FANTA PET NO RETOR 3000 CC PACK 6 UN",
+      "created": "2025-12-18T15:22:22.955987"
+    },
+    {
+      "sku": "A269759",
+      "descripcion": "SKU-BEBIDA FANTA PET NO RETOR 591CC DISPLAY 6UN",
+      "created": "2025-12-18T15:22:22.957988"
+    },
+    {
+      "sku": "A312029",
+      "descripcion": "SKU-BEBIDA FANTA S/AZUCAR PET NO RETOR 3LT PACK 6UN",
+      "created": "2025-12-18T15:22:22.959985"
+    },
+    {
+      "sku": "A034858",
+      "descripcion": "SKU-BEBIDA FANTA ZERO PET NO RETOR 1500 CC PACK 6 UN",
+      "created": "2025-12-18T15:22:22.961987"
+    },
+    {
+      "sku": "A269766",
+      "descripcion": "SKU-BEBIDA FANTA ZERO PET 591CC DISPLAY 6UN",
+      "created": "2025-12-18T15:22:22.964992"
+    },
+    {
+      "sku": "A035282",
+      "descripcion": "SKU-BEBIDA SPRITE LATA 350 CC PACK 6 UN",
+      "created": "2025-12-18T15:22:22.967078"
+    },
+    {
+      "sku": "A036634",
+      "descripcion": "SKU-BEBIDA SPRITE PET NO RETOR 1500 CC PACK 6 UN",
+      "created": "2025-12-18T15:22:22.968985"
+    },
+    {
+      "sku": "A036670",
+      "descripcion": "SKU-BEBIDA SPRITE PET NO RETOR 3000 CC PACK 6 UN",
+      "created": "2025-12-18T15:22:22.970990"
+    },
+    {
+      "sku": "A269742",
+      "descripcion": "SKU-BEBIDA SPRITE PET NO RETOR 591CC PACK DISPLAY 6UN",
+      "created": "2025-12-18T15:22:22.972985"
+    },
+    {
+      "sku": "A036768",
+      "descripcion": "SKU-BEBIDA SPRITE ZERO LATA 350 CC PACK 6 UN",
+      "created": "2025-12-18T15:22:22.975989"
+    },
+    {
+      "sku": "A036731",
+      "descripcion": "SKU-BEBIDA SPRITE ZERO PET NO RETOR 1500 CC PACK 6 UN",
+      "created": "2025-12-18T15:22:22.977992"
+    },
+    {
+      "sku": "A312030",
+      "descripcion": "SKU-BEBIDA SPRITE ZERO PET NO RETOR 3LT PACK 6UN",
+      "created": "2025-12-18T15:22:22.980986"
+    },
+    {
+      "sku": "A269797",
+      "descripcion": "SKU-BEBIDA SPRITE ZERO PET 591CC DISPLAY 6UN",
+      "created": "2025-12-18T15:22:22.982987"
+    },
+    {
+      "sku": "A038368",
+      "descripcion": "SKU-CAFE DESCAFEINADO NESCAFE 170GR",
+      "created": "2025-12-18T15:22:22.985991"
+    },
+    {
+      "sku": "A308988",
+      "descripcion": "SKU-CAFE DESCAFEINADO NESCAFE DECAF SACHET 1,8GR CAJA 180UN",
+      "created": "2025-12-18T15:22:22.987991"
+    },
+    {
+      "sku": "A311845",
+      "descripcion": "SKU-CAFE SOLUBLE GOLD PRIMERA SELECCIÓN 400GR CAJA 10UN",
+      "created": "2025-12-18T15:22:22.989993"
+    },
+    {
+      "sku": "A038614",
+      "descripcion": "SKU-CAFE SOLUBLE NESCAFE LATA 170GR",
+      "created": "2025-12-18T15:22:22.992989"
+    },
+    {
+      "sku": "A038641",
+      "descripcion": "SKU-CAFE SOLUBLE NESCAFE LATA 400GR",
+      "created": "2025-12-18T15:22:22.994985"
+    },
+    {
+      "sku": "A304828",
+      "descripcion": "SKU-CAFE GOLD STICK 1,8 GR X 96 UN",
+      "created": "2025-12-18T15:22:22.997987"
+    },
+    {
+      "sku": "A088381",
+      "descripcion": "SKU-CAFE SACHET NESCAFE 1.8GR CAJA 180UN",
+      "created": "2025-12-18T15:22:23.000985"
+    },
+    {
+      "sku": "A307323",
+      "descripcion": "SKU-CAFE SOLUBLE SELECCIÓN FRASCO 200GR UN",
+      "created": "2025-12-18T15:22:23.003987"
+    },
+    {
+      "sku": "A039127",
+      "descripcion": "SKU-CALDO CONCENTRADO AVE BOLSA 1KG",
+      "created": "2025-12-18T15:22:23.006987"
+    },
+    {
+      "sku": "A039057",
+      "descripcion": "SKU-CALDO CONCENTRADO CARNE BOLSA 1KG",
+      "created": "2025-12-18T15:22:23.010989"
+    },
+    {
+      "sku": "A311935",
+      "descripcion": "SKU-CALDO CONCENTRADO VERDURA BOLSA 1KG",
+      "created": "2025-12-18T15:22:23.014987"
+    },
+    {
+      "sku": "A303572",
+      "descripcion": "SKU-CERDO CHULETA CENTRO PORCIONADA CALIBRADA IQF 180-200 G KILO",
+      "created": "2025-12-18T15:22:23.019988"
+    },
+    {
+      "sku": "A000833",
+      "descripcion": "SKU-CERDO LOMO CENTRO KILO CONG",
+      "created": "2025-12-18T15:22:23.023988"
+    },
+    {
+      "sku": "A000985",
+      "descripcion": "SKU-CERDO PULPA PIERNA SIN HUESO KILO CONG",
+      "created": "2025-12-18T15:22:23.026987"
+    },
+    {
+      "sku": "A307702",
+      "descripcion": "SKU-CEREAL VIVO LINE INTEGRAL 350GR CAJA 10UN",
+      "created": "2025-12-18T15:22:23.032000"
+    },
+    {
+      "sku": "A311889",
+      "descripcion": "SKU-CEREAL GRANOLA MIEL ALMENDRA 320GR QUAKER UN",
+      "created": "2025-12-18T15:22:23.035000"
+    },
+    {
+      "sku": "A311559",
+      "descripcion": "SKU-CEREAL HOJUELAS ZUCOSOS 700GR CAJA 16UN NESTLE",
+      "created": "2025-12-18T15:22:23.038006"
+    },
+    {
+      "sku": "A310725",
+      "descripcion": "SKU-CHAPARRITA VIENESA QUESO GRANDE HORNEADA CAJA 27UN",
+      "created": "2025-12-18T15:22:23.042510"
+    },
+    {
+      "sku": "A310284",
+      "descripcion": "SKU-CHORIZO CERDO PARRILLERO 800GR UN",
+      "created": "2025-12-18T15:22:23.047521"
+    },
+    {
+      "sku": "A054445",
+      "descripcion": "SKU-CHUCHOCA ALMIFRUT 1KG",
+      "created": "2025-12-18T15:22:23.051521"
+    },
+    {
+      "sku": "A062055",
+      "descripcion": "SKU-COBERTURA CHOCOLATE AMBROSOLI CAFE 1KG",
+      "created": "2025-12-18T15:22:23.055521"
+    },
+    {
+      "sku": "A311898",
+      "descripcion": "SKU-COBERTURA COCO RALLADO BOLSA 250GR",
+      "created": "2025-12-18T15:22:23.059520"
+    },
+    {
+      "sku": "A310499",
+      "descripcion": "SKU-COMIDA IND CARBONADA AMBIENTE 350GR CAJA 8UN",
+      "created": "2025-12-18T15:22:23.063525"
+    },
+    {
+      "sku": "A310495",
+      "descripcion": "SKU-COMIDA IND ESPIRALES BOLOGNESA AMBIENTE 350GR CAJA 8UN",
+      "created": "2025-12-18T15:22:23.068523"
+    },
+    {
+      "sku": "A310500",
+      "descripcion": "SKU-COMIDA IND LASAGNA BOLOGNESA AMBIENTE 350GR CAJA 8UN",
+      "created": "2025-12-18T15:22:23.073523"
+    },
+    {
+      "sku": "A310501",
+      "descripcion": "SKU-COMIDA IND LASAGNA ESPINACA CHAMPINON AMBIENTE 350GR CAJA 8UN",
+      "created": "2025-12-18T15:22:23.078524"
+    },
+    {
+      "sku": "A310496",
+      "descripcion": "SKU-COMIDA IND LENTEJAS GUISADAS AMBIENTE 350GR CAJA 8UN",
+      "created": "2025-12-18T15:22:23.082522"
+    },
+    {
+      "sku": "A310497",
+      "descripcion": "SKU-COMIDA IND PASTEL CHOCLO AMBIENTE 350GR CAJA 8UN",
+      "created": "2025-12-18T15:22:23.087525"
+    },
+    {
+      "sku": "A310498",
+      "descripcion": "SKU-COMIDA IND POROTOS ESTILO CASERO AMBIENTE 350GR CAJA 8UN",
+      "created": "2025-12-18T15:22:23.091523"
+    },
+    {
+      "sku": "A307381",
+      "descripcion": "SKU-COMIDA IND. SOPA INSTANTÁNEA FIDEOS CARNE TRAVERSO 65GR CAJA 12UN",
+      "created": "2025-12-18T15:22:23.096522"
+    },
+    {
+      "sku": "A307382",
+      "descripcion": "SKU-COMIDA IND. SOPA INSTANTÁNEA FIDEOS POLLO TRAVERSO 65GR CAJA 12UN",
+      "created": "2025-12-18T15:22:23.100522"
+    },
+    {
+      "sku": "A307384",
+      "descripcion": "SKU-COMIDA IND. SOPA INSTANTÁNEA FIDEOS VEGETALES TRAVERSO 65GR CAJA 12UN",
+      "created": "2025-12-18T15:22:23.105524"
+    },
+    {
+      "sku": "A303626",
+      "descripcion": "SKU-CONCENTRADO DE TOMATE 3KG X 6UN",
+      "created": "2025-12-18T15:22:23.109523"
+    },
+    {
+      "sku": "A290364",
+      "descripcion": "SKU-AJI COLOR MOLIDO KILO",
+      "created": "2025-12-18T15:22:23.113522"
+    },
+    {
+      "sku": "A290371",
+      "descripcion": "SKU-CONDIMENTO AJO EN POLVO BOLSA 1KG",
+      "created": "2025-12-18T15:22:23.118526"
+    },
+    {
+      "sku": "A305971",
+      "descripcion": "SKU-CONDIMENTO ALBAHACA SECA 250GR UN",
+      "created": "2025-12-18T15:22:23.122520"
+    },
+    {
+      "sku": "A042547",
+      "descripcion": "SKU-CONDIMENTO CANELA ENTERA BOLSA 250GR",
+      "created": "2025-12-18T15:22:23.127537"
+    },
+    {
+      "sku": "A042529",
+      "descripcion": "SKU-CONDIMENTO CANELA MOLIDA BOLSA 250GR",
+      "created": "2025-12-18T15:22:23.131540"
+    },
+    {
+      "sku": "A042574",
+      "descripcion": "SKU-CONDIMENTO CLAVO DE OLOR MOLIDO BOLSA 250GR",
+      "created": "2025-12-18T15:22:23.135538"
+    },
+    {
+      "sku": "A042592",
+      "descripcion": "SKU-CONDIMENTO COMINO MOLIDO BOLSA 250GR",
+      "created": "2025-12-18T15:22:23.139539"
+    },
+    {
+      "sku": "A306773",
+      "descripcion": "SKU-CONDIMENTO CURRY EN POLVO 250GR UN",
+      "created": "2025-12-18T15:22:23.144071"
+    },
+    {
+      "sku": "A042680",
+      "descripcion": "SKU-CONDIMENTO ENELDO FRASCO 10 GR",
+      "created": "2025-12-18T15:22:23.148072"
+    },
+    {
+      "sku": "A270359",
+      "descripcion": "SKU-ESTRAGON ENTERO SOBRE DE 5GR",
+      "created": "2025-12-18T15:22:23.151076"
+    },
+    {
+      "sku": "A303639",
+      "descripcion": "SKU-CONDIMENTO JENGIBRE SACHET 30GR CAJA 50 UN",
+      "created": "2025-12-18T15:22:23.155073"
+    },
+    {
+      "sku": "A310154",
+      "descripcion": "SKU-CONDIMENTO LAUREL 5GR CAJA 50UN NUESTRA COCINA",
+      "created": "2025-12-18T15:22:23.159072"
+    },
+    {
+      "sku": "A042343",
+      "descripcion": "SKU-CONDIMENTO MERKEN BOLSA 250GR",
+      "created": "2025-12-18T15:22:23.164073"
+    },
+    {
+      "sku": "A042769",
+      "descripcion": "SKU-CONDIMENTO NUEZ MOSCADA ENTERA 100GR UN",
+      "created": "2025-12-18T15:22:23.169071"
+    },
+    {
+      "sku": "A289047",
+      "descripcion": "SKU-OREGANO SECO BOLSA 250 GR",
+      "created": "2025-12-18T15:22:23.174070"
+    },
+    {
+      "sku": "A308484",
+      "descripcion": "SKU-CONDIMENTO PIMIENTA NEGRA ENTERA BOLSA 1KG UN",
+      "created": "2025-12-18T15:22:23.179072"
+    },
+    {
+      "sku": "A042954",
+      "descripcion": "SKU-CONDIMENTO PIMIENTA NEGRA MOLIDA 1KG",
+      "created": "2025-12-18T15:22:23.183069"
+    },
+    {
+      "sku": "A042918",
+      "descripcion": "SKU-CONDIMENTO PIMIENTA NEGRA MOLIDA BOLSA 250GR",
+      "created": "2025-12-18T15:22:23.187067"
+    },
+    {
+      "sku": "A308427",
+      "descripcion": "SKU-CONDIMENTO ROMERO FRASCO 11GR UN GOURMET",
+      "created": "2025-12-18T15:22:23.192068"
+    },
+    {
+      "sku": "A307402",
+      "descripcion": "SKU-CONDIMENTO TOMILLO MOLIDO 30GR DISPLAY 10UN",
+      "created": "2025-12-18T15:22:23.197068"
+    },
+    {
+      "sku": "A305753",
+      "descripcion": "SKU-CREMA CHANTILLY POLVO 450GR UN",
+      "created": "2025-12-18T15:22:23.200067"
+    },
+    {
+      "sku": "A308426",
+      "descripcion": "SKU-CREMA DE ARVEJAS CON JAMON TKF BOLSA 1KG",
+      "created": "2025-12-18T15:22:23.205068"
+    },
+    {
+      "sku": "A039321",
+      "descripcion": "SKU-CREMA POLLO BOLSA 1KG",
+      "created": "2025-12-18T15:22:23.210072"
+    },
+    {
+      "sku": "A305021",
+      "descripcion": "SKU-CREMA ESPARRAGO BOLSA 1KG",
+      "created": "2025-12-18T15:22:23.214068"
+    },
+    {
+      "sku": "A295260",
+      "descripcion": "SKU-CREMA DE LECHE ESPESA SOPROLE 1LT CAJA 12 LTS",
+      "created": "2025-12-18T15:22:23.219066"
+    },
+    {
+      "sku": "A308424",
+      "descripcion": "SKU-CREMA PASTELERA POLVO TKF BOLSA 1KG",
+      "created": "2025-12-18T15:22:23.224067"
+    },
+    {
+      "sku": "A312102",
+      "descripcion": "SKU-CREMA VEGETAL S/AZUCAR CAJA 12LT PURATOS",
+      "created": "2025-12-18T15:22:23.228070"
+    },
+    {
+      "sku": "A095707",
+      "descripcion": "SKU-EMPANADA CONG CARNE PICADA LA JACINTA 200 GR CAJA 50 UN",
+      "created": "2025-12-18T15:22:23.232074"
+    },
+    {
+      "sku": "A306231",
+      "descripcion": "SKU-ENDULZANTE STEVIA CERO K 250 CC CAJA 20 UN",
+      "created": "2025-12-18T15:22:23.238076"
+    },
+    {
+      "sku": "A311863",
+      "descripcion": "SKU-ENDULZANTE SUCRALOSA SACHET 5GR CAJA 1000UN ONZA",
+      "created": "2025-12-18T15:22:23.242076"
+    },
+    {
+      "sku": "A079781",
+      "descripcion": "SKU-ENDULZANTE SUCRALOSA POLVO VENDOM 0.5 GR CAJA 1000UN",
+      "created": "2025-12-18T15:22:23.247604"
+    },
+    {
+      "sku": "A062480",
+      "descripcion": "SKU-ESENCIA HUMO FRASCO 165CC",
+      "created": "2025-12-18T15:22:23.253612"
+    },
+    {
+      "sku": "A062505",
+      "descripcion": "SKU-ESENCIA VAINILLA BOTELLA 1LT",
+      "created": "2025-12-18T15:22:23.257599"
+    },
+    {
+      "sku": "A303490",
+      "descripcion": "SKU-FIDEOS CABELLO CORTO CAROZZI 5KG DISPLAY 2 UN",
+      "created": "2025-12-18T15:22:23.261600"
+    },
+    {
+      "sku": "A059404",
+      "descripcion": "SKU-FIDEOS CORBATAS CAROZZI 5KG",
+      "created": "2025-12-18T15:22:23.267603"
+    },
+    {
+      "sku": "A058964",
+      "descripcion": "SKU-FIDEOS ESPIRALES CAROZZI 5KG",
+      "created": "2025-12-18T15:22:23.272602"
+    },
+    {
+      "sku": "A311886",
+      "descripcion": "SKU-FIDEOS LASAGNA PRECOCIDA 360GR LUCCHETTI UN",
+      "created": "2025-12-18T15:22:23.276602"
+    },
+    {
+      "sku": "A059574",
+      "descripcion": "SKU-FIDEOS MOSTACCIOLI CAROZZI 5KG",
+      "created": "2025-12-18T15:22:23.282603"
+    },
+    {
+      "sku": "A059060",
+      "descripcion": "SKU-FIDEOS QUIFAROS CAROZZI 5KG",
+      "created": "2025-12-18T15:22:23.288599"
+    },
+    {
+      "sku": "A303496",
+      "descripcion": "SKU-FIDEOS SPAGUETTI 5 CAROZZI 5KG DISPLAY 2 UN",
+      "created": "2025-12-18T15:22:23.292597"
+    },
+    {
+      "sku": "A128834",
+      "descripcion": "SKU-FRUTILLAS CONG FRUTOS DEL MAIPO BOLSA 2KG",
+      "created": "2025-12-18T15:22:23.298602"
+    },
+    {
+      "sku": "A311163",
+      "descripcion": "SKU-FRUTA CONSERVA CEREZA CON CAROZO 580GR UN",
+      "created": "2025-12-18T15:22:23.304598"
+    },
+    {
+      "sku": "A191944",
+      "descripcion": "SKU-FRUTA CONSERVA DURAZNOS MITAD GALON 3KG",
+      "created": "2025-12-18T15:22:23.308602"
+    },
+    {
+      "sku": "A311147",
+      "descripcion": "SKU-FRUTA CONSERVA FRUTILLA 570GR UN ACONCAGUA",
+      "created": "2025-12-18T15:22:23.312602"
+    },
+    {
+      "sku": "A311887",
+      "descripcion": "SKU-COCKTAIL DE FRUTAS EN ALMIBAR 850GR GRANJAS DE LA SIERRA UN",
+      "created": "2025-12-18T15:22:23.317598"
+    },
+    {
+      "sku": "A051439",
+      "descripcion": "SKU-FRUTA DESHID CIRUELA SIN CAROZO BOLSA 1 KG",
+      "created": "2025-12-18T15:22:23.322598"
+    },
+    {
+      "sku": "A051518",
+      "descripcion": "SKU-FRUTA DESHID HUESILLO BOLSA 1 KG",
+      "created": "2025-12-18T15:22:23.325598"
+    },
+    {
+      "sku": "A311093",
+      "descripcion": "SKU-FRUTA DESHID PASAS DE UVA RUBIA 250GR UN",
+      "created": "2025-12-18T15:22:23.329611"
+    },
+    {
+      "sku": "A064521",
+      "descripcion": "SKU-FRUTA FRESCA LIMON KG",
+      "created": "2025-12-18T15:22:23.335612"
+    },
+    {
+      "sku": "A064585",
+      "descripcion": "SKU-FRUTA FRESCA MANGO KG",
+      "created": "2025-12-18T15:22:23.339612"
+    },
+    {
+      "sku": "A064178",
+      "descripcion": "SKU-MANZANA ROJA FRESCO KILO",
+      "created": "2025-12-18T15:22:23.343127"
+    },
+    {
+      "sku": "A064211",
+      "descripcion": "SKU-FRUTA FRESCA MANZANA VERDE CALIBRE MAYOR KG",
+      "created": "2025-12-18T15:22:23.348127"
+    },
+    {
+      "sku": "A064266",
+      "descripcion": "SKU-FRUTA FRESCA NARANJA CALIBRE MAYOR KG",
+      "created": "2025-12-18T15:22:23.351131"
+    },
+    {
+      "sku": "A064327",
+      "descripcion": "SKU-FRUTA FRESCA PALTA HASS KG",
+      "created": "2025-12-18T15:22:23.354129"
+    },
+    {
+      "sku": "A064354",
+      "descripcion": "SKU-FRUTA FRESCA PERA CALIBRE MAYOR KG",
+      "created": "2025-12-18T15:22:23.358126"
+    },
+    {
+      "sku": "A064707",
+      "descripcion": "SKU-FRUTA FRESCA PINA AMARILLA UN",
+      "created": "2025-12-18T15:22:23.362126"
+    },
+    {
+      "sku": "A064734",
+      "descripcion": "SKU-FRUTA FRESCA PLATANO MADURO KG",
+      "created": "2025-12-18T15:22:23.366125"
+    },
+    {
+      "sku": "A054241",
+      "descripcion": "SKU-ALMENDRAS CON CASCARA BOLSA 1 KG",
+      "created": "2025-12-18T15:22:23.369125"
+    },
+    {
+      "sku": "A311909",
+      "descripcion": "SKU-ALMENDRAS LAMINADA PELADA BOLSA 1KG",
+      "created": "2025-12-18T15:22:23.375126"
+    },
+    {
+      "sku": "A308428",
+      "descripcion": "SKU-FRUTO SECO Y SEMILLA AMAPOLA 1KG UN",
+      "created": "2025-12-18T15:22:23.380127"
+    },
+    {
+      "sku": "A308422",
+      "descripcion": "SKU-FRUTO SECO Y SEMILLA NUEZ MARIPOSA 1KG UN",
+      "created": "2025-12-18T15:22:23.384130"
+    },
+    {
+      "sku": "A307146",
+      "descripcion": "SKU-FRUTO SECO Y SEMILLA SESAMO BOLSA 1KG",
+      "created": "2025-12-18T15:22:23.387126"
+    },
+    {
+      "sku": "A302869",
+      "descripcion": "SKU-GALLETA COSTA CHIPS CHOCOLATE 125GR X 28UN",
+      "created": "2025-12-18T15:22:23.392127"
+    },
+    {
+      "sku": "A310482",
+      "descripcion": "SKU-GALLETA COSTA FRAC BI CAPUCCINO 110GR CAJA 36UN",
+      "created": "2025-12-18T15:22:23.399131"
+    },
+    {
+      "sku": "A302791",
+      "descripcion": "SKU-GALLETA COSTA GRETTEL YOGHURT FRUTILLA 85GR X 24UN",
+      "created": "2025-12-18T15:22:23.405126"
+    },
+    {
+      "sku": "A077446",
+      "descripcion": "SKU-GALLETA DE AVENA NUTRABIEN MANZANA UN",
+      "created": "2025-12-18T15:22:23.408127"
+    },
+    {
+      "sku": "A091695",
+      "descripcion": "SKU-GALLETA DE SODA COSTA 54GR CAJA 27UN",
+      "created": "2025-12-18T15:22:23.413132"
+    },
+    {
+      "sku": "A151948",
+      "descripcion": "SKU-GALLETA VIVO SODA COSTA 123GR CAJA 24UN",
+      "created": "2025-12-18T15:22:23.419125"
+    },
+    {
+      "sku": "A309268",
+      "descripcion": "SKU-GALLETA LIMON MCKAY 120GR CAJA 30UN",
+      "created": "2025-12-18T15:22:23.424128"
+    },
+    {
+      "sku": "A302746",
+      "descripcion": "SKU-GALLETA COSTA MANTEQUILLA 140GR CAJA 24UN",
+      "created": "2025-12-18T15:22:23.428137"
+    },
+    {
+      "sku": "A308819",
+      "descripcion": "SKU-GALLETA MCKAY MARAVILLA 120GR CAJA 30UN",
+      "created": "2025-12-18T15:22:23.435224"
+    },
+    {
+      "sku": "A281294",
+      "descripcion": "SKU-GALLETA MCKAY NIZA 150GR CAJA 24UN",
+      "created": "2025-12-18T15:22:23.440225"
+    },
+    {
+      "sku": "A302821",
+      "descripcion": "SKU-GALLETA MCKAY OBLEA BOCADO 140GR X 24UN",
+      "created": "2025-12-18T15:22:23.444746"
+    },
+    {
+      "sku": "A290456",
+      "descripcion": "SKU-GALLETA TRITON MCKAY CHOCOLATE 116GR CAJA 30UN",
+      "created": "2025-12-18T15:22:23.451742"
+    },
+    {
+      "sku": "A303409",
+      "descripcion": "SKU-GALLETA NESTLE CHOKITA 30GR X 100 UNIDADES",
+      "created": "2025-12-18T15:22:23.456739"
+    },
+    {
+      "sku": "A304896",
+      "descripcion": "SKU-GALLETA VINO MCKAY 28 X 155 GRS",
+      "created": "2025-12-18T15:22:23.460743"
+    },
+    {
+      "sku": "A303607",
+      "descripcion": "SKU-GALLETAS EMPAREDADOS DE CIRUELA ECOVIDA 150GR X 30UN",
+      "created": "2025-12-18T15:22:23.467741"
+    },
+    {
+      "sku": "A303610",
+      "descripcion": "SKU-GALLETAS EMPAREDADOS DE HIGO S/AZUCAR ECOVIDA 150GR X 30UN",
+      "created": "2025-12-18T15:22:23.472743"
+    },
+    {
+      "sku": "A303611",
+      "descripcion": "SKU-GALLETAS EMPAREDADOS DE MANI S/AZUCAR ECOVIDA 150GR CAJA 30 UN",
+      "created": "2025-12-18T15:22:23.478744"
+    },
+    {
+      "sku": "A303604",
+      "descripcion": "SKU-GALLETAS SIN AZUCAR ECOVIDA 120GR X 30UN",
+      "created": "2025-12-18T15:22:23.485739"
+    },
+    {
+      "sku": "A311839",
+      "descripcion": "SKU-HAMBURGUESA VEGANA GARBANZOS CONG MINUTO VERDE 100GR CAJA 30UN",
+      "created": "2025-12-18T15:22:23.492742"
+    },
+    {
+      "sku": "A310704",
+      "descripcion": "SKU-HARINA DE TRIGO SIN POLVO 1KG DISPLAY 10UN",
+      "created": "2025-12-18T15:22:23.497741"
+    },
+    {
+      "sku": "A304313",
+      "descripcion": "SKU-HELADO CREMA BRESLER GRANEL TRISABOR CHOC FRUT VAINILLA 1.8 LT CAJA 6UN",
+      "created": "2025-12-18T15:22:23.502741"
+    },
+    {
+      "sku": "A010593",
+      "descripcion": "SKU-HUEVO BLANCO PRIMERA CAJA 180 UN",
+      "created": "2025-12-18T15:22:23.510741"
+    },
+    {
+      "sku": "A003698",
+      "descripcion": "SKU-JAMON CERDO COCIDO ENTERO KG (XD)",
+      "created": "2025-12-18T15:22:23.516738"
+    },
+    {
+      "sku": "A310721",
+      "descripcion": "SKU-JAMON CERDO COLONIAL LAMINADO 200GR CAJA 12UN",
+      "created": "2025-12-18T15:22:23.521739"
+    },
+    {
+      "sku": "A307320",
+      "descripcion": "SKU-JAMON CERDO PIERNA LAMINADO 500GR CAJA 4UN",
+      "created": "2025-12-18T15:22:23.527751"
+    },
+    {
+      "sku": "A307454",
+      "descripcion": "SKU-JAMON PLANCHADO LAMINADO 500 GR CAJA 4UN",
+      "created": "2025-12-18T15:22:23.533751"
+    },
+    {
+      "sku": "A307236",
+      "descripcion": "SKU-FIAMBRE SANDWICH LAMINADO 500GR CAJA 4UN",
+      "created": "2025-12-18T15:22:23.538749"
+    },
+    {
+      "sku": "A307282",
+      "descripcion": "SKU-JAMON PAVO AHUMADO LAMINADO 500GR CAJA 4UN",
+      "created": "2025-12-18T15:22:23.543272"
+    },
+    {
+      "sku": "A073820",
+      "descripcion": "SKU-JUGO CAJA 1LT ANDIFRUT DURAZNO 1LT PACK 6UN",
+      "created": "2025-12-18T15:22:23.549276"
+    },
+    {
+      "sku": "A011547",
+      "descripcion": "SKU-JUGO CAJA 1 LT ANDIFRUT NARANJA PACK 6UN (XD)",
+      "created": "2025-12-18T15:22:23.554270"
+    },
+    {
+      "sku": "A010885",
+      "descripcion": "SKU-JUGO CAJA 1 LT ANDIFRUT PINA PACK 6UN (XD)",
+      "created": "2025-12-18T15:22:23.560275"
+    },
+    {
+      "sku": "A308435",
+      "descripcion": "SKU-JUGO CONCENTRADO 1+5 DURAZNO BIDON 5LT TRAVERSO",
+      "created": "2025-12-18T15:22:23.568277"
+    },
+    {
+      "sku": "A308436",
+      "descripcion": "SKU-JUGO CONCENTRADO 1+5 FRAMBUESA BIDON 5LT TRAVERSO",
+      "created": "2025-12-18T15:22:23.579275"
+    },
+    {
+      "sku": "A308438",
+      "descripcion": "SKU-JUGO CONCENTRADO 1+5 MELON TUNA BIDON 5LT TRAVERSO",
+      "created": "2025-12-18T15:22:23.585272"
+    },
+    {
+      "sku": "A308439",
+      "descripcion": "SKU-JUGO CONCENTRADO 1+5 NARANJA BIDON 5LT TRAVERSO",
+      "created": "2025-12-18T15:22:23.593279"
+    },
+    {
+      "sku": "A308440",
+      "descripcion": "SKU-JUGO CONCENTRADO 1+5 PINA BIDON 5LT TRAVERSO",
+      "created": "2025-12-18T15:22:23.601273"
+    },
+    {
+      "sku": "A311114",
+      "descripcion": "SKU-LECHE CONSERVA CONDENSADA NESTLE BOLSA 6KG",
+      "created": "2025-12-18T15:22:23.605276"
+    },
+    {
+      "sku": "A309923",
+      "descripcion": "SKU-LECHE CONSERVA EVAPORADA 390GR IDEAL NESTLE",
+      "created": "2025-12-18T15:22:23.612276"
+    },
+    {
+      "sku": "A295574",
+      "descripcion": "SKU-LECHE IND SEMI DESCREMADA CHOCOLATE (C/CACAO) SOPROLE 200CC CAJA 30 UN",
+      "created": "2025-12-18T15:22:23.617275"
+    },
+    {
+      "sku": "A295543",
+      "descripcion": "SKU-LECHE IND DESCREMADA 200CC CAJA 24UN COLUN (SS)",
+      "created": "2025-12-18T15:22:23.625271"
+    },
+    {
+      "sku": "A295291",
+      "descripcion": "SKU-LECHE IND SEMI DESCREMADA FRUTILLA SOPROLE 200CC 30 UNIDADES",
+      "created": "2025-12-18T15:22:23.631284"
+    },
+    {
+      "sku": "A304473",
+      "descripcion": "SKU-LECHE LIQUIDA DESCREMADA NATURAL 1LT X 12 UN",
+      "created": "2025-12-18T15:22:23.640282"
+    },
+    {
+      "sku": "A295284",
+      "descripcion": "SKU-LECHE LIQ. DESCREMADA SIN LACTOSA SOPROLE CAJA 1LT 12 UNIDADES",
+      "created": "2025-12-18T15:22:23.646803"
+    },
+    {
+      "sku": "A011972",
+      "descripcion": "SKU-LECHE LIQ. ENTERA 31% NATURAL SOPROLE BOTELLA 1LT CAJA 12UN",
+      "created": "2025-12-18T15:22:23.651807"
+    },
+    {
+      "sku": "A295314",
+      "descripcion": "SKU-LECHE LIQ. SEMIDESCREMADA NATURAL SOPROLE CAJA 1LT 12 UNIDADES",
+      "created": "2025-12-18T15:22:23.658801"
+    },
+    {
+      "sku": "A311945",
+      "descripcion": "SKU-LECHE LIQUIDA SEMIDESCREMADA S/LACTOSA 1LT CAJA 6UN SOPROLE",
+      "created": "2025-12-18T15:22:23.664806"
+    },
+    {
+      "sku": "A302708",
+      "descripcion": "SKU-LECHE POLVO ENTERA NATURAL 26% ULA 800GR CAJA 20 UN",
+      "created": "2025-12-18T15:22:23.669800"
+    },
+    {
+      "sku": "A309150",
+      "descripcion": "SKU-LECHE POLVO ENTERA NATURAL 26% NIDO INSTANTANEA LATA 1,35KG CAJA 6UN",
+      "created": "2025-12-18T15:22:23.676805"
+    },
+    {
+      "sku": "A311833",
+      "descripcion": "SKU-LECHE POLVO SEMIDESCREAMADA NATURAL 700GR CAJA 12UN SOPROLE",
+      "created": "2025-12-18T15:22:23.682814"
+    },
+    {
+      "sku": "A303156",
+      "descripcion": "SKU-LEGUMBRE ARVEJAS PARTIDAS SECA 1KG X 10UN",
+      "created": "2025-12-18T15:22:23.690801"
+    },
+    {
+      "sku": "A303423",
+      "descripcion": "SKU-LEGUMBRE GARBANZOS PELADOS SECOS 1KG DISPLAY 10 UN",
+      "created": "2025-12-18T15:22:23.694802"
+    },
+    {
+      "sku": "A303424",
+      "descripcion": "SKU-LEGUMBRE LENTEJAS SECAS 6MM 1KG DISPLAY 10 UN",
+      "created": "2025-12-18T15:22:23.703812"
+    },
+    {
+      "sku": "A311934",
+      "descripcion": "SKU-LEGUMBRE POROTO NEGROS SECO BOLSA 1KG",
+      "created": "2025-12-18T15:22:23.709804"
+    },
+    {
+      "sku": "A305059",
+      "descripcion": "SKU-LEGUMBRE POROTO HALLADO SECO 1KG DISPLAY 10 UN",
+      "created": "2025-12-18T15:22:23.716803"
+    },
+    {
+      "sku": "A057114",
+      "descripcion": "SKU-LEVADURA SECA SOBRE 500GR",
+      "created": "2025-12-18T15:22:23.723802"
+    },
+    {
+      "sku": "A310792",
+      "descripcion": "SKU-LONGANIZA CERDO PARRILLERA SAN JORGE 800GR UN",
+      "created": "2025-12-18T15:22:23.728818"
+    },
+    {
+      "sku": "A054579",
+      "descripcion": "SKU-MAICENA FINA DE MAIZ BOLSA 1KG",
+      "created": "2025-12-18T15:22:23.734826"
+    },
+    {
+      "sku": "A311946",
+      "descripcion": "SKU-DULCE DE LECHE BOLSA 1KG DISPLAY 5UN SOPROLE",
+      "created": "2025-12-18T15:22:23.742328"
+    },
+    {
+      "sku": "A013226",
+      "descripcion": "SKU-MANTECA PROFESIONAL DELICIA SOPROLE 1KG",
+      "created": "2025-12-18T15:22:23.748340"
+    },
+    {
+      "sku": "A013341",
+      "descripcion": "SKU-MANTEQUILLA SOPROLE PAQUETE 250GR",
+      "created": "2025-12-18T15:22:23.757345"
+    },
+    {
+      "sku": "A308794",
+      "descripcion": "SKU-MANTEQUILLA MINIPOTE 10GR CAJA 144UN SOPROLE",
+      "created": "2025-12-18T15:22:23.763352"
+    },
+    {
+      "sku": "A013174",
+      "descripcion": "SKU-MARGARINA SOPROLE PAQUETE 250GR",
+      "created": "2025-12-18T15:22:23.773340"
+    },
+    {
+      "sku": "A308478",
+      "descripcion": "SKU-MASA FRESCA TORTILLA TRIGO 20-25CM 53GR CAJA 120UN PANCHO VILLA",
+      "created": "2025-12-18T15:22:23.778341"
+    },
+    {
+      "sku": "A307484",
+      "descripcion": "SKU-MERMELADA DE GUINDA AMBROSOLI 1KG CAJA 10UN",
+      "created": "2025-12-18T15:22:23.784341"
+    },
+    {
+      "sku": "A309968",
+      "descripcion": "SKU-MERMELADA DAMASCO WATTS SOBRE 225GR",
+      "created": "2025-12-18T15:22:23.792341"
+    },
+    {
+      "sku": "A051794",
+      "descripcion": "SKU-MERMELADA DAMASCO LIGHT WATTS SOBRE 250GR",
+      "created": "2025-12-18T15:22:23.801351"
+    },
+    {
+      "sku": "A052386",
+      "descripcion": "SKU-MERMELADA DURAZNO REGIMEL SOBRE 200GR",
+      "created": "2025-12-18T15:22:23.809346"
+    },
+    {
+      "sku": "A269506",
+      "descripcion": "SKU-MERMELADA FRUTILLA S/AZUCAR ECKART SOBRE 200GR",
+      "created": "2025-12-18T15:22:23.817340"
+    },
+    {
+      "sku": "A052012",
+      "descripcion": "SKU-MERMELADA FRUTILLA 20GR CAJA 192UN",
+      "created": "2025-12-18T15:22:23.824338"
+    },
+    {
+      "sku": "A307787",
+      "descripcion": "SKU-MERMELADA DURAZNO LIGHT 20GR RELKON CAJA 192UN",
+      "created": "2025-12-18T15:22:23.830355"
+    },
+    {
+      "sku": "A303990",
+      "descripcion": "SKU-MEZCLA PARA HELADO CREMA BOCADO CALO 1CJ X 12 UN X 1LT",
+      "created": "2025-12-18T15:22:23.837359"
+    },
+    {
+      "sku": "A303991",
+      "descripcion": "SKU-MEZCLA PARA HELADO CREMA CHOCOLATE CALO 1CJ X 12 UN X 1LT",
+      "created": "2025-12-18T15:22:23.844872"
+    },
+    {
+      "sku": "A303992",
+      "descripcion": "SKU-MEZCLA PARA HELADO CREMA FRUTILLA CALO 1CJ X 12 UN X 1LT",
+      "created": "2025-12-18T15:22:23.852879"
+    },
+    {
+      "sku": "A052553",
+      "descripcion": "SKU-MIEL DE ABEJA 1KG",
+      "created": "2025-12-18T15:22:23.860873"
+    },
+    {
+      "sku": "A289665",
+      "descripcion": "SKU-PAN CONG BAGUETTE BREMA 42 GR CAJA 7KG",
+      "created": "2025-12-18T15:22:23.866876"
+    },
+    {
+      "sku": "A307431",
+      "descripcion": "SKU-PAN CONG HALLULLA MEDIA 55G HORNEADA BREDENMASTER CAJA 12KG",
+      "created": "2025-12-18T15:22:23.875873"
+    },
+    {
+      "sku": "A289160",
+      "descripcion": "SKU-PAN CONG HALLULLA 95GR BREMA CJ12K",
+      "created": "2025-12-18T15:22:23.880876"
+    },
+    {
+      "sku": "A268493",
+      "descripcion": "SKU-HALLULLA MEDIA INTEGRAL BREMA 55GR CAJA 12KG (XD)",
+      "created": "2025-12-18T15:22:23.887873"
+    },
+    {
+      "sku": "A212175",
+      "descripcion": "SKU-PAN HAMBURGUESA CONG 80GR BREMA CAJA 55UN",
+      "created": "2025-12-18T15:22:23.893871"
+    },
+    {
+      "sku": "A289320",
+      "descripcion": "SKU-PAN HOT DOG CONG 55GR BREMA CAJA 75UN",
+      "created": "2025-12-18T15:22:23.899875"
+    },
+    {
+      "sku": "A289177",
+      "descripcion": "SKU-CONG PAN MARRAQUETAGRANDE 210G BREMA CAJA 7.7KG",
+      "created": "2025-12-18T15:22:23.907874"
+    },
+    {
+      "sku": "A301955",
+      "descripcion": "SKU-PAN ENVASADO MOLDE CONGELADO 580 GR X 10UN",
+      "created": "2025-12-18T15:22:23.912882"
+    },
+    {
+      "sku": "A301959",
+      "descripcion": "SKU-PAN ENVASADO MOLDE INTEGRAL CONGELADO 580 GR X 10UN",
+      "created": "2025-12-18T15:22:23.923872"
+    },
+    {
+      "sku": "A311888",
+      "descripcion": "SKU-PASTAS FRESCAS GNOCHI 400GR RANA UN",
+      "created": "2025-12-18T15:22:23.930893"
+    },
+    {
+      "sku": "A304104",
+      "descripcion": "SKU-PATE AVE 125 GR X 16UN",
+      "created": "2025-12-18T15:22:23.939882"
+    },
+    {
+      "sku": "A306249",
+      "descripcion": "SKU-PATE TERNERA SAN JORGE 125GR 16UN",
+      "created": "2025-12-18T15:22:23.947416"
+    },
+    {
+      "sku": "A089098",
+      "descripcion": "SKU-MERLUZA FILETE AUSTRAL 200-400GR PORC. CONG KG (SP)",
+      "created": "2025-12-18T15:22:23.956420"
+    },
+    {
+      "sku": "A308486",
+      "descripcion": "SKU-POLENTA BOLSA 1KG UN ALMIFRUT",
+      "created": "2025-12-18T15:22:23.961411"
+    },
+    {
+      "sku": "A255462",
+      "descripcion": "SKU-POLLO FILETILLO PECHUGA AGROSUPER KG CONG",
+      "created": "2025-12-18T15:22:23.968422"
+    },
+    {
+      "sku": "A310741",
+      "descripcion": "SKU-POLLO MEDIA PECHUGA S/HUESO 28% MARINADO CONG KG",
+      "created": "2025-12-18T15:22:23.977413"
+    },
+    {
+      "sku": "A311164",
+      "descripcion": "SKU-POLLO TRUTRO CORTO C/HUESO HASTA 28% MARINADO CONG KG",
+      "created": "2025-12-18T15:22:23.982410"
+    },
+    {
+      "sku": "A310740",
+      "descripcion": "SKU-POLLO TRUTRO ENTERO C/HUESO HASTA 28% MARINADO CONG KG",
+      "created": "2025-12-18T15:22:23.991409"
+    },
+    {
+      "sku": "A255493",
+      "descripcion": "SKU-POLLO TRUTRO LARGO CONGELADO KILO",
+      "created": "2025-12-18T15:22:23.998415"
+    },
+    {
+      "sku": "A305755",
+      "descripcion": "SKU-POLVOS DE HORNEAR 500GR",
+      "created": "2025-12-18T15:22:24.007413"
+    },
+    {
+      "sku": "A059990",
+      "descripcion": "SKU-POSTRE EN POLVO BAVAROIS NARANJA 1KG",
+      "created": "2025-12-18T15:22:24.014411"
+    },
+    {
+      "sku": "A060677",
+      "descripcion": "SKU-POSTRE EN POLVO JALEA 15 CEREZA GUINDA TKF 1KG",
+      "created": "2025-12-18T15:22:24.022410"
+    },
+    {
+      "sku": "A060598",
+      "descripcion": "SKU-POSTRE EN POLVO JALEA 15 DURAZNO MACRO FOOD 1KG",
+      "created": "2025-12-18T15:22:24.027409"
+    },
+    {
+      "sku": "A060853",
+      "descripcion": "SKU-POSTRE EN POLVO JALEA FRAMBUESA LIGHT TKF SOBRE 60GR",
+      "created": "2025-12-18T15:22:24.034430"
+    },
+    {
+      "sku": "A060923",
+      "descripcion": "SKU-POSTRE EN POLVO JALEA 15 LIMON MACRO FOOD 1KG",
+      "created": "2025-12-18T15:22:24.040418"
+    },
+    {
+      "sku": "A060996",
+      "descripcion": "SKU-POSTRE EN POLVO JALEA 15 MANZANA 1KG",
+      "created": "2025-12-18T15:22:24.044931"
+    },
+    {
+      "sku": "A060686",
+      "descripcion": "SKU-POSTRE EN POLVO JALEA 15 MELON TUNA TKF 1KG",
+      "created": "2025-12-18T15:22:24.055934"
+    },
+    {
+      "sku": "A286909",
+      "descripcion": "SKU-POSTRE DESHID JALEA DE NARANJA CARIC 10KG",
+      "created": "2025-12-18T15:22:24.060930"
+    },
+    {
+      "sku": "A305751",
+      "descripcion": "SKU-POSTRE DESHID JALEA DE NARANJA LIGHT CON SUCRALOSA 275GR UN",
+      "created": "2025-12-18T15:22:24.066941"
+    },
+    {
+      "sku": "A095558",
+      "descripcion": "SKU-POSTRE EN POLVO JALEA 15 PAPAYA MACRO FOOD 1KG",
+      "created": "2025-12-18T15:22:24.072930"
+    },
+    {
+      "sku": "A286916",
+      "descripcion": "SKU-POSTRE DESHID JALEA DE PINA CARIC 10KG",
+      "created": "2025-12-18T15:22:24.076930"
+    },
+    {
+      "sku": "A305752",
+      "descripcion": "SKU-POSTRE DESHID JALEA DE PINA LIGHT CON SUCRALOSA 275GR UN",
+      "created": "2025-12-18T15:22:24.081933"
+    },
+    {
+      "sku": "A308979",
+      "descripcion": "SKU-POSTRE DESHID MOUSSE DE CHOCOLATE TKF 1KG UN",
+      "created": "2025-12-18T15:22:24.090930"
+    },
+    {
+      "sku": "A061348",
+      "descripcion": "SKU-POSTRE EN POLVO NATILLA MACRO FOOD LUCUMA 1KG",
+      "created": "2025-12-18T15:22:24.095931"
+    },
+    {
+      "sku": "A061339",
+      "descripcion": "SKU-POSTRE EN POLVO NATILLA MANJAR COCO MACRO 1KG",
+      "created": "2025-12-18T15:22:24.103939"
+    },
+    {
+      "sku": "A075819",
+      "descripcion": "SKU-POSTRE DESHID NATILLA SUSPIRO LIMENO KG",
+      "created": "2025-12-18T15:22:24.108929"
+    },
+    {
+      "sku": "A061588",
+      "descripcion": "SKU-POSTRE EN POLVO SEMOLA CON LECHE 1KG",
+      "created": "2025-12-18T15:22:24.115936"
+    },
+    {
+      "sku": "A310666",
+      "descripcion": "SKU-POSTRE IND FLAN CARAMELO 110GR BANDEJA 36UN SOPROLE (SS)",
+      "created": "2025-12-18T15:22:24.123931"
+    },
+    {
+      "sku": "A310665",
+      "descripcion": "SKU-POSTRE IND FLAN VAINILLA 110GR BANDEJA 36UN SOPROLE (SS)",
+      "created": "2025-12-18T15:22:24.130947"
+    },
+    {
+      "sku": "A303546",
+      "descripcion": "SKU-POSTRE IND JALEA SOPROLE GUINDA 110GR X 36UN (SS)",
+      "created": "2025-12-18T15:22:24.138939"
+    },
+    {
+      "sku": "A306116",
+      "descripcion": "SKU-JALEA NARANJA COLUN 100 GR CAJA 48UN (SS)",
+      "created": "2025-12-18T15:22:24.143459"
+    },
+    {
+      "sku": "A303544",
+      "descripcion": "SKU-POSTRE IND JALEA SOPROLE PINA 110GR X 36UN (SS)",
+      "created": "2025-12-18T15:22:24.150467"
+    },
+    {
+      "sku": "A307776",
+      "descripcion": "SKU-POSTRE IND SOPROLE LECHE ASADA 120GR BANDEJA 36UN",
+      "created": "2025-12-18T15:22:24.156461"
+    },
+    {
+      "sku": "A311869",
+      "descripcion": "SKU-POSTRE IND SEMOLA CARAMELO 140GR DISPLAY 4UN SOPROLE (SS)",
+      "created": "2025-12-18T15:22:24.162463"
+    },
+    {
+      "sku": "A311864",
+      "descripcion": "SKU-POSTRE IND SOPROLE ARROZ CON LECHE 130GR DISPLAY 4UN (SS)",
+      "created": "2025-12-18T15:22:24.169462"
+    },
+    {
+      "sku": "A311866",
+      "descripcion": "SKU-POSTRE IND SOPROLE MANJARATE 80GR DISPLAY 4UN",
+      "created": "2025-12-18T15:22:24.175459"
+    },
+    {
+      "sku": "A290302",
+      "descripcion": "SKU-PLANCHA PIZZA CONG BREMA 600GR CAJA 20UN_",
+      "created": "2025-12-18T15:22:24.181482"
+    },
+    {
+      "sku": "A108683",
+      "descripcion": "SKU-PREMEZCLA BIZCOCHO TEGRAL CHOCOLATE PURATOS SACO 10KG",
+      "created": "2025-12-18T15:22:24.188459"
+    },
+    {
+      "sku": "A108676",
+      "descripcion": "SKU-PREMEZCLA BIZCOCHO PURATOS SACO 10KG",
+      "created": "2025-12-18T15:22:24.193458"
+    },
+    {
+      "sku": "A062268",
+      "descripcion": "SKU-PREMEZCLA MERENGUE BOLSA 1KG",
+      "created": "2025-12-18T15:22:24.200463"
+    },
+    {
+      "sku": "A308697",
+      "descripcion": "SKU-PRIETAS CERDO VACIO PF 1KG UN",
+      "created": "2025-12-18T15:22:24.207457"
+    },
+    {
+      "sku": "A308429",
+      "descripcion": "SKU-PROTEINA DE SOYA 500GR UN ALMIFRUT",
+      "created": "2025-12-18T15:22:24.212458"
+    },
+    {
+      "sku": "A312101",
+      "descripcion": "SKU-PULPA CHIRIMOYA BOLSA 1KG CONG CAJA 10UN MINUTO VERDE",
+      "created": "2025-12-18T15:22:24.221469"
+    },
+    {
+      "sku": "A312100",
+      "descripcion": "SKU-PULPA FRAMBUESA BOLSA 1KG CONG CAJA 10UN MINUTO VERDE",
+      "created": "2025-12-18T15:22:24.227461"
+    },
+    {
+      "sku": "A312099",
+      "descripcion": "SKU-PULPA FRUTILLA BOLSA 1KG CONG CAJA 10UN MINUTO VERDE",
+      "created": "2025-12-18T15:22:24.232469"
+    },
+    {
+      "sku": "A061861",
+      "descripcion": "SKU-PURE PURE DE PAPAS SIN LECHE MAGGI BOLSA 2KG",
+      "created": "2025-12-18T15:22:24.238467"
+    },
+    {
+      "sku": "A072867",
+      "descripcion": "SKU-PURE PURE DE PAPAS SIN LECHE KNORR 20KG (SS)",
+      "created": "2025-12-18T15:22:24.242973"
+    },
+    {
+      "sku": "A311883",
+      "descripcion": "SKU-PURE PALTA BOLSA 500GR CAJA 8UN MINUTO VERDE CONG",
+      "created": "2025-12-18T15:22:24.247987"
+    },
+    {
+      "sku": "A303573",
+      "descripcion": "SKU-QUEQUES NUTRABIEN BROWNIE 62G CHIP CHOCOLATE DISPLAY 12 UN",
+      "created": "2025-12-18T15:22:24.254981"
+    },
+    {
+      "sku": "A303828",
+      "descripcion": "SKU-QUEQUES NUTRABIEN BROWNIE SIN A ZUCAR 50GR X 12 UN",
+      "created": "2025-12-18T15:22:24.258980"
+    },
+    {
+      "sku": "A311767",
+      "descripcion": "SKU-QUESILLO POTE 300GR DISPLAY 5UN SOPROLE",
+      "created": "2025-12-18T15:22:24.263987"
+    },
+    {
+      "sku": "A311948",
+      "descripcion": "SKU-QUESO CREMA SABOR NATURAL 200GR DISPLAY 8UN DOS ALAMOS",
+      "created": "2025-12-18T15:22:24.271000"
+    },
+    {
+      "sku": "A310388",
+      "descripcion": "SKU-QUESO CHACRA RIO BUENO BOLSA 400GR KG",
+      "created": "2025-12-18T15:22:24.274981"
+    },
+    {
+      "sku": "A310026",
+      "descripcion": "SKU-QUESO GAUDA ENTERO SOPROLE BARRA 3,9KG UN",
+      "created": "2025-12-18T15:22:24.280985"
+    },
+    {
+      "sku": "A311768",
+      "descripcion": "SKU-QUESO GAUDA LAMINADO 500GR DISPLAY 2UN SOPROLE",
+      "created": "2025-12-18T15:22:24.287984"
+    },
+    {
+      "sku": "A311929",
+      "descripcion": "SKU-QUESO MANTECOSO LAMINADO 3,4KG QUILQUE UN",
+      "created": "2025-12-18T15:22:24.292979"
+    },
+    {
+      "sku": "A311796",
+      "descripcion": "SKU-QUESO PARMESANO RALLADO SOBRE 80GR DISPLAY 15UN DOS ALAMOS",
+      "created": "2025-12-18T15:22:24.299991"
+    },
+    {
+      "sku": "A040600",
+      "descripcion": "SKU-QUINOA KG",
+      "created": "2025-12-18T15:22:24.306982"
+    },
+    {
+      "sku": "N305058",
+      "descripcion": "SKU-REVOLVEDOR MADERA 14CM DISPLAY 1000UN",
+      "created": "2025-12-18T15:22:24.310980"
+    },
+    {
+      "sku": "A062392",
+      "descripcion": "SKU-SABORIZANTE CHOCOLATE POLVO AMARGO BOLSA 1KG UN",
+      "created": "2025-12-18T15:22:24.315983"
+    },
+    {
+      "sku": "A193016",
+      "descripcion": "SKU-SABORIZANTE MILO NESTLE BOLSA 1KG CAJA 15UN",
+      "created": "2025-12-18T15:22:24.322980"
+    },
+    {
+      "sku": "A043069",
+      "descripcion": "SKU-SAL DE MESA SIN MARCA 1KG",
+      "created": "2025-12-18T15:22:24.328987"
+    },
+    {
+      "sku": "A207690",
+      "descripcion": "SKU-SAL DIET BIOSAL FRASCO 125GR",
+      "created": "2025-12-18T15:22:24.335992"
+    },
+    {
+      "sku": "A304494",
+      "descripcion": "SKU-SAL PORCION IND 2000 UN",
+      "created": "2025-12-18T15:22:24.340985"
+    },
+    {
+      "sku": "A307457",
+      "descripcion": "SKU-SALAME CERDO ITALIANO LAMINADO DISPLAY 1,6 KG UN",
+      "created": "2025-12-18T15:22:24.345539"
+    },
+    {
+      "sku": "A019691",
+      "descripcion": "SKU-SALSA AJI J.B. 1KG",
+      "created": "2025-12-18T15:22:24.354539"
+    },
+    {
+      "sku": "A308242",
+      "descripcion": "SKU-SALSA AJI PORCION IND SACHET 8GR CAJA 300UN TRAVERSO",
+      "created": "2025-12-18T15:22:24.362536"
+    },
+    {
+      "sku": "A020712",
+      "descripcion": "SKU-SALSA AMERICANA TRAVERSO 1KG",
+      "created": "2025-12-18T15:22:24.369540"
+    },
+    {
+      "sku": "A304950",
+      "descripcion": "SKU-SALSA BARBECUE 1KG",
+      "created": "2025-12-18T15:22:24.375531"
+    },
+    {
+      "sku": "A307419",
+      "descripcion": "SKU-SALSA BLANCA MACRO FOOD BOLSA 1 KILO",
+      "created": "2025-12-18T15:22:24.382538"
+    },
+    {
+      "sku": "A052757",
+      "descripcion": "SKU-SALSA CARAMELO B YT BOTELLA 1LT",
+      "created": "2025-12-18T15:22:24.390534"
+    },
+    {
+      "sku": "A052775",
+      "descripcion": "SKU-SALSA CHOCOLATE BYT BOTELLA 1LT",
+      "created": "2025-12-18T15:22:24.397538"
+    },
+    {
+      "sku": "A052979",
+      "descripcion": "SKU-SALSA FRAMBUESA WIBSA BOTELLA 1LT",
+      "created": "2025-12-18T15:22:24.407535"
+    },
+    {
+      "sku": "A052827",
+      "descripcion": "SKU-SALSA FRUTILLA BYT BOTELLA 1LT",
+      "created": "2025-12-18T15:22:24.413538"
+    },
+    {
+      "sku": "A052863",
+      "descripcion": "SKU-SALSA NARANJA WIBSA BOTELLA 1LT",
+      "created": "2025-12-18T15:22:24.423537"
+    },
+    {
+      "sku": "A043166",
+      "descripcion": "SKU-SALSA SOYA GOOD FOOD 1LT",
+      "created": "2025-12-18T15:22:24.428538"
+    },
+    {
+      "sku": "A305623",
+      "descripcion": "SKU-SALSA DE TOMATE ITALIANA MALLOA SACHET 200GR UN",
+      "created": "2025-12-18T15:22:24.436543"
+    },
+    {
+      "sku": "A307441",
+      "descripcion": "SKU-SALSA PARA PIZZA ACONCAGUA FOODS 1KG CAJA 10UN",
+      "created": "2025-12-18T15:22:24.442535"
+    },
+    {
+      "sku": "A305912",
+      "descripcion": "SKU-SALSA ESPANOLA 1 KILO",
+      "created": "2025-12-18T15:22:24.451857"
+    },
+    {
+      "sku": "A305627",
+      "descripcion": "SKU-SALSA INGLESA 165CC UN",
+      "created": "2025-12-18T15:22:24.459852"
+    },
+    {
+      "sku": "A304068",
+      "descripcion": "SKU-SALSA PESTO 190GR CAJA 12UN",
+      "created": "2025-12-18T15:22:24.468859"
+    },
+    {
+      "sku": "A311841",
+      "descripcion": "SKU-SANDWICH MIGA AVE MAYO 175GR PF CAJA 6UN REFRIG",
+      "created": "2025-12-18T15:22:24.475855"
+    },
+    {
+      "sku": "A311842",
+      "descripcion": "SKU-SANDWICH MIGA JAMON QUESO 175GR PF CAJA 6UN REFRIG",
+      "created": "2025-12-18T15:22:24.484857"
+    },
+    {
+      "sku": "A311844",
+      "descripcion": "SKU-SANDWICH MIGA AVE PIMENTON 175GR PF CAJA 6UN REFRIG",
+      "created": "2025-12-18T15:22:24.491856"
+    },
+    {
+      "sku": "A311843",
+      "descripcion": "SKU-SANDWICH MIGA QUESO SALAME 150GR PF CAJA 6UN REFRIG",
+      "created": "2025-12-18T15:22:24.498869"
+    },
+    {
+      "sku": "A303416",
+      "descripcion": "SKU-SEMOLA 1KG DISPLAY 12 UNIDADES",
+      "created": "2025-12-18T15:22:24.507854"
+    },
+    {
+      "sku": "A303812",
+      "descripcion": "SKU-SNACK GALLETA DE ARROZ ARANDANO Y GRANADA 16GR X 28 UN",
+      "created": "2025-12-18T15:22:24.513860"
+    },
+    {
+      "sku": "A311451",
+      "descripcion": "SKU-SNACK MANI SALADO 380GR CAJA 16UN EVERCRISP",
+      "created": "2025-12-18T15:22:24.525850"
+    },
+    {
+      "sku": "A311942",
+      "descripcion": "SKU-SNACK MANI SIN SAL 380GR CAJA 16UN EVERCRISP",
+      "created": "2025-12-18T15:22:24.532903"
+    },
+    {
+      "sku": "A304708",
+      "descripcion": "SKU-SUPLEMENTO NESTUM AVENA ARROZ 250 GR X 24 UN",
+      "created": "2025-12-18T15:22:24.540903"
+    },
+    {
+      "sku": "A304424",
+      "descripcion": "SKU-TE CEYLAN GRANEL 1 X 100 BOLSAS UN",
+      "created": "2025-12-18T15:22:24.548422"
+    },
+    {
+      "sku": "A055161",
+      "descripcion": "SKU-TE HIERBA SURTID SUPREMO CAJA 20 BOLSITAS",
+      "created": "2025-12-18T15:22:24.556449"
+    },
+    {
+      "sku": "A304060",
+      "descripcion": "SKU-TE DE YERBA MATE SUPREMO CAJA 20 BOLSITAS UN",
+      "created": "2025-12-18T15:22:24.561419"
+    },
+    {
+      "sku": "A290166",
+      "descripcion": "SKU-TE LIPTON NEGRO ROYAL CEYLAN CAJA 20 UNIDAD",
+      "created": "2025-12-18T15:22:24.570428"
+    },
+    {
+      "sku": "A306379",
+      "descripcion": "SKU-TE NEGRO PREMIUN SUPREMO CAJA 100UN",
+      "created": "2025-12-18T15:22:24.577418"
+    },
+    {
+      "sku": "A307160",
+      "descripcion": "SKU-TE NEGRO RENDIDORA SUPREMO 100 BOLSITAS CAJA 10UN",
+      "created": "2025-12-18T15:22:24.585421"
+    },
+    {
+      "sku": "A307161",
+      "descripcion": "SKU-TE NEGRO CEYLAN MILDRED 100 BOLSITAS CAJA 10UN",
+      "created": "2025-12-18T15:22:24.594419"
+    },
+    {
+      "sku": "A307162",
+      "descripcion": "SKU-TE NEGRO CEYLAN MILDRED 20 BOLSITAS CAJA 50 UN",
+      "created": "2025-12-18T15:22:24.601417"
+    },
+    {
+      "sku": "A306867",
+      "descripcion": "SKU-TOCINO AHUMADO LAMINADO 500 GR CAJA 4 UN",
+      "created": "2025-12-18T15:22:24.606419"
+    },
+    {
+      "sku": "A041636",
+      "descripcion": "SKU-TRIGO MOTE L.M.C.BOLSA 1KG",
+      "created": "2025-12-18T15:22:24.612422"
+    },
+    {
+      "sku": "A311840",
+      "descripcion": "SKU-VACUNO ALBONDIGA 50GR BOLSA 300GR CONG KARMAC CAJA 3,6KG",
+      "created": "2025-12-18T15:22:24.619418"
+    },
+    {
+      "sku": "A002592",
+      "descripcion": "SKU-VACUNO ASIENTO CONG KG",
+      "created": "2025-12-18T15:22:24.624418"
+    },
+    {
+      "sku": "A002417",
+      "descripcion": "SKU-VACUNO GANSO CONG KG",
+      "created": "2025-12-18T15:22:24.631449"
+    },
+    {
+      "sku": "A311115",
+      "descripcion": "SKU-VACUNO HAMBURGUESA KARMAC 135 GR CAJA 132 UN CONG.",
+      "created": "2025-12-18T15:22:24.636436"
+    },
+    {
+      "sku": "A002431",
+      "descripcion": "SKU-VACUNO LOMO LISO CONG KG",
+      "created": "2025-12-18T15:22:24.642438"
+    },
+    {
+      "sku": "A296120",
+      "descripcion": "SKU-CARNE MOLIDA 5% CONGELADO KILO",
+      "created": "2025-12-18T15:22:24.648978"
+    },
+    {
+      "sku": "A002684",
+      "descripcion": "SKU-VACUNO POLLO GANSO CONG KG",
+      "created": "2025-12-18T15:22:24.658974"
+    },
+    {
+      "sku": "A002707",
+      "descripcion": "SKU-VACUNO POSTA PALETA CONG KG",
+      "created": "2025-12-18T15:22:24.663973"
+    },
+    {
+      "sku": "A002714",
+      "descripcion": "SKU-VACUNO POSTA ROSADA CONG KG",
+      "created": "2025-12-18T15:22:24.668977"
+    },
+    {
+      "sku": "A311874",
+      "descripcion": "SKU-VACUNO SOBRECOSTILLA CONG KG",
+      "created": "2025-12-18T15:22:24.674973"
+    },
+    {
+      "sku": "A107778",
+      "descripcion": "SKU-VACUNO SUBPRODUCTO GUATA CALLO MONDONGO CONG KG",
+      "created": "2025-12-18T15:22:24.679975"
+    },
+    {
+      "sku": "A002462",
+      "descripcion": "SKU-VACUNO TAPAPECHO CONG KG",
+      "created": "2025-12-18T15:22:24.685010"
+    },
+    {
+      "sku": "N304161",
+      "descripcion": "SKU-VASO POLIPAPEL SIMPLE BLANCO 8OZ CAJA 1000UN",
+      "created": "2025-12-18T15:22:24.690972"
+    },
+    {
+      "sku": "A311848",
+      "descripcion": "SKU-VENDING CAPUCCINO VAINILLA BOLSA 1KG CAJA 10UN LAQTIA",
+      "created": "2025-12-18T15:22:24.696972"
+    },
+    {
+      "sku": "A311846",
+      "descripcion": "SKU-VENDING LECHE EN POLVO DESCREMADA BOLSA 500GR CAJA 20UN LAQTIA",
+      "created": "2025-12-18T15:22:24.701973"
+    },
+    {
+      "sku": "A311847",
+      "descripcion": "SKU-VENDING SABORIZANTE CHOCOLATE BOLSA 1KG CAJA 10UN LAQTIA",
+      "created": "2025-12-18T15:22:24.706972"
+    },
+    {
+      "sku": "A311849",
+      "descripcion": "SKU-VENDING TE NEGRO PURO BOLSA 500GR CAJA 20UN",
+      "created": "2025-12-18T15:22:24.711975"
+    },
+    {
+      "sku": "A075493",
+      "descripcion": "SKU-VERDURA CONG ARVEJAS FRUMA BOLSA 2 KG",
+      "created": "2025-12-18T15:22:24.717974"
+    },
+    {
+      "sku": "A075509",
+      "descripcion": "SKU-VERDURA CONG BROCOLI FRUMA BOLSA 2 KG",
+      "created": "2025-12-18T15:22:24.722973"
+    },
+    {
+      "sku": "A006750",
+      "descripcion": "SKU-VERDURA CONG CHAMPIGNON FRUMA BOLSA 2.5 KG",
+      "created": "2025-12-18T15:22:24.727984"
+    },
+    {
+      "sku": "A006767",
+      "descripcion": "SKU-VERDURA CONG CHOCLO GRANO FRUMA BOLSA 2 KG",
+      "created": "2025-12-18T15:22:24.734288"
+    },
+    {
+      "sku": "A099156",
+      "descripcion": "SKU-VERDURA CONG CHOCLO TROZO 2,5 PULG FRUMA BL2K",
+      "created": "2025-12-18T15:22:24.740287"
+    },
+    {
+      "sku": "A075527",
+      "descripcion": "SKU-VERDURA CONG COLIFLOR FRUMA BOLSA 2KG",
+      "created": "2025-12-18T15:22:24.746423"
+    },
+    {
+      "sku": "A006422",
+      "descripcion": "SKU-VERDURA CONG ENSALADA JARDINERA FRUMA BOLSA 2KG",
+      "created": "2025-12-18T15:22:24.753423"
+    },
+    {
+      "sku": "A006828",
+      "descripcion": "SKU-VERDURA CONG ENSALADA PRIMAVERA FRUMA BOLSA 2KG",
+      "created": "2025-12-18T15:22:24.758420"
+    },
+    {
+      "sku": "A076827",
+      "descripcion": "SKU-VERDURA CONG ENSALADA RUSA FRUMA BOLSA 1KG",
+      "created": "2025-12-18T15:22:24.764431"
+    },
+    {
+      "sku": "A006309",
+      "descripcion": "SKU-VERDURA CONG ESPARRAGOS FRUMA BOLSA 1 KG",
+      "created": "2025-12-18T15:22:24.769417"
+    },
+    {
+      "sku": "A006897",
+      "descripcion": "SKU-VERDURA CONG ESPINACA FRUMA BOLSA 2 KG",
+      "created": "2025-12-18T15:22:24.774417"
+    },
+    {
+      "sku": "A006958",
+      "descripcion": "SKU-VERDURA CONG HABA FRUMA BOLSA 2 KG",
+      "created": "2025-12-18T15:22:24.781422"
+    },
+    {
+      "sku": "A192705",
+      "descripcion": "SKU-MIX PIMENTONES CONG FRUTOS DEL MAIPO BOLSA 1KG",
+      "created": "2025-12-18T15:22:24.786532"
+    },
+    {
+      "sku": "A006491",
+      "descripcion": "SKU-VERDURA CONG PAPA PRE-FRITAS FRUMA BOLSA 2.5 KG",
+      "created": "2025-12-18T15:22:24.791415"
+    },
+    {
+      "sku": "A006514",
+      "descripcion": "SKU-VERDURA CONG PIMIENTO ROJO CUBO FRUMA BOLSA 2 KG",
+      "created": "2025-12-18T15:22:24.796418"
+    },
+    {
+      "sku": "A007115",
+      "descripcion": "SKU-VERDURA CONG POROTOS VERDE CORTE AMERICANO FRUMA BOLSA 2 KG",
+      "created": "2025-12-18T15:22:24.800541"
+    },
+    {
+      "sku": "A007153",
+      "descripcion": "SKU-VERDURA CONG POROTOS VERDE CORTE FRANCES FRUMA BOLSA 2 KG",
+      "created": "2025-12-18T15:22:24.805415"
+    },
+    {
+      "sku": "A007191",
+      "descripcion": "SKU-VERDURA CONG SALTEADO CHAPSUI FRUMA BOLSA 2 KG",
+      "created": "2025-12-18T15:22:24.812419"
+    },
+    {
+      "sku": "A311885",
+      "descripcion": "SKU-VERDURA CONSERVA CHAMPINONES ENTEROS 400GR CAJA 24UN ACONCAGUA",
+      "created": "2025-12-18T15:22:24.817483"
+    },
+    {
+      "sku": "A311884",
+      "descripcion": "SKU-VERDURA CONSERVA PALMITOS RODAJA 400GR CAJA 24UN ACONCAGUA",
+      "created": "2025-12-18T15:22:24.822418"
+    },
+    {
+      "sku": "A051110",
+      "descripcion": "SKU-VERDURA CONSER PIMIENTO MORRON FRASCO 220GR",
+      "created": "2025-12-18T15:22:24.827417"
+    },
+    {
+      "sku": "A063920",
+      "descripcion": "SKU-VERDURA DESHIDRATADA COCHAYUYO UNIDAD",
+      "created": "2025-12-18T15:22:24.832427"
+    },
+    {
+      "sku": "A310754",
+      "descripcion": "SKU-VERDURA ENCUR ACEITUNA NEGRA LAMINADA BOLSA 935GR UN",
+      "created": "2025-12-18T15:22:24.837425"
+    },
+    {
+      "sku": "A310753",
+      "descripcion": "SKU-VERDURA ENCUR ACEITUNA SIN CAROZO BOLSA 850GR UN",
+      "created": "2025-12-18T15:22:24.842941"
+    },
+    {
+      "sku": "A041830",
+      "descripcion": "SKU-VERDURA ENCUR ACEITUNA VERDE KG",
+      "created": "2025-12-18T15:22:24.847951"
+    },
+    {
+      "sku": "A041849",
+      "descripcion": "SKU-VERDURA ENCUR ACEITUNA VERDE SIN CAROZO KG",
+      "created": "2025-12-18T15:22:24.853952"
+    },
+    {
+      "sku": "A041894",
+      "descripcion": "SKU-VERDURA ENCUR CEBOLLA PERLA KG",
+      "created": "2025-12-18T15:22:24.859952"
+    },
+    {
+      "sku": "A041928",
+      "descripcion": "SKU-VERDURA ENCUR PEPINILLOS BOLSA 1 KG",
+      "created": "2025-12-18T15:22:24.865952"
+    },
+    {
+      "sku": "A066352",
+      "descripcion": "SKU-VERDURA FRESCA ACELGA KG (XD)",
+      "created": "2025-12-18T15:22:24.871948"
+    },
+    {
+      "sku": "A067412",
+      "descripcion": "SKU-VERDURA FRESCA AJI VERDE KG",
+      "created": "2025-12-18T15:22:24.875947"
+    },
+    {
+      "sku": "A067467",
+      "descripcion": "SKU-VERDURA FRESCA APIO KG",
+      "created": "2025-12-18T15:22:24.880950"
+    },
+    {
+      "sku": "A305514",
+      "descripcion": "SKU-VERDURA FRESCA BERENJENA KG",
+      "created": "2025-12-18T15:22:24.886949"
+    },
+    {
+      "sku": "A067537",
+      "descripcion": "SKU-VERDURA FRESCA BETARRAGA KG",
+      "created": "2025-12-18T15:22:24.892101"
+    },
+    {
+      "sku": "A067634",
+      "descripcion": "SKU-VERDURA FRESCA CEBOLLA CON PIEL KG",
+      "created": "2025-12-18T15:22:24.898955"
+    },
+    {
+      "sku": "A067616",
+      "descripcion": "SKU-VERDURA FRESCA CEBOLLA MORADA KG",
+      "created": "2025-12-18T15:22:24.905023"
+    },
+    {
+      "sku": "A067652",
+      "descripcion": "SKU-VERDURA FRESCA CEBOLLIN KG",
+      "created": "2025-12-18T15:22:24.910953"
+    },
+    {
+      "sku": "A066680",
+      "descripcion": "SKU-VERDURA FRESCA CIBOULETTE UN",
+      "created": "2025-12-18T15:22:24.917948"
+    },
+    {
+      "sku": "A067786",
+      "descripcion": "SKU-VERDURA FRESCA CILANTRO KG",
+      "created": "2025-12-18T15:22:24.922964"
+    },
+    {
+      "sku": "A066769",
+      "descripcion": "SKU-VERDURA FRESCA DIENTE DRAGON BOLSA 1KG",
+      "created": "2025-12-18T15:22:24.930962"
+    },
+    {
+      "sku": "A067892",
+      "descripcion": "SKU-VERDURA FRESCA ESPINACA KG (XD)",
+      "created": "2025-12-18T15:22:24.937973"
+    },
+    {
+      "sku": "A066875",
+      "descripcion": "SKU-VERDURA FRESCA LECHUGA ESCAROLA UN",
+      "created": "2025-12-18T15:22:24.944498"
+    },
+    {
+      "sku": "A066927",
+      "descripcion": "SKU-VERDURA FRESCA LECHUGA HIDROPONICA UN",
+      "created": "2025-12-18T15:22:24.952495"
+    },
+    {
+      "sku": "A068022",
+      "descripcion": "SKU-VERDURA FRESCA PAPA KG",
+      "created": "2025-12-18T15:22:24.959496"
+    },
+    {
+      "sku": "A068040",
+      "descripcion": "SKU-VERDURA FRESCA PEPINO ENSALADA KG",
+      "created": "2025-12-18T15:22:24.968488"
+    },
+    {
+      "sku": "A067050",
+      "descripcion": "SKU-VERDURA FRESCA PEREJIL KG",
+      "created": "2025-12-18T15:22:24.973598"
+    },
+    {
+      "sku": "A067111",
+      "descripcion": "SKU-VERDURA FRESCA PIMIENTO ROJO KG",
+      "created": "2025-12-18T15:22:24.982496"
+    },
+    {
+      "sku": "A068068",
+      "descripcion": "SKU-VERDURA FRESCA PIMIENTO VERDE KG",
+      "created": "2025-12-18T15:22:24.987501"
+    },
+    {
+      "sku": "A067175",
+      "descripcion": "SKU-VERDURA FRESCA RABANITOS KG",
+      "created": "2025-12-18T15:22:24.993537"
+    },
+    {
+      "sku": "A067209",
+      "descripcion": "SKU-VERDURA FRESCA REPOLLO CRESPO ENTERO KG",
+      "created": "2025-12-18T15:22:25.000496"
+    },
+    {
+      "sku": "A068156",
+      "descripcion": "SKU-VERDURA FRESCA REPOLLO MORADO ENTERO KG",
+      "created": "2025-12-18T15:22:25.006488"
+    },
+    {
+      "sku": "A307954",
+      "descripcion": "SKU-VERDURA FRESCA TOMATE LARGA VIDA MADURO KG",
+      "created": "2025-12-18T15:22:25.013491"
+    },
+    {
+      "sku": "A068262",
+      "descripcion": "SKU-VERDURA FRESCA ZANAHORIA CON PIEL KG",
+      "created": "2025-12-18T15:22:25.020552"
+    },
+    {
+      "sku": "A067379",
+      "descripcion": "SKU-VERDURA FRESCA ZAPALLO KG",
+      "created": "2025-12-18T15:22:25.026494"
+    },
+    {
+      "sku": "A067388",
+      "descripcion": "SKU-VERDURA FRESCA ZAPALLO ITALIANO KG",
+      "created": "2025-12-18T15:22:25.033559"
+    },
+    {
+      "sku": "A004282",
+      "descripcion": "SKU-VIENESAS CERDO SAN JORGE VACIO KG",
+      "created": "2025-12-18T15:22:25.039556"
+    },
+    {
+      "sku": "A063498",
+      "descripcion": "SKU-VINO BLANCO TETRAPACK 1 LT",
+      "created": "2025-12-18T15:22:25.044028"
+    },
+    {
+      "sku": "A063629",
+      "descripcion": "SKU-VINO TINTO TETRAPACK 1LT",
+      "created": "2025-12-18T15:22:25.049921"
+    },
+    {
+      "sku": "A305696",
+      "descripcion": "SKU-YOGHURT BATIDO BOLSA CHIRIMOYA 1 LITRO CAJA 12 UN (SS)",
+      "created": "2025-12-18T15:22:25.057924"
+    },
+    {
+      "sku": "A311797",
+      "descripcion": "SKU-YOGHURT GRANEL BATIDO DAMASCO BOLSA 1KG 2UN SOPROLE",
+      "created": "2025-12-18T15:22:25.069923"
+    },
+    {
+      "sku": "A311793",
+      "descripcion": "SKU-YOGHURT GRANEL BATIDO FRUTILLA BOLSA 1KG DISPLAY 2UN SOPROLE",
+      "created": "2025-12-18T15:22:25.075929"
+    },
+    {
+      "sku": "A311798",
+      "descripcion": "SKU-YOGHURT GRANEL BATIDO VAINILLA BOLSA 1KG 2UN SOPROLE",
+      "created": "2025-12-18T15:22:25.084032"
+    },
+    {
+      "sku": "A114813",
+      "descripcion": "SKU-YOGHURT BATIDO NATURAL COLUN BOLSA LT (SS)",
+      "created": "2025-12-18T15:22:25.088978"
+    },
+    {
+      "sku": "A311940",
+      "descripcion": "SKU-YOGHURT IND LIGHT DAMASCO 120GR DISPLAY 8UN COLUN",
+      "created": "2025-12-18T15:22:25.099929"
+    },
+    {
+      "sku": "A311936",
+      "descripcion": "SKU-YOGHURT IND LIGHT FRUTILLA 120GR DISPLAY 8UN COLUN",
+      "created": "2025-12-18T15:22:25.109022"
+    },
+    {
+      "sku": "A311938",
+      "descripcion": "SKU-YOGHURT IND LIGHT FRAMBUESA 120GR DISPLAY 8UN COLUN",
+      "created": "2025-12-18T15:22:25.125926"
+    },
+    {
+      "sku": "A311939",
+      "descripcion": "SKU-YOGHURT IND LIGHT MORA 120GR DISPLAY 8UN COLUN",
+      "created": "2025-12-18T15:22:25.139941"
+    },
+    {
+      "sku": "A311937",
+      "descripcion": "SKU-YOGHURT IND LIGHT VAINILLA 120GR DISPLAY 8UN COLUN",
+      "created": "2025-12-18T15:22:25.150502"
+    },
+    {
+      "sku": "A311834",
+      "descripcion": "SKU-YOGHURT IND FRUTILLA S/AZUCAR 155GR DISPLAY 4UN SOPROLE",
+      "created": "2025-12-18T15:22:25.160496"
+    },
+    {
+      "sku": "A311076",
+      "descripcion": "SKU-YOGHURT IND BATIFRUT FRUTILLA 165GR BANDEJA 36UN SOPROLE (SS)",
+      "created": "2025-12-18T15:22:25.171511"
+    },
+    {
+      "sku": "A311836",
+      "descripcion": "SKU-YOGHURT IND FRUTOS SECOS S/AZUCAR 155GR DISPLAY 4UN SOPROLE",
+      "created": "2025-12-18T15:22:25.177490"
+    },
+    {
+      "sku": "A311258",
+      "descripcion": "SKU-YOGHURT IND NATURAL 155GR BANDEJA 36UN SOPROLE (SS)",
+      "created": "2025-12-18T15:22:25.185500"
+    },
+    {
+      "sku": "A311941",
+      "descripcion": "SKU-YOGHURT IND LIGHT NATURAL 120GR DISPLAY 8UN COLUN",
+      "created": "2025-12-18T15:22:25.193504"
+    },
+    {
+      "sku": "A311835",
+      "descripcion": "SKU-YOGHURT IND VAINILLA S/AZUCAR 155GR DISPLAY 4UN SOPROLE",
+      "created": "2025-12-18T15:22:25.203494"
+    },
+    {
+      "sku": "A311830",
+      "descripcion": "SKU-YOGHURT IND ZEROLACTO CHOCO ALEMENDRAS 155GR DISPLAY 4UN SOPROLE",
+      "created": "2025-12-18T15:22:25.209490"
+    },
+    {
+      "sku": "A311829",
+      "descripcion": "SKU-YOGHURT IND ZEROLACTO FRUTOS SECOS 155GR DISPLAY 4UN SOPROLE",
+      "created": "2025-12-18T15:22:25.220495"
+    },
+    {
+      "sku": "A311831",
+      "descripcion": "SKU-YOGHURT IND ZEROLACTO FRUTILLA 155GR BANDEJA 36UN SOPROLE",
+      "created": "2025-12-18T15:22:25.226497"
+    },
+    {
+      "sku": "A311924",
+      "descripcion": "SKU-YOGHURT IND ZEROLACTO FRUTILLA 155GR DISPLAY 4UN SOPROLE",
+      "created": "2025-12-18T15:22:25.234501"
+    },
+    {
+      "sku": "A311922",
+      "descripcion": "SKU-YOGHURT IND SOPROLE BATIFRUT DURAZNO CLASICO 165GR DISPLAY 4UN",
+      "created": "2025-12-18T15:22:25.241502"
+    },
+    {
+      "sku": "A311828",
+      "descripcion": "SKU-YOGHURT IND SOPROLE BATIFRUT PAPAYA 165GR DISPLAY 4UN",
+      "created": "2025-12-18T15:22:25.250120"
+    },
+    {
+      "sku": "A311827",
+      "descripcion": "SKU-YOGHURT IND SOPROLE BATIFRUT PINA 165GR DISPLAY 4UN",
+      "created": "2025-12-18T15:22:25.257138"
+    },
+    {
+      "sku": "A216524",
+      "descripcion": "SKU-YOGHURT GOLD SOPROLE TRADICIONAL CLASICO 165GR",
+      "created": "2025-12-18T15:22:25.266120"
+    },
+    {
+      "sku": "A311832",
+      "descripcion": "SKU-YOGHURT IND TROZOS PAPAYA S/AZUCAR 155GR DISPLAY 4UN SOPROLE",
+      "created": "2025-12-18T15:22:25.274132"
+    },
+    {
+      "sku": "A059325",
+      "descripcion": "nan",
+      "created": "2025-12-18T15:22:25.283124"
+    },
+    {
+      "sku": "A059635",
+      "descripcion": "nan",
+      "created": "2025-12-18T15:22:25.291120"
+    },
+    {
+      "sku": "A306837",
+      "descripcion": "nan",
+      "created": "2025-12-18T15:22:25.301138"
+    },
+    {
+      "sku": "A312209",
+      "descripcion": "nan",
+      "created": "2025-12-18T15:22:25.312116"
+    },
+    {
+      "sku": "A312211",
+      "descripcion": "nan",
+      "created": "2025-12-18T15:22:25.320116"
+    },
+    {
+      "sku": "A312221",
+      "descripcion": "nan",
+      "created": "2025-12-18T15:22:25.328142"
+    },
+    {
+      "sku": "A018063",
+      "descripcion": "nan",
+      "created": "2025-12-18T15:22:25.336139"
+    },
+    {
+      "sku": "A254830",
+      "descripcion": "nan",
+      "created": "2025-12-18T15:22:25.347671"
+    },
+    {
+      "sku": "A305314",
+      "descripcion": "nan",
+      "created": "2025-12-18T15:22:25.355668"
+    },
+    {
+      "sku": "A311879",
+      "descripcion": "nan",
+      "created": "2025-12-18T15:22:25.365668"
+    },
+    {
+      "sku": "A311880",
+      "descripcion": "nan",
+      "created": "2025-12-18T15:22:25.374671"
+    },
+    {
+      "sku": "A311903",
+      "descripcion": "nan",
+      "created": "2025-12-18T15:22:25.383666"
+    },
+    {
+      "sku": "A311905",
+      "descripcion": "nan",
+      "created": "2025-12-18T15:22:25.392666"
+    },
+    {
+      "sku": "A312250",
+      "descripcion": "nan",
+      "created": "2025-12-18T15:22:25.403664"
+    },
+    {
+      "sku": "A312259",
+      "descripcion": "nan",
+      "created": "2025-12-18T15:22:25.412667"
+    },
+    {
+      "sku": "A305621",
+      "descripcion": "nan",
+      "created": "2025-12-18T15:22:25.424668"
+    },
+    {
+      "sku": "N312234",
+      "descripcion": "nan",
+      "created": "2025-12-18T15:22:25.435679"
+    },
+    {
+      "sku": "A303412",
+      "descripcion": "nan",
+      "created": "2025-12-18T15:22:25.449257"
+    },
+    {
+      "sku": "A312205",
+      "descripcion": "nan",
+      "created": "2025-12-18T15:22:25.460247"
+    },
+    {
+      "sku": "A312214",
+      "descripcion": "nan",
+      "created": "2025-12-18T15:22:25.470251"
+    },
+    {
+      "sku": "N312236",
+      "descripcion": "nan",
+      "created": "2025-12-18T15:22:25.480244",
+      "updated": "2025-12-18T15:22:26.128611"
+    },
+    {
+      "sku": "A018328",
+      "descripcion": "nan",
+      "created": "2025-12-18T15:22:25.490250"
+    },
+    {
+      "sku": "A303398",
+      "descripcion": "nan",
+      "created": "2025-12-18T15:22:25.499255"
+    },
+    {
+      "sku": "A306099",
+      "descripcion": "nan",
+      "created": "2025-12-18T15:22:25.510249"
+    },
+    {
+      "sku": "A311882",
+      "descripcion": "nan",
+      "created": "2025-12-18T15:22:25.522252"
+    },
+    {
+      "sku": "A312189",
+      "descripcion": "nan",
+      "created": "2025-12-18T15:22:25.533274"
+    },
+    {
+      "sku": "A312190",
+      "descripcion": "nan",
+      "created": "2025-12-18T15:22:25.543830"
+    },
+    {
+      "sku": "A312191",
+      "descripcion": "nan",
+      "created": "2025-12-18T15:22:25.557824"
+    },
+    {
+      "sku": "A312192",
+      "descripcion": "nan",
+      "created": "2025-12-18T15:22:25.569818"
+    },
+    {
+      "sku": "A312196",
+      "descripcion": "nan",
+      "created": "2025-12-18T15:22:25.581827"
+    },
+    {
+      "sku": "A312197",
+      "descripcion": "nan",
+      "created": "2025-12-18T15:22:25.593822"
+    },
+    {
+      "sku": "A312198",
+      "descripcion": "nan",
+      "created": "2025-12-18T15:22:25.604827"
+    },
+    {
+      "sku": "A312199",
+      "descripcion": "nan",
+      "created": "2025-12-18T15:22:25.616820"
+    },
+    {
+      "sku": "A312200",
+      "descripcion": "nan",
+      "created": "2025-12-18T15:22:25.628837"
+    },
+    {
+      "sku": "A312202",
+      "descripcion": "nan",
+      "created": "2025-12-18T15:22:25.640844"
+    },
+    {
+      "sku": "A312203",
+      "descripcion": "nan",
+      "created": "2025-12-18T15:22:25.654644"
+    },
+    {
+      "sku": "A312204",
+      "descripcion": "nan",
+      "created": "2025-12-18T15:22:25.668646"
+    },
+    {
+      "sku": "A312206",
+      "descripcion": "nan",
+      "created": "2025-12-18T15:22:25.683644"
+    },
+    {
+      "sku": "A312215",
+      "descripcion": "nan",
+      "created": "2025-12-18T15:22:25.697638"
+    },
+    {
+      "sku": "A312216",
+      "descripcion": "nan",
+      "created": "2025-12-18T15:22:25.706634"
+    },
+    {
+      "sku": "A312251",
+      "descripcion": "nan",
+      "created": "2025-12-18T15:22:25.716636"
+    },
+    {
+      "sku": "A312253",
+      "descripcion": "nan",
+      "created": "2025-12-18T15:22:25.725639"
+    },
+    {
+      "sku": "A312257",
+      "descripcion": "nan",
+      "created": "2025-12-18T15:22:25.735643"
+    },
+    {
+      "sku": "A312304",
+      "descripcion": "nan",
+      "created": "2025-12-18T15:22:25.743165"
+    },
+    {
+      "sku": "A312307",
+      "descripcion": "nan",
+      "created": "2025-12-18T15:22:25.751177"
+    },
+    {
+      "sku": "N250580",
+      "descripcion": "nan",
+      "created": "2025-12-18T15:22:25.760183"
+    },
+    {
+      "sku": "N308020",
+      "descripcion": "nan",
+      "created": "2025-12-18T15:22:25.768180",
+      "updated": "2025-12-18T15:22:26.121609"
+    },
+    {
+      "sku": "N312235",
+      "descripcion": "nan",
+      "created": "2025-12-18T15:22:25.777175"
+    },
+    {
+      "sku": "A312373",
+      "descripcion": "nan",
+      "created": "2025-12-18T15:22:25.785306"
+    },
+    {
+      "sku": "A312374",
+      "descripcion": "nan",
+      "created": "2025-12-18T15:22:25.794292"
+    },
+    {
+      "sku": "A043236",
+      "descripcion": "nan",
+      "created": "2025-12-18T15:22:25.804297"
+    },
+    {
+      "sku": "A303433",
+      "descripcion": "nan",
+      "created": "2025-12-18T15:22:25.813293"
+    },
+    {
+      "sku": "A306579",
+      "descripcion": "nan",
+      "created": "2025-12-18T15:22:25.820296"
+    },
+    {
+      "sku": "A311546",
+      "descripcion": "nan",
+      "created": "2025-12-18T15:22:25.829303"
+    },
+    {
+      "sku": "A311549",
+      "descripcion": "nan",
+      "created": "2025-12-18T15:22:25.836299"
+    },
+    {
+      "sku": "A311761",
+      "descripcion": "nan",
+      "created": "2025-12-18T15:22:25.842304"
+    },
+    {
+      "sku": "A311881",
+      "descripcion": "nan",
+      "created": "2025-12-18T15:22:25.850353"
+    },
+    {
+      "sku": "A312193",
+      "descripcion": "nan",
+      "created": "2025-12-18T15:22:25.857348"
+    },
+    {
+      "sku": "A312194",
+      "descripcion": "nan",
+      "created": "2025-12-18T15:22:25.867352"
+    },
+    {
+      "sku": "A312195",
+      "descripcion": "nan",
+      "created": "2025-12-18T15:22:25.875352"
+    },
+    {
+      "sku": "A312201",
+      "descripcion": "nan",
+      "created": "2025-12-18T15:22:25.884356"
+    },
+    {
+      "sku": "A312213",
+      "descripcion": "nan",
+      "created": "2025-12-18T15:22:25.892352"
+    },
+    {
+      "sku": "A312218",
+      "descripcion": "nan",
+      "created": "2025-12-18T15:22:25.900349"
+    },
+    {
+      "sku": "A312240",
+      "descripcion": "nan",
+      "created": "2025-12-18T15:22:25.908351"
+    },
+    {
+      "sku": "A312252",
+      "descripcion": "nan",
+      "created": "2025-12-18T15:22:25.916349"
+    },
+    {
+      "sku": "A312265",
+      "descripcion": "nan",
+      "created": "2025-12-18T15:22:25.923350"
+    },
+    {
+      "sku": "A312266",
+      "descripcion": "nan",
+      "created": "2025-12-18T15:22:25.931359"
+    },
+    {
+      "sku": "A312269",
+      "descripcion": "nan",
+      "created": "2025-12-18T15:22:25.938360"
+    },
+    {
+      "sku": "A312271",
+      "descripcion": "nan",
+      "created": "2025-12-18T15:22:25.944842"
+    },
+    {
+      "sku": "A312274",
+      "descripcion": "nan",
+      "created": "2025-12-18T15:22:25.951844"
+    },
+    {
+      "sku": "A312308",
+      "descripcion": "nan",
+      "created": "2025-12-18T15:22:25.959842"
+    },
+    {
+      "sku": "A312343",
+      "descripcion": "nan",
+      "created": "2025-12-18T15:22:25.967849"
+    },
+    {
+      "sku": "A312364",
+      "descripcion": "nan",
+      "created": "2025-12-18T15:22:25.975855"
+    },
+    {
+      "sku": "A312365",
+      "descripcion": "nan",
+      "created": "2025-12-18T15:22:25.983843"
+    },
+    {
+      "sku": "A312367",
+      "descripcion": "nan",
+      "created": "2025-12-18T15:22:25.989842"
+    },
+    {
+      "sku": "A312368",
+      "descripcion": "nan",
+      "created": "2025-12-18T15:22:25.997842"
+    },
+    {
+      "sku": "A312369",
+      "descripcion": "nan",
+      "created": "2025-12-18T15:22:26.005842"
+    },
+    {
+      "sku": "A312371",
+      "descripcion": "nan",
+      "created": "2025-12-18T15:22:26.013886"
+    },
+    {
+      "sku": "A312372",
+      "descripcion": "nan",
+      "created": "2025-12-18T15:22:26.020883"
+    },
+    {
+      "sku": "N021818",
+      "descripcion": "nan",
+      "created": "2025-12-18T15:22:26.029092"
+    },
+    {
+      "sku": "N290555",
+      "descripcion": "nan",
+      "created": "2025-12-18T15:22:26.036093"
+    },
+    {
+      "sku": "N290746",
+      "descripcion": "nan",
+      "created": "2025-12-18T15:22:26.043601"
+    },
+    {
+      "sku": "N302227",
+      "descripcion": "nan",
+      "created": "2025-12-18T15:22:26.051610"
+    },
+    {
+      "sku": "N306973",
+      "descripcion": "nan",
+      "created": "2025-12-18T15:22:26.060610"
+    },
+    {
+      "sku": "N307354",
+      "descripcion": "nan",
+      "created": "2025-12-18T15:22:26.068647"
+    },
+    {
+      "sku": "N308187",
+      "descripcion": "nan",
+      "created": "2025-12-18T15:22:26.074643"
+    },
+    {
+      "sku": "N308189",
+      "descripcion": "nan",
+      "created": "2025-12-18T15:22:26.082613"
+    },
+    {
+      "sku": "N308190",
+      "descripcion": "nan",
+      "created": "2025-12-18T15:22:26.088610"
+    },
+    {
+      "sku": "N312378",
+      "descripcion": "nan",
+      "created": "2025-12-18T15:22:26.096609"
+    },
+    {
+      "sku": "N312379",
+      "descripcion": "nan",
+      "created": "2025-12-18T15:22:26.102611"
+    },
+    {
+      "sku": "N312380",
+      "descripcion": "nan",
+      "created": "2025-12-18T15:22:26.108610"
+    },
+    {
+      "sku": "N312381",
+      "descripcion": "nan",
+      "created": "2025-12-18T15:22:26.115609"
+    },
+    {
+      "sku": "A018036",
+      "descripcion": "nan",
+      "created": "2025-12-18T15:22:26.134624"
+    },
+    {
+      "sku": "A311771",
+      "descripcion": "nan",
+      "created": "2025-12-18T15:22:26.147177"
+    },
+    {
+      "sku": "A312239",
+      "descripcion": "nan",
+      "created": "2025-12-18T15:22:26.154174"
+    },
+    {
+      "sku": "A312267",
+      "descripcion": "nan",
+      "created": "2025-12-18T15:22:26.161175"
+    },
+    {
+      "sku": "A312317",
+      "descripcion": "nan",
+      "created": "2025-12-18T15:22:26.168177"
+    },
+    {
+      "sku": "A312363",
+      "descripcion": "nan",
+      "created": "2025-12-18T15:22:26.175177"
+    },
+    {
+      "sku": "A312366",
+      "descripcion": "nan",
+      "created": "2025-12-18T15:22:26.185176"
+    },
+    {
+      "sku": "A312370",
+      "descripcion": "nan",
+      "created": "2025-12-18T15:22:26.196179"
+    },
+    {
+      "sku": "N298926",
+      "descripcion": "nan",
+      "created": "2025-12-18T15:22:26.207175"
+    },
+    {
+      "sku": "N305568",
+      "descripcion": "nan",
+      "created": "2025-12-18T15:22:26.218177"
+    },
+    {
+      "sku": "N312375",
+      "descripcion": "DESC",
+      "created": "2025-12-18T15:22:26.227180",
+      "updated": "2025-12-18T15:23:13.292956"
+    },
+    {
+      "sku": "A311900",
+      "descripcion": "nan",
+      "created": "2025-12-18T15:22:26.236188"
+    },
+    {
+      "sku": "A312318",
+      "descripcion": "nan",
+      "created": "2025-12-18T15:22:26.245718"
+    },
+    {
+      "sku": "A312384",
+      "descripcion": "nan",
+      "created": "2025-12-18T15:22:26.254716"
+    },
+    {
+      "sku": "A312392",
+      "descripcion": "nan",
+      "created": "2025-12-18T15:22:26.262720"
+    },
+    {
+      "sku": "N026877",
+      "descripcion": "nan",
+      "created": "2025-12-18T15:22:26.271730"
+    },
+    {
+      "sku": "N054205",
+      "descripcion": "nan",
+      "created": "2025-12-18T15:22:26.280742"
+    },
+    {
+      "sku": "N307233",
+      "descripcion": "nan",
+      "created": "2025-12-18T15:22:26.290723"
+    },
+    {
+      "sku": "N309443",
+      "descripcion": "nan",
+      "created": "2025-12-18T15:22:26.300724"
+    },
+    {
+      "sku": "N312376",
+      "descripcion": "nan",
+      "created": "2025-12-18T15:22:26.309724"
+    },
+    {
+      "sku": "A002615",
+      "descripcion": "nan",
+      "created": "2025-12-18T15:22:26.318718"
+    },
+    {
+      "sku": "A095293",
+      "descripcion": "nan",
+      "created": "2025-12-18T15:22:26.327720"
+    },
+    {
+      "sku": "A306140",
+      "descripcion": "nan",
+      "created": "2025-12-18T15:22:26.333766"
+    },
+    {
+      "sku": "A307436",
+      "descripcion": "nan",
+      "created": "2025-12-18T15:22:26.338727"
+    },
+    {
+      "sku": "A312217",
+      "descripcion": "nan",
+      "created": "2025-12-18T15:22:26.346250"
+    },
+    {
+      "sku": "A312247",
+      "descripcion": "nan",
+      "created": "2025-12-18T15:22:26.354252"
+    },
+    {
+      "sku": "A312386",
+      "descripcion": "nan",
+      "created": "2025-12-18T15:22:26.369255"
+    },
+    {
+      "sku": "A312387",
+      "descripcion": "nan",
+      "created": "2025-12-18T15:22:26.379254"
+    },
+    {
+      "sku": "A312388",
+      "descripcion": "nan",
+      "created": "2025-12-18T15:22:26.387248"
+    },
+    {
+      "sku": "A312389",
+      "descripcion": "nan",
+      "created": "2025-12-18T15:22:26.395251"
+    },
+    {
+      "sku": "A312390",
+      "descripcion": "nan",
+      "created": "2025-12-18T15:22:26.401258"
+    },
+    {
+      "sku": "N290791",
+      "descripcion": "nan",
+      "created": "2025-12-18T15:22:26.408250"
+    },
+    {
+      "sku": "N307390",
+      "descripcion": "nan",
+      "created": "2025-12-18T15:22:26.417261"
+    },
+    {
+      "sku": "A002646",
+      "descripcion": "nan",
+      "created": "2025-12-18T15:22:26.425449"
+    },
+    {
+      "sku": "A305694",
+      "descripcion": "nan",
+      "created": "2025-12-18T15:22:26.433462"
+    },
+    {
+      "sku": "N106603",
+      "descripcion": "nan",
+      "created": "2025-12-18T15:22:26.441512"
+    },
+    {
+      "sku": "A212199",
+      "descripcion": "nan",
+      "created": "2025-12-18T15:22:26.451988"
+    },
+    {
+      "sku": "N308686",
+      "descripcion": "nan",
+      "created": "2025-12-18T15:22:26.460986"
+    },
+    {
+      "sku": "A307275",
+      "descripcion": "nan",
+      "created": "2025-12-18T15:22:26.467986"
+    },
+    {
+      "sku": "A312249",
+      "descripcion": "nan",
+      "created": "2025-12-18T15:22:26.473984"
+    },
+    {
+      "sku": "A312355",
+      "descripcion": "nan",
+      "created": "2025-12-18T15:22:26.482081"
+    },
+    {
+      "sku": "A312383",
+      "descripcion": "nan",
+      "created": "2025-12-18T15:22:26.488981"
+    },
+    {
+      "sku": "A312393",
+      "descripcion": "nan",
+      "created": "2025-12-18T15:22:26.497035"
+    },
+    {
+      "sku": "A312395",
+      "descripcion": "nan",
+      "created": "2025-12-18T15:22:26.503980"
+    },
+    {
+      "sku": "A312396",
+      "descripcion": "nan",
+      "created": "2025-12-18T15:22:26.509990"
+    },
+    {
+      "sku": "A312412",
+      "descripcion": "nan",
+      "created": "2025-12-18T15:22:26.517980"
+    },
+    {
+      "sku": "N099147",
+      "descripcion": "nan",
+      "created": "2025-12-18T15:22:26.523978"
+    },
+    {
+      "sku": "N304044",
+      "descripcion": "nan",
+      "created": "2025-12-18T15:22:26.532995"
+    },
+    {
+      "sku": "N311482",
+      "descripcion": "nan",
+      "created": "2025-12-18T15:22:26.538993"
+    },
+    {
+      "sku": "N111010",
+      "descripcion": "nan",
+      "created": "2025-12-18T15:22:26.546515"
+    },
+    {
+      "sku": "N309739",
+      "descripcion": "nan",
+      "created": "2025-12-18T15:22:26.552522"
+    },
+    {
+      "sku": "A312261",
+      "descripcion": "nan",
+      "created": "2025-12-18T15:22:26.559518"
+    },
+    {
+      "sku": "A312262",
+      "descripcion": "AA",
+      "created": "2025-12-18T16:25:03.068623"
+    },
+    {
+      "sku": "A002677",
+      "descripcion": "ASD",
+      "created": "2025-12-18T17:06:12.701455"
+    }
+  ],
+  "metadata": {
+    "total_count": 581,
+    "last_updated": "2025-12-18T17:06:12.701455",
+    "version": "1.0"
+  }
+}

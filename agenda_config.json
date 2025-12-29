@@ -1,0 +1,214 @@
+{
+    "dias_despacho": 21,
+    "proveedores": {
+        "77300": {
+            "nombre": "BIDFOOD CHILE S.A.",
+            "LUN": 1,
+            "MAR": null,
+            "MIE": 1,
+            "JUE": null,
+            "VIE": 1,
+            "SAB": null,
+            "D-2": null,
+            "fecha_manual": null
+        },
+        "33227": {
+            "nombre": "SOC. COM. Y DISTRIBUIDORA OVIEDO LTDA.",
+            "LUN": 1,
+            "MAR": 1,
+            "MIE": 1,
+            "JUE": 1,
+            "VIE": 1,
+            "SAB": null,
+            "D-2": null,
+            "fecha_manual": null
+        },
+        "26840": {
+            "nombre": "EMPRESAS CAROZZI S.A.",
+            "LUN": 1,
+            "MAR": null,
+            "MIE": 1,
+            "JUE": null,
+            "VIE": 1,
+            "SAB": null,
+            "D-2": null,
+            "fecha_manual": null
+        },
+        "21143": {
+            "nombre": "EMBOTELLADORA ANDINA S.A.",
+            "LUN": 1,
+            "MAR": null,
+            "MIE": null,
+            "JUE": 1,
+            "VIE": null,
+            "SAB": null,
+            "D-2": null,
+            "fecha_manual": null
+        },
+        "88475": {
+            "nombre": "ZEC HERMANOS Y COMPANIA LIMITADA",
+            "LUN": 1,
+            "MAR": null,
+            "MIE": null,
+            "JUE": null,
+            "VIE": 1,
+            "SAB": null,
+            "D-2": 1,
+            "fecha_manual": null
+        },
+        "80903": {
+            "nombre": "COMERCIAL AUSTRAL VENDING SPA",
+            "LUN": 1,
+            "MAR": null,
+            "MIE": null,
+            "JUE": 1,
+            "VIE": null,
+            "SAB": null,
+            "D-2": null,
+            "fecha_manual": null
+        },
+        "21084": {
+            "nombre": "NESTLE CHILE SA",
+            "LUN": null,
+            "MAR": 1,
+            "MIE": null,
+            "JUE": 1,
+            "VIE": null,
+            "SAB": null,
+            "D-2": null,
+            "fecha_manual": null
+        },
+        "21013": {
+            "nombre": "AGROSUPER COMERCIALIZADORA DE ALIMENTO",
+            "LUN": 1,
+            "MAR": 1,
+            "MIE": 1,
+            "JUE": 1,
+            "VIE": 1,
+            "SAB": 1,
+            "D-2": 1,
+            "fecha_manual": null
+        },
+        "81644": {
+            "nombre": "COMERCIAL VERGEL Y COMPANIA LTDA",
+            "LUN": 1,
+            "MAR": null,
+            "MIE": 1,
+            "JUE": null,
+            "VIE": 1,
+            "SAB": null,
+            "D-2": null,
+            "fecha_manual": null
+        },
+        "21030": {
+            "nombre": "CONSORCIO INDUSTRIAL DE ALIMENTOS SA",
+            "LUN": null,
+            "MAR": 1,
+            "MIE": null,
+            "JUE": 1,
+            "VIE": null,
+            "SAB": null,
+            "D-2": null,
+            "fecha_manual": null
+        },
+        "21614": {
+            "nombre": "PRODUCTOS FERNANDEZ S.A.",
+            "LUN": 1,
+            "MAR": 1,
+            "MIE": null,
+            "JUE": null,
+            "VIE": null,
+            "SAB": null,
+            "D-2": null,
+            "fecha_manual": null
+        },
+        "21092": {
+            "nombre": "COMERCIAL SANTA ELENA SA",
+            "LUN": 0,
+            "MAR": null,
+            "MIE": 1,
+            "JUE": null,
+            "VIE": 1,
+            "SAB": null,
+            "D-2": null,
+            "fecha_manual": null
+        },
+        "21952": {
+            "nombre": "COOPAGRICY LECHERA DE LA UNION LTDA",
+            "LUN": null,
+            "MAR": 1,
+            "MIE": null,
+            "JUE": 1,
+            "VIE": null,
+            "SAB": null,
+            "D-2": null,
+            "fecha_manual": null
+        },
+        "69793": {
+            "nombre": "MARFRIG CHILE SA",
+            "LUN": null,
+            "MAR": 1,
+            "MIE": null,
+            "JUE": null,
+            "VIE": 1,
+            "SAB": null,
+            "D-2": null,
+            "fecha_manual": null
+        },
+        "33145": {
+            "nombre": "DISTRIBUIDORA LAGO BLANCO LTDA.",
+            "LUN": null,
+            "MAR": null,
+            "MIE": null,
+            "JUE": null,
+            "VIE": null,
+            "SAB": null,
+            "D-2": 1,
+            "fecha_manual": null
+        },
+        "60352": {
+            "nombre": "FABRICAS DE BANDEJAS LDTA",
+            "LUN": null,
+            "MAR": 1,
+            "MIE": 1,
+            "JUE": 1,
+            "VIE": null,
+            "SAB": null,
+            "D-2": null,
+            "fecha_manual": null
+        },
+        "48280": {
+            "nombre": "SOCIEDAD COMERCIAL CINTEC LDTA",
+            "LUN": null,
+            "MAR": 1,
+            "MIE": 1,
+            "JUE": 1,
+            "VIE": null,
+            "SAB": null,
+            "D-2": null,
+            "fecha_manual": null
+        },
+        "100041": {
+            "nombre": "CARNES PUERTO NATALES SOCIEDAD ANONIMA",
+            "LUN": null,
+            "MAR": 1,
+            "MIE": null,
+            "JUE": 1,
+            "VIE": null,
+            "SAB": null,
+            "D-2": null,
+            "fecha_manual": null
+        },
+        "28210": {
+            "nombre": "MODINGER HNOS SA",
+            "LUN": null,
+            "MAR": null,
+            "MIE": 1,
+            "JUE": null,
+            "VIE": 1,
+            "SAB": null,
+            "D-2": null,
+            "fecha_manual": null
+        }
+    }
+}

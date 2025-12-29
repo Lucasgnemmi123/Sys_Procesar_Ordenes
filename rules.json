@@ -1,0 +1,56 @@
+{
+    "local_rules": [
+        {
+            "local": "12345",
+            "sku": "A12345",
+            "proveedor": "77300",
+            "descripcion": "Regla ejemplo 1",
+            "created": "2025-12-18T16:23:48.466102",
+            "active": true
+        },
+        {
+            "local": "67890",
+            "sku": "B67890",
+            "proveedor": "77301",
+            "descripcion": "Regla ejemplo 2",
+            "created": "2025-12-18T16:23:48.467547",
+            "active": true
+        },
+        {
+            "local": "11111",
+            "sku": "C11111",
+            "proveedor": "77302",
+            "descripcion": "Regla ejemplo 3",
+            "created": "2025-12-18T16:23:48.467547",
+            "active": true
+        }
+    ],
+    "stock_blocks": [
+        {
+            "sku": "A12345",
+            "proveedor": "77300",
+            "motivo": "Quiebre de stock temporal",
+            "created": "2025-12-18T16:23:48.467547",
+            "active": true
+        },
+        {
+            "sku": "B67890",
+            "proveedor": "77301",
+            "motivo": "Calidad deficiente",
+            "created": "2025-12-18T16:23:48.467547",
+            "active": true
+        },
+        {
+            "sku": "C11111",
+            "proveedor": "77302",
+            "motivo": "Descontinuado por proveedor",
+            "created": "2025-12-18T16:23:48.467547",
+            "active": true
+        }
+    ],
+    "metadata": {
+        "created": "2025-12-17T10:18:26.072957",
+        "version": "1.0",
+        "last_updated": "2025-12-18T16:23:48.467547"
+    }
+}
