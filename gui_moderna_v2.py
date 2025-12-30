@@ -265,7 +265,7 @@ class ModernGUI:
             version_frame,
             text="v3.0 Modern",
             font=(self.theme.FONT_FAMILY, 12, "bold"),
-            text_color="#2c3e50"  # Azul oscuro en lugar de negro
+            text_color=self.theme.SECONDARY  # Mismo color que botón actualizar
         )
         version.pack(padx=18, pady=6)
         
