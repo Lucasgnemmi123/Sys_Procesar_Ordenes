@@ -117,13 +117,13 @@ $pythonSize = (Get-Item $PythonZip).Length / 1MB
 $libsSize = (Get-Item $LibsZip).Length / 1MB
 $totalSize = $pythonSize + $libsSize
 
-Write-Host "  📦 $PythonZip" -ForegroundColor Cyan
+Write-Host "  [ZIP] $PythonZip" -ForegroundColor Cyan
 Write-Host "     Tamaño: $([math]::Round($pythonSize, 2)) MB" -ForegroundColor White
 Write-Host ""
-Write-Host "  📦 $LibsZip" -ForegroundColor Cyan
+Write-Host "  [ZIP] $LibsZip" -ForegroundColor Cyan
 Write-Host "     Tamaño: $([math]::Round($libsSize, 2)) MB" -ForegroundColor White
 Write-Host ""
-Write-Host "  📊 Total: $([math]::Round($totalSize, 2)) MB" -ForegroundColor Yellow
+Write-Host "  [TOTAL] $([math]::Round($totalSize, 2)) MB" -ForegroundColor Yellow
 Write-Host ""
 
 # Instrucciones
@@ -133,14 +133,12 @@ Write-Host "================================================" -ForegroundColor C
 Write-Host ""
 Write-Host "1. Ve a tu repositorio en GitHub" -ForegroundColor White
 Write-Host "2. Click en Releases y luego Create a new release" -ForegroundColor White
-Write-Host "3. Tag: v3.0.0" -ForegroundColor White
-Write-Host "4. Titulo: DHL Order Processing System v3.0.0 - Portable" -ForegroundColor White
+Write-Host "3. Tag: v1.0.0" -ForegroundColor White
+Write-Host "4. Titulo: Sistema Procesar Pedidos v1.0.0 - Portable" -ForegroundColor White
 Write-Host "5. Arrastra y suelta estos archivos:" -ForegroundColor White
 Write-Host "   - python-portable.zip" -ForegroundColor Cyan
 Write-Host "   - libs-portable.zip" -ForegroundColor Cyan
 Write-Host "6. Publica el release" -ForegroundColor White
-Write-Host ""
-Write-Host "7. Actualiza Descargar_Python.ps1 con tu URL de GitHub" -ForegroundColor White
 Write-Host ""
 Write-Host "Mas detalles en: docs/GUIA_DISTRIBUCION.md" -ForegroundColor Yellow
 Write-Host ""
