@@ -358,8 +358,7 @@ class AgendaDialog:
             relief='flat',
             cursor='hand2',
             padx=15,
-            pady=4,
-            bd=0
+            pady=6
         ).pack(side='left', padx=5)
         
         tk.Button(
@@ -372,8 +371,7 @@ class AgendaDialog:
             relief='flat',
             cursor='hand2',
             padx=15,
-            pady=4,
-            bd=0
+            pady=6
         ).pack(side='left', padx=5)
         
         tk.Button(
@@ -386,8 +384,7 @@ class AgendaDialog:
             relief='flat',
             cursor='hand2',
             padx=15,
-            pady=4,
-            bd=0
+            pady=6
         ).pack(side='left', padx=5)
         
         # Botón para eliminar toda la agenda
@@ -401,8 +398,7 @@ class AgendaDialog:
             relief='flat',
             cursor='hand2',
             padx=15,
-            pady=4,
-            bd=0
+            pady=6
         ).pack(side='left', padx=5)
     
     def cargar_proveedores(self):
