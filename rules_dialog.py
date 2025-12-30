@@ -1,26 +1,22 @@
 """
-Interfaz Gráfica para Gestión de Reglas Especiales
-Created by Lucas Gnemmi
-Version: 1.0
-
-Permite crear, editar y eliminar reglas especiales:
-1. Reglas de LOCAL → Proveedor forzado
-2. Reglas de Bloqueo por Quiebre de Stock
+Interfaz Simple para Gestión de Reglas Especiales
+Version simplificada con diseño moderno que garantiza el refresh correcto
 """
 
 import tkinter as tk
-from tkinter import ttk, messagebox, scrolledtext
+from tkinter import ttk, messagebox, filedialog
 from rules_manager import RulesManager
+import pandas as pd
 
 class RulesDialog:
-    """Ventana de diálogo para gestionar reglas especiales"""
+    """Ventana simple para gestionar reglas especiales"""
     
-    def __init__(self, parent):
+    def __init__(self, parent=None):
         """Inicializa la ventana de reglas"""
         self.parent = parent
         self.rules_manager = RulesManager()
         
-        # Crear un root de tkinter oculto si no existe
+        # Crear root oculto si no existe (igual que AgendaDialog)
         try:
             root = tk._default_root
             if root is None:
@@ -30,946 +26,865 @@ class RulesDialog:
             root = tk.Tk()
             root.withdraw()
         
-        # Crear ventana independiente (compatible con customtkinter parent)
+        # Crear Toplevel independiente (compatible con customtkinter parent)
         self.window = tk.Toplevel()
-        self.window.title("⚙️ Gestión de Reglas Especiales")
+        self.window.title("Gestión de Reglas Especiales - Sistema DHL")
         
-        # Adaptar altura a la pantalla del usuario
-        screen_height = self.window.winfo_screenheight()
-        window_height = int(screen_height * 0.85)  # 85% de la altura de pantalla
-        window_width = 1200
-        
-        # Centrar ventana
-        x_position = int((self.window.winfo_screenwidth() - window_width) / 2)
-        y_position = int((screen_height - window_height) / 2)
-        
-        self.window.geometry(f"{window_width}x{window_height}+{x_position}+{y_position}")
-        self.window.configure(bg="#1a1d29")  # BG_DARK
-        
-        # Colores tema moderno (consistente con GUI principal)
-        self.PRIMARY = "#00d4ff"      # PRIMARY
-        self.PRIMARY_DARK = "#00b8d9" # PRIMARY_DARK
-        self.SECONDARY = "#a78bfa"    # SECONDARY
-        self.SUCCESS = "#34d399"      # SUCCESS
-        self.WARNING = "#fbbf24"      # WARNING
-        self.ERROR = "#f87171"        # ERROR
-        self.WHITE = "#ffffff"        # TEXT_PRIMARY
-        self.BG_DARK = "#1a1d29"      # BG_DARK
-        self.BG_CARD = "#2d3142"      # BG_CARD
-        self.BG_SURFACE = "#242837"   # BG_SURFACE
-        self.LIGHT_GRAY = "#e5e7eb"   # TEXT_SECONDARY
-        
-        # Inicializar estilos de tablas
-        self.style = ttk.Style()
+        # IMPORTANTE: Forzar theme 'default' para SOBREESCRIBIR el 'clam' de gui_moderna_v2
+        # Esto debe hacerse INMEDIATAMENTE después de crear la ventana
+        self.style = ttk.Style(self.window)
         self.style.theme_use('default')
-        self.configure_table_styles()
+        
+        # Obtener dimensiones de pantalla
+        screen_width = self.window.winfo_screenwidth()
+        screen_height = self.window.winfo_screenheight()
+        
+        # Ventana optimizada - MENOS ANCHA
+        window_width = min(1200, screen_width - 100)
+        window_height = min(950, screen_height - 100)  # Altura fija optimizada
+        
+        # Centrar
+        x = (screen_width - window_width) // 2
+        y = (screen_height - window_height) // 2
+        self.window.geometry(f"{window_width}x{window_height}+{x}+{y}")
+        
+        # Colores del tema moderno (consistente con gui_moderna_v2.py)
+        self.BG_DARK = "#1a1d29"
+        self.BG_SURFACE = "#242837"
+        self.BG_CARD = "#2d3142"
+        self.PRIMARY = "#00d4ff"
+        self.PRIMARY_DARK = "#00b8d9"
+        self.SUCCESS = "#34d399"
+        self.WARNING = "#fbbf24"
+        self.ERROR = "#f87171"
+        self.TEXT_PRIMARY = "#ffffff"
+        self.TEXT_SECONDARY = "#e5e7eb"
+        self.TEXT_MUTED = "#9ca3af"
+        self.BORDER = "#3f4555"
+        
+        # Configurar ventana
+        self.window.configure(bg=self.BG_DARK)
+        
+        # Configurar estilos de tabla
+        self.configure_table_style()
         
         self.setup_ui()
-        self.refresh_all()
+        
+        # CRÍTICO: Esperar a que la ventana esté completamente renderizada
+        # antes de hacer el primer refresh
+        self.window.update()
+        self.window.after(200, self.refresh_all)
     
-    def configure_table_styles(self):
-        """Configura los estilos para las tablas y pestañas del diálogo con tema moderno"""
-        # ============ ESTILOS DE PESTAÑAS (NOTEBOOK) ============
-        # Configurar estilo personalizado para el Notebook
-        self.style.configure('Rules.TNotebook',
-            background=self.BG_DARK,      # Fondo oscuro
-            borderwidth=0,
-            tabmargins=[5, 5, 5, 0]
-        )
+    def _show_message(self, msg_type, title, message):
+        """Helper para mostrar messageboxes que SIEMPRE aparezcan al frente"""
+        self.window.lift()
+        self.window.attributes('-topmost', True)
+        self.window.update()
         
-        # Estilo para las pestañas (tabs)
-        self.style.configure('Rules.TNotebook.Tab',
-            background=self.BG_SURFACE,   # Fondo superficie cuando no está seleccionada
-            foreground=self.WHITE,        # Texto blanco
-            padding=[15, 8],              # Espacio interno moderado
-            font=('Segoe UI', 11, 'bold'),# Fuente más grande
+        if msg_type == "info":
+            result = messagebox.showinfo(title, message, parent=self.window)
+        elif msg_type == "error":
+            result = messagebox.showerror(title, message, parent=self.window)
+        elif msg_type == "warning":
+            result = messagebox.showwarning(title, message, parent=self.window)
+        elif msg_type == "yesno":
+            result = messagebox.askyesno(title, message, parent=self.window)
+        
+        self.window.attributes('-topmost', False)
+        return result
+    
+    def configure_table_style(self):
+        """Configura el estilo de la tabla EXACTO de agenda_dialog.py"""
+        self.style.configure('Bordered.Treeview',
+            background='white',
+            foreground='black',
+            fieldbackground='white',
+            bordercolor='black',
             borderwidth=1,
-            relief='flat'                 # Sin relieve
+            rowheight=28,
+            font=('Segoe UI', 9)
+        )
+        self.style.configure('Bordered.Treeview.Heading',
+            background='#E3F2FD',
+            foreground='#1976D2',
+            borderwidth=1,
+            font=('Segoe UI', 9, 'bold'),
+            relief='solid'
+        )
+        self.style.map('Bordered.Treeview',
+            background=[('selected', '#BBDEFB')],
+            foreground=[('selected', 'black')]
         )
         
-        # Estilo cuando el mouse pasa sobre la pestaña
-        self.style.map('Rules.TNotebook.Tab',
+        # Estilo moderno para el Notebook
+        self.style.configure('Modern.TNotebook',
+            background=self.BG_DARK,
+            borderwidth=0,
+            tabmargins=[2, 5, 2, 0]
+        )
+        
+        self.style.configure('Modern.TNotebook.Tab',
+            background=self.BG_SURFACE,
+            foreground=self.TEXT_MUTED,
+            padding=[25, 12],
+            font=('Segoe UI', 11, 'bold'),
+            borderwidth=0,
+            focuscolor='none'
+        )
+        
+        self.style.map('Modern.TNotebook.Tab',
             background=[
-                ('selected', self.PRIMARY),    # Color primario cuando está seleccionada
-                ('active', self.SECONDARY)     # Color secundario cuando el mouse está encima
+                ('selected', self.BG_CARD),
+                ('active', self.BG_SURFACE)  # hover
             ],
             foreground=[
-                ('selected', '#000000'),       # Texto negro cuando está seleccionada (mejor contraste)
-                ('active', self.WHITE)         # Texto blanco cuando el mouse está encima
+                ('selected', self.PRIMARY),
+                ('active', self.TEXT_SECONDARY)
             ],
-            relief=[
-                ('selected', 'flat'),  # Sin relieve cuando está seleccionada
-                ('!selected', 'raised')  # Con relieve cuando no está seleccionada
-            ],
-            borderwidth=[
-                ('selected', 3),  # Borde más grueso cuando está seleccionada
-                ('!selected', 2)
-            ]
+            expand=[('selected', [1, 1, 1, 0])]
         )
-        
-        # ============ ESTILOS DE TABLAS ============
-        # Estilo para tabla de reglas LOCAL
-        self.style.configure('LocalRules.Treeview',
-            background=self.WHITE,        # Fondo blanco para legibilidad
-            foreground='#2c3e50',         # Texto azul oscuro
-            fieldbackground=self.WHITE,   # Campo blanco
-            bordercolor='#bdc3c7',        # Borde gris claro
-            borderwidth=2,                # Borde más grueso
-            rowheight=35,                 # Filas más altas
-            font=('Segoe UI', 12)         # Fuente más grande
-        )
-        self.style.configure('LocalRules.Treeview.Heading',
-            background=self.SUCCESS,      # Header verde para reglas
-            foreground=self.WHITE,        # Texto blanco
-            borderwidth=2,                # Borde más grueso
-            font=('Segoe UI', 13, 'bold'), # Header más grande
-            relief='flat'                 # Sin relieve
-        )
-        self.style.map('LocalRules.Treeview',
-            background=[('selected', self.SUCCESS)], # Selección con verde
-            foreground=[('selected', self.WHITE)]   # Texto blanco al seleccionar
-        )
-        
-        # Estilo para tabla de bloqueos de stock
-        self.style.configure('StockBlocks.Treeview',
-            background=self.WHITE,        # Fondo blanco para legibilidad
-            foreground='#2c3e50',         # Texto azul oscuro
-            fieldbackground=self.WHITE,   # Campo blanco
-            bordercolor='#bdc3c7',        # Borde gris claro
-            borderwidth=2,                # Borde más grueso
-            rowheight=35,                 # Filas más altas
-            font=('Segoe UI', 12)         # Fuente más grande
-        )
-        self.style.configure('StockBlocks.Treeview.Heading',
-            background=self.ERROR,        # Header rojo para bloqueos
-            foreground=self.WHITE,        # Texto blanco
-            borderwidth=2,                # Borde más grueso
-            font=('Segoe UI', 13, 'bold'), # Header más grande
-            relief='flat'                 # Sin relieve
-        )
-        self.style.map('StockBlocks.Treeview',
-            background=[('selected', self.ERROR)], # Selección con rojo
-            foreground=[('selected', self.WHITE)]  # Texto blanco al seleccionar
-        )
-        
+    
     def setup_ui(self):
-        """Configura la interfaz de usuario"""
-        # Header con tema moderno y botón cerrar
-        header = tk.Frame(self.window, bg=self.BG_CARD, height=70)
+        """Configura la interfaz"""
+        # Header oscuro moderno
+        header = tk.Frame(self.window, bg=self.BG_SURFACE, height=70)
         header.pack(fill="x")
         header.pack_propagate(False)
         
-        # Frame para organizar título y botón cerrar
-        header_content = tk.Frame(header, bg=self.BG_CARD)
-        header_content.pack(fill="both", expand=True, padx=20, pady=10)
+        # Título con icono
+        title_frame = tk.Frame(header, bg=self.BG_SURFACE)
+        title_frame.pack(side="left", padx=25, pady=15)
         
         tk.Label(
-            header_content, 
-            text="⚙️ REGLAS ESPECIALES", 
-            font=("Segoe UI", 18, "bold"),  # Fuente más grande
-            fg=self.PRIMARY,                # Color primario para el texto
-            bg=self.BG_CARD                 # Fondo del card
+            title_frame, 
+            text="⚙", 
+            font=("Segoe UI Emoji", 24),
+            bg=self.BG_SURFACE,
+            fg=self.PRIMARY
+        ).pack(side="left", padx=(0, 10))
+        
+        tk.Label(
+            title_frame, 
+            text="REGLAS ESPECIALES", 
+            font=("Segoe UI", 18, "bold"),
+            bg=self.BG_SURFACE,
+            fg=self.PRIMARY
         ).pack(side="left")
         
-        # Botón cerrar
+        # Botón cerrar con texto
         close_btn = tk.Button(
-            header_content,
+            header,
             text="✕ Cerrar",
             command=self.window.destroy,
-            bg=self.ERROR,              # Fondo rojo
-            fg=self.WHITE,              # Texto blanco
-            font=("Segoe UI", 12, "bold"),
-            relief='flat',
-            cursor='hand2',
+            bg=self.ERROR,
+            fg=self.TEXT_PRIMARY,
+            font=("Segoe UI", 11, "bold"),
+            relief="flat",
             padx=20,
-            pady=5
+            pady=10,
+            cursor="hand2",
+            activebackground="#dc2626",
+            activeforeground=self.TEXT_PRIMARY
         )
-        close_btn.pack(side="right")
+        close_btn.pack(side="right", padx=15, pady=15)
         
-        # Notebook para tabs con estilo personalizado
-        self.notebook = ttk.Notebook(self.window, style='Rules.TNotebook')
-        self.notebook.pack(fill="both", expand=True, padx=10, pady=10)
+        # Barra de herramientas con botones de gestión
+        self.setup_management_buttons(self.window)
         
-        # Tab 1: Reglas de LOCAL + SKU
-        self.tab_local = tk.Frame(self.notebook, bg=self.BG_DARK)
-        self.notebook.add(self.tab_local, text="📍 Reglas de LOCAL + SKU → Proveedor")
+        # ESTRUCTURA CON NOTEBOOK - 2 PESTAÑAS SEPARADAS
+        # Contenedor principal
+        main_container = tk.Frame(self.window, bg=self.BG_DARK)
+        main_container.pack(fill="both", expand=True, padx=15, pady=15)
         
-        # Tab 2: Bloqueos de Stock
-        self.tab_stock = tk.Frame(self.notebook, bg=self.BG_DARK)
-        self.notebook.add(self.tab_stock, text="🚫 Bloqueos por Quiebre de Stock")
+        # Crear Notebook para pestañas con estilo moderno
+        self.notebook = ttk.Notebook(main_container, style='Modern.TNotebook')
+        self.notebook.pack(fill="both", expand=True)
         
-        # Tab 3: Gestión de reglas
-        self.tab_stats = tk.Frame(self.notebook, bg=self.BG_DARK)
-        self.notebook.add(self.tab_stats, text="⚙️ Gestión de reglas")
+        # Pestaña 1: Reglas LOCAL + SKU
+        tab_local = tk.Frame(self.notebook, bg=self.BG_DARK)
+        self.notebook.add(tab_local, text="  📍 Reglas LOCAL + SKU  ")
+        self.setup_local_section(tab_local)
         
-        # Configurar cada tab
-        self.setup_local_tab()
-        self.setup_stock_tab()
-        self.setup_stats_tab()
-        
-    # --- TAB 1: REGLAS DE LOCAL ---
+        # Pestaña 2: Bloqueos de Stock
+        tab_stock = tk.Frame(self.notebook, bg=self.BG_DARK)
+        self.notebook.add(tab_stock, text="  📦 Bloqueos de Stock  ")
+        self.setup_stock_section(tab_stock)
     
-    def setup_local_tab(self):
-        """Configura el tab de reglas de LOCAL"""
-        # Panel de entrada con tema oscuro
-        input_frame = tk.LabelFrame(
-            self.tab_local, 
-            text="➕ Agregar Nueva Regla: LOCAL + SKU → Proveedor", 
-            font=("Segoe UI", 12, "bold"),  # Fuente moderna
-            bg=self.BG_CARD,                # Fondo oscuro
-            fg=self.WHITE,                  # Texto blanco
-            padx=15,
-            pady=15
-        )
-        input_frame.pack(fill="x", padx=10, pady=10)
+    def setup_local_section(self, parent):
+        """Configura la sección de reglas LOCAL"""
+        # Card con fondo elevado que ocupa todo el espacio
+        section = tk.Frame(parent, bg=self.BG_CARD, relief="flat", bd=0)
+        section.pack(fill="both", expand=True, padx=10, pady=10)
         
-        # Campos - Fila 1: LOCAL y SKU
-        row1 = tk.Frame(input_frame, bg=self.BG_CARD)
+        # Formulario de entrada con estilo moderno
+        form = tk.Frame(section, bg=self.BG_CARD)
+        form.pack(fill="x", padx=20, pady=15)
+        
+        # Fila 1
+        row1 = tk.Frame(form, bg=self.BG_CARD)
         row1.pack(fill="x", pady=5)
         
-        tk.Label(
-            row1, 
-            text="Código LOCAL:", 
-            font=("Segoe UI", 11), 
-            bg=self.BG_CARD,      # Fondo del card
-            fg=self.WHITE,        # Texto blanco
-            width=18,
-            anchor="w"
-        ).pack(side="left", padx=5)
+        self._create_input_group(row1, "LOCAL:", "local_entry", 15)
+        self._create_input_group(row1, "SKU:", "local_sku_entry", 15)
+        self._create_input_group(row1, "Proveedor:", "local_prov_entry", 15)
         
-        self.local_entry = tk.Entry(row1, font=("Segoe UI", 11), width=12, relief='solid', bd=1, 
-                                    bg=self.BG_DARK, fg=self.WHITE, insertbackground=self.WHITE)
-        self.local_entry.pack(side="left", padx=5)
-        
-        tk.Label(
-            row1, 
-            text="+", 
-            font=("Segoe UI", 14, "bold"), 
-            bg=self.BG_CARD,      # Fondo del card
-            fg=self.WHITE         # Texto blanco
-        ).pack(side="left", padx=10)
-        
-        tk.Label(
-            row1, 
-            text="Código SKU:", 
-            font=("Segoe UI", 11), 
-            bg=self.BG_CARD,
-            fg=self.WHITE,
-            width=15,
-            anchor="w"
-        ).pack(side="left", padx=5)
-        
-        self.local_sku_entry = tk.Entry(row1, font=("Segoe UI", 11), width=12, relief='solid', bd=1, 
-                                        bg=self.BG_DARK, fg=self.WHITE, insertbackground=self.WHITE)
-        self.local_sku_entry.pack(side="left", padx=5)
-        
-        # Fila 2: Proveedor
-        row1b = tk.Frame(input_frame, bg=self.BG_CARD)
-        row1b.pack(fill="x", pady=5)
-        
-        tk.Label(
-            row1b, 
-            text="→", 
-            font=("Segoe UI", 14, "bold"), 
-            bg=self.BG_CARD,
-            fg=self.PRIMARY
-        ).pack(side="left", padx=5)
-        
-        tk.Label(
-            row1b, 
-            text="Código Proveedor:", 
-            font=("Segoe UI", 11), 
-            bg=self.BG_CARD,
-            fg=self.WHITE,
-            width=18,
-            anchor="w"
-        ).pack(side="left", padx=5)
-        
-        self.local_prov_entry = tk.Entry(row1b, font=("Segoe UI", 11), width=15, relief='solid', bd=1, 
-                                         bg=self.BG_DARK, fg=self.WHITE, insertbackground=self.WHITE)
-        self.local_prov_entry.pack(side="left", padx=5)
-        
-        # Descripción
-        row2 = tk.Frame(input_frame, bg=self.BG_CARD)
+        # Fila 2
+        row2 = tk.Frame(form, bg=self.BG_CARD)
         row2.pack(fill="x", pady=5)
         
         tk.Label(
             row2, 
-            text="Descripción (opcional):", 
-            font=("Segoe UI", 11), 
-            bg=self.BG_CARD,
-            fg=self.WHITE,
-            width=20,
-            anchor="w"
+            text="Descripción:", 
+            bg=self.BG_CARD, 
+            fg=self.TEXT_SECONDARY,
+            font=("Segoe UI", 10)
         ).pack(side="left", padx=5)
         
-        self.local_desc_entry = tk.Entry(row2, font=("Segoe UI", 11), width=50, relief='solid', bd=1, 
-                                         bg=self.BG_DARK, fg=self.WHITE, insertbackground=self.WHITE)
-        self.local_desc_entry.pack(side="left", padx=5, fill="x", expand=True)
-        
-        # Botón agregar
-        tk.Button(
-            input_frame,
-            text="➕ Agregar Regla",
-            font=("Segoe UI", 9, "bold"),
-            bg=self.SUCCESS,
-            fg=self.WHITE,
-            command=self.add_local_rule,
-            cursor="hand2",
-            padx=12,
-            pady=6,
+        self.local_desc_entry = tk.Entry(
+            row2, 
+            width=70,
+            bg=self.BG_SURFACE,
+            fg=self.TEXT_PRIMARY,
+            insertbackground=self.PRIMARY,
             relief="flat",
-            activebackground=self.PRIMARY
-        ).pack(pady=10)
+            font=("Segoe UI", 10),
+            bd=0,
+            highlightthickness=2,
+            highlightbackground=self.BORDER,
+            highlightcolor=self.PRIMARY
+        )
+        self.local_desc_entry.pack(side="left", padx=5, ipady=6)
         
-        # Lista de reglas existentes
-        list_frame = tk.LabelFrame(
-            self.tab_local, 
-            text="📋 Reglas Activas", 
-            font=("Segoe UI", 12, "bold"),
+        # Botones con estilo moderno
+        btn_frame = tk.Frame(form, bg=self.BG_CARD)
+        btn_frame.pack(fill="x", pady=10)
+        
+        self._create_action_button(
+            btn_frame, 
+            "✚ Agregar Regla", 
+            self.add_local_rule, 
+            self.SUCCESS
+        ).pack(side="left", padx=5)
+        
+        self._create_action_button(
+            btn_frame, 
+            "✖ Eliminar Seleccionada", 
+            self.remove_local_rule, 
+            self.ERROR
+        ).pack(side="left", padx=5)
+        
+        # Buscador
+        search_frame = tk.Frame(section, bg=self.BG_CARD)
+        search_frame.pack(fill="x", padx=20, pady=(10, 5))
+        
+        tk.Label(
+            search_frame,
+            text="🔍 Buscar:",
             bg=self.BG_CARD,
-            fg=self.WHITE,
+            fg=self.TEXT_SECONDARY,
+            font=("Segoe UI", 10)
+        ).pack(side="left", padx=5)
+        
+        self.local_search_entry = tk.Entry(
+            search_frame,
+            width=40,
+            bg=self.BG_SURFACE,
+            fg=self.TEXT_PRIMARY,
+            insertbackground=self.PRIMARY,
+            relief="flat",
+            font=("Segoe UI", 10),
+            bd=0,
+            highlightthickness=2,
+            highlightbackground=self.BORDER,
+            highlightcolor=self.PRIMARY
+        )
+        self.local_search_entry.pack(side="left", padx=5, ipady=6)
+        self.local_search_entry.insert(0, "Buscar por LOCAL, SKU o Proveedor...")
+        self.local_search_entry.bind("<FocusIn>", lambda e: self._clear_placeholder(self.local_search_entry, "Buscar por LOCAL, SKU o Proveedor..."))
+        self.local_search_entry.bind("<FocusOut>", lambda e: self._restore_placeholder(self.local_search_entry, "Buscar por LOCAL, SKU o Proveedor..."))
+        self.local_search_entry.bind("<KeyRelease>", lambda e: self.filter_local_rules())
+        
+        tk.Button(
+            search_frame,
+            text="✖ Limpiar",
+            command=lambda: self._clear_search(self.local_search_entry, "Buscar por LOCAL, SKU o Proveedor...", self.refresh_local_rules),
+            bg=self.BG_SURFACE,
+            fg=self.TEXT_SECONDARY,
+            font=("Segoe UI", 9),
+            relief="flat",
             padx=10,
-            pady=10
-        )
-        list_frame.pack(fill="both", expand=True, padx=10, pady=10)
+            pady=4,
+            cursor="hand2"
+        ).pack(side="left", padx=5)
         
-        # Treeview
-        columns = ("LOCAL", "SKU", "Proveedor", "Descripción", "Fecha Creación")
+        # Tabla con estilo moderno
+        table_frame = tk.Frame(section, bg=self.BG_CARD)
+        table_frame.pack(fill="both", expand=True, padx=20, pady=(0, 15))
+        
+        columns = ("LOCAL", "SKU", "Proveedor", "Descripcion", "Fecha")
         self.local_tree = ttk.Treeview(
-            list_frame, 
-            columns=columns, 
+            table_frame,
+            columns=columns,
             show="headings",
-            height=12,
-            style='LocalRules.Treeview'
+            height=15,
+            style="Bordered.Treeview"
         )
         
-        # Configurar columnas
-        self.local_tree.heading("LOCAL", text="Código LOCAL")
-        self.local_tree.heading("SKU", text="Código SKU")
-        self.local_tree.heading("Proveedor", text="Código Proveedor")
-        self.local_tree.heading("Descripción", text="Descripción")
-        self.local_tree.heading("Fecha Creación", text="Fecha Creación")
+        self.local_tree.heading("LOCAL", text="LOCAL")
+        self.local_tree.heading("SKU", text="SKU")
+        self.local_tree.heading("Proveedor", text="Proveedor")
+        self.local_tree.heading("Descripcion", text="Descripción")
+        self.local_tree.heading("Fecha", text="Fecha Creación")
         
-        self.local_tree.column("LOCAL", width=120, anchor="center")
+        self.local_tree.column("LOCAL", width=100, anchor="center")
         self.local_tree.column("SKU", width=120, anchor="center")
-        self.local_tree.column("Proveedor", width=140, anchor="center")
-        self.local_tree.column("Descripción", width=280, anchor="w")
-        self.local_tree.column("Fecha Creación", width=140, anchor="center")
+        self.local_tree.column("Proveedor", width=100, anchor="center")
+        self.local_tree.column("Descripcion", width=400)
+        self.local_tree.column("Fecha", width=120, anchor="center")
         
-        # Configurar tags de filas alternadas
+        # Configurar tags de filas alternadas (COPIADO DE products_dialog.py)
         self.local_tree.tag_configure('oddrow', background='#F5F5F5')
         self.local_tree.tag_configure('evenrow', background='white')
         
-        # Scrollbar
-        scrollbar = ttk.Scrollbar(list_frame, orient="vertical", command=self.local_tree.yview)
+        scrollbar = ttk.Scrollbar(table_frame, orient="vertical", command=self.local_tree.yview)
         self.local_tree.configure(yscrollcommand=scrollbar.set)
         
         self.local_tree.pack(side="left", fill="both", expand=True)
         scrollbar.pack(side="right", fill="y")
+    
+    def _create_input_group(self, parent, label_text, entry_var_name, width):
+        """Helper para crear un grupo de label + entry"""
+        tk.Label(
+            parent, 
+            text=label_text, 
+            bg=self.BG_CARD, 
+            fg=self.TEXT_SECONDARY,
+            font=("Segoe UI", 10)
+        ).pack(side="left", padx=5)
         
-        # Botón eliminar
-        tk.Button(
-            list_frame,
-            text="🗑️ Eliminar Regla Seleccionada",
-            font=("Segoe UI", 9, "bold"),
-            bg=self.ERROR,
-            fg=self.WHITE,
-            command=self.remove_local_rule,
+        entry = tk.Entry(
+            parent, 
+            width=width,
+            bg=self.BG_SURFACE,
+            fg=self.TEXT_PRIMARY,
+            insertbackground=self.PRIMARY,
+            relief="flat",
+            font=("Segoe UI", 10),
+            bd=0,
+            highlightthickness=2,
+            highlightbackground=self.BORDER,
+            highlightcolor=self.PRIMARY
+        )
+        entry.pack(side="left", padx=5, ipady=6)
+        setattr(self, entry_var_name, entry)
+    
+    def _create_action_button(self, parent, text, command, bg_color):
+        """Helper para crear botones de acción con estilo"""
+        btn = tk.Button(
+            parent,
+            text=text,
+            command=command,
+            bg=bg_color,
+            fg=self.TEXT_PRIMARY,
+            font=("Segoe UI", 10, "bold"),
+            relief="flat",
+            padx=15,
+            pady=8,
             cursor="hand2",
-            padx=12,
-            pady=6
-        ).pack(pady=5)
+            activebackground=bg_color,
+            activeforeground=self.TEXT_PRIMARY
+        )
+        return btn
+    
+    def setup_stock_section(self, parent):
+        """Configura la sección de bloqueos de stock"""
+        # Card con fondo elevado que ocupa todo el espacio
+        section = tk.Frame(parent, bg=self.BG_CARD, relief="flat", bd=0)
+        section.pack(fill="both", expand=True, padx=10, pady=10)
         
+        # Formulario
+        form = tk.Frame(section, bg=self.BG_CARD)
+        form.pack(fill="x", padx=20, pady=15)
+        
+        row1 = tk.Frame(form, bg=self.BG_CARD)
+        row1.pack(fill="x", pady=5)
+        
+        self._create_input_group(row1, "SKU:", "stock_sku_entry", 15)
+        self._create_input_group(row1, "Proveedor:", "stock_prov_entry", 15)
+        self._create_input_group(row1, "Motivo:", "stock_motivo_entry", 45)
+        self.stock_motivo_entry.insert(0, "Quiebre de stock")
+        
+        btn_frame = tk.Frame(form, bg=self.BG_CARD)
+        btn_frame.pack(fill="x", pady=10)
+        
+        self._create_action_button(
+            btn_frame, 
+            "✚ Agregar Bloqueo", 
+            self.add_stock_block, 
+            self.SUCCESS
+        ).pack(side="left", padx=5)
+        
+        self._create_action_button(
+            btn_frame, 
+            "✖ Eliminar Seleccionado", 
+            self.remove_stock_block, 
+            self.ERROR
+        ).pack(side="left", padx=5)
+        
+        # Buscador
+        search_frame = tk.Frame(section, bg=self.BG_CARD)
+        search_frame.pack(fill="x", padx=20, pady=(10, 5))
+        
+        tk.Label(
+            search_frame,
+            text="🔍 Buscar:",
+            bg=self.BG_CARD,
+            fg=self.TEXT_SECONDARY,
+            font=("Segoe UI", 10)
+        ).pack(side="left", padx=5)
+        
+        self.stock_search_entry = tk.Entry(
+            search_frame,
+            width=40,
+            bg=self.BG_SURFACE,
+            fg=self.TEXT_PRIMARY,
+            insertbackground=self.PRIMARY,
+            relief="flat",
+            font=("Segoe UI", 10),
+            bd=0,
+            highlightthickness=2,
+            highlightbackground=self.BORDER,
+            highlightcolor=self.PRIMARY
+        )
+        self.stock_search_entry.pack(side="left", padx=5, ipady=6)
+        self.stock_search_entry.insert(0, "Buscar por SKU o Proveedor...")
+        self.stock_search_entry.bind("<FocusIn>", lambda e: self._clear_placeholder(self.stock_search_entry, "Buscar por SKU o Proveedor..."))
+        self.stock_search_entry.bind("<FocusOut>", lambda e: self._restore_placeholder(self.stock_search_entry, "Buscar por SKU o Proveedor..."))
+        self.stock_search_entry.bind("<KeyRelease>", lambda e: self.filter_stock_blocks())
+        
+        tk.Button(
+            search_frame,
+            text="✖ Limpiar",
+            command=lambda: self._clear_search(self.stock_search_entry, "Buscar por SKU o Proveedor...", self.refresh_stock_blocks),
+            bg=self.BG_SURFACE,
+            fg=self.TEXT_SECONDARY,
+            font=("Segoe UI", 9),
+            relief="flat",
+            padx=10,
+            pady=4,
+            cursor="hand2"
+        ).pack(side="left", padx=5)
+        
+        # Tabla
+        table_frame = tk.Frame(section, bg=self.BG_CARD)
+        table_frame.pack(fill="both", expand=True, padx=20, pady=(0, 15))
+        
+        columns = ("SKU", "Proveedor", "Motivo", "Fecha")
+        self.stock_tree = ttk.Treeview(
+            table_frame,
+            columns=columns,
+            show="headings",
+            height=15,
+            style="Bordered.Treeview"
+        )
+        
+        self.stock_tree.heading("SKU", text="SKU")
+        self.stock_tree.heading("Proveedor", text="Proveedor")
+        self.stock_tree.heading("Motivo", text="Motivo del Bloqueo")
+        self.stock_tree.heading("Fecha", text="Fecha Creación")
+        
+        self.stock_tree.column("SKU", width=120, anchor="center")
+        self.stock_tree.column("Proveedor", width=120, anchor="center")
+        self.stock_tree.column("Motivo", width=450)
+        self.stock_tree.column("Fecha", width=120, anchor="center")
+        
+        # Configurar tags de filas alternadas (COPIADO DE products_dialog.py)
+        self.stock_tree.tag_configure('oddrow', background='#F5F5F5')
+        self.stock_tree.tag_configure('evenrow', background='white')
+        
+        scrollbar = ttk.Scrollbar(table_frame, orient="vertical", command=self.stock_tree.yview)
+        self.stock_tree.configure(yscrollcommand=scrollbar.set)
+        
+        self.stock_tree.pack(side="left", fill="both", expand=True)
+        scrollbar.pack(side="right", fill="y")
+    
+    def setup_management_buttons(self, parent):
+        """Botones de gestión masiva en toolbar"""
+        # Toolbar oscuro
+        toolbar = tk.Frame(parent, bg=self.BG_SURFACE, height=60)
+        toolbar.pack(fill="x")
+        toolbar.pack_propagate(False)
+        
+        # Frame interno para botones
+        btn_frame = tk.Frame(toolbar, bg=self.BG_SURFACE)
+        btn_frame.pack(fill="both", padx=15, pady=10)
+        
+        # Label de acciones
+        tk.Label(
+            btn_frame,
+            text="ACCIONES:",
+            font=("Segoe UI", 10, "bold"),
+            bg=self.BG_SURFACE,
+            fg=self.TEXT_MUTED
+        ).pack(side="left", padx=(0, 15))
+        
+        # Botones de gestión
+        self._create_toolbar_button(
+            btn_frame, 
+            "� Descargar Template", 
+            self.descargar_template, 
+            self.PRIMARY
+        ).pack(side="left", padx=3)
+        
+        self._create_toolbar_button(
+            btn_frame, 
+            "📥 Importar Template", 
+            self.import_from_excel, 
+            self.PRIMARY
+        ).pack(side="left", padx=3)
+        
+        self._create_toolbar_button(
+            btn_frame, 
+            "📤 Exportar a Excel", 
+            self.export_to_excel, 
+            self.PRIMARY
+        ).pack(side="left", padx=3)
+        
+        # Botón de limpieza a la derecha
+        self._create_toolbar_button(
+            btn_frame, 
+            "🗑 Limpiar Todo", 
+            self.clear_all_rules, 
+            self.ERROR
+        ).pack(side="right", padx=3)
+    
+    def _create_toolbar_button(self, parent, text, command, bg_color):
+        """Helper para crear botones de toolbar más compactos"""
+        btn = tk.Button(
+            parent,
+            text=text,
+            command=command,
+            bg=bg_color,
+            fg=self.TEXT_PRIMARY,
+            font=("Segoe UI", 9, "bold"),
+            relief="flat",
+            padx=12,
+            pady=6,
+            cursor="hand2",
+            activebackground=bg_color,
+            activeforeground=self.TEXT_PRIMARY
+        )
+        return btn
+    
+    # Métodos de gestión
     def add_local_rule(self):
-        """Agrega una nueva regla de LOCAL + SKU"""
         local = self.local_entry.get().strip()
         sku = self.local_sku_entry.get().strip().upper()
         proveedor = self.local_prov_entry.get().strip()
         descripcion = self.local_desc_entry.get().strip()
         
         if not local or not sku or not proveedor:
-            messagebox.showwarning(
-                "⚠️ Campos Incompletos",
-                "Por favor ingrese el código LOCAL, SKU y código de Proveedor."
-            , parent=self.window)
+            self._show_message("warning", "Campos Incompletos", "Complete LOCAL, SKU y Proveedor")
             return
         
         if self.rules_manager.add_local_rule(local, sku, proveedor, descripcion):
-            messagebox.showinfo(
-                "✅ Éxito",
-                f"Regla agregada:\nLOCAL {local} + SKU {sku} → Proveedor {proveedor}"
-            , parent=self.window)
+            self._show_message("info", "Exito", f"Regla agregada: LOCAL {local} + SKU {sku}")
             
-            # Limpiar campos
+            # Limpiar campos DESPUÉS del messagebox
             self.local_entry.delete(0, tk.END)
             self.local_sku_entry.delete(0, tk.END)
             self.local_prov_entry.delete(0, tk.END)
             self.local_desc_entry.delete(0, tk.END)
             
-            self.refresh_local_rules()
-            self.refresh_stats()
+            # Diferir refresh para DESPUÉS del ciclo de eventos
+            self.window.after(50, self.refresh_local_rules)
         else:
-            messagebox.showerror(
-                "❌ Error",
-                f"No se pudo agregar la regla.\nPosiblemente ya existe una regla para LOCAL {local} + SKU {sku}."
-            , parent=self.window)
+            self._show_message("error", "Error", "No se pudo agregar la regla")
     
     def remove_local_rule(self):
-        """Elimina la regla de LOCAL + SKU seleccionada"""
         selection = self.local_tree.selection()
         if not selection:
-            messagebox.showwarning(
-                "⚠️ Sin Selección",
-                "Por favor seleccione una regla para eliminar."
-            , parent=self.window)
+            self._show_message("warning", "Sin Seleccion", "Seleccione una regla")
             return
         
         item = self.local_tree.item(selection[0])
         local = item["values"][0]
         sku = item["values"][1]
         
-        if messagebox.askyesno(
-            "🗑️ Confirmar Eliminación",
-            f"¿Está seguro que desea eliminar la regla?\n\nLOCAL {local} + SKU {sku}"
-        , parent=self.window):
+        if self._show_message("yesno", "Confirmar", f"Eliminar regla LOCAL {local} + SKU {sku}?"):
             if self.rules_manager.remove_local_rule(local, sku):
-                messagebox.showinfo("✅ Éxito", f"Regla eliminada: LOCAL {local} + SKU {sku}", parent=self.window)
-                self.refresh_local_rules()
-                self.refresh_stats()
-            else:
-                messagebox.showerror("❌ Error", "No se pudo eliminar la regla.", parent=self.window)
-    
-    def refresh_local_rules(self):
-        """Actualiza la lista de reglas de LOCAL"""
-        # Limpiar
-        for item in self.local_tree.get_children():
-            self.local_tree.delete(item)
-        
-        # Cargar reglas
-        rules = self.rules_manager.get_local_rules()
-        for rule in rules:
-            fecha = rule.get("created", "N/A")
-            if "T" in fecha:
-                fecha = fecha.split("T")[0]  # Solo fecha, sin hora
-            
-            # Determinar tag de fila alternada
-            num_items = len(self.local_tree.get_children())
-            tag_fila = 'evenrow' if num_items % 2 == 0 else 'oddrow'
-            
-            self.local_tree.insert(
-                "", 
-                "end", 
-                values=(
-                    rule["local"],
-                    rule.get("sku", "N/A"),  # Agregar SKU
-                    rule["proveedor"],
-                    rule.get("descripcion", ""),
-                    fecha
-                ),
-                tags=(tag_fila,)
-            )
-    
-    # --- TAB 2: BLOQUEOS DE STOCK ---
-    
-    def setup_stock_tab(self):
-        """Configura el tab de bloqueos de stock"""
-        # Panel de entrada con tema oscuro
-        input_frame = tk.LabelFrame(
-            self.tab_stock, 
-            text="➕ Agregar Nuevo Bloqueo por Quiebre de Stock", 
-            font=("Segoe UI", 12, "bold"),  # Fuente moderna
-            bg=self.BG_CARD,                # Fondo oscuro
-            fg=self.WHITE,                  # Texto blanco
-            padx=15,
-            pady=15
-        )
-        input_frame.pack(fill="x", padx=10, pady=10)
-        
-        # Explicación
-        tk.Label(
-            input_frame,
-            text="⚠️ Un SKU bloqueado con un proveedor específico:\n"
-                 "• Si solo tiene 1 proveedor → NO genera orden de compra\n"
-                 "• Si tiene múltiples proveedores → Ignora el bloqueado y usa los demás",
-            font=("Segoe UI", 10),          # Fuente moderna
-            bg=self.BG_CARD,                # Fondo oscuro
-            fg=self.WARNING,                # Texto amarillo para advertencia
-            justify="left"
-        ).pack(anchor="w", pady=5)
-        
-        # Campos
-        row1 = tk.Frame(input_frame, bg=self.BG_CARD)
-        row1.pack(fill="x", pady=5)
-        
-        tk.Label(
-            row1, 
-            text="Código SKU:", 
-            font=("Segoe UI", 11),          # Fuente moderna
-            bg=self.BG_CARD,                # Fondo oscuro
-            fg=self.WHITE,                  # Texto blanco
-            width=20,
-            anchor="w"
-        ).pack(side="left", padx=5)
-        
-        self.stock_sku_entry = tk.Entry(row1, font=("Segoe UI", 10), width=15, relief='solid', bd=1, 
-                                         bg=self.BG_DARK, fg=self.WHITE, insertbackground=self.WHITE)
-        self.stock_sku_entry.pack(side="left", padx=5)
-        
-        tk.Label(
-            row1, 
-            text="🚫", 
-            font=("Segoe UI", 14, "bold"), 
-            bg=self.BG_CARD,
-            fg=self.ERROR
-        ).pack(side="left", padx=10)
-        
-        tk.Label(
-            row1, 
-            text="Código Proveedor:", 
-            font=("Segoe UI", 11), 
-            bg=self.BG_CARD,
-            fg=self.WHITE,
-            width=20,
-            anchor="w"
-        ).pack(side="left", padx=5)
-        
-        self.stock_prov_entry = tk.Entry(row1, font=("Segoe UI", 10), width=15, relief='solid', bd=1, 
-                                         bg=self.BG_DARK, fg=self.WHITE, insertbackground=self.WHITE)
-        self.stock_prov_entry.pack(side="left", padx=5)
-        
-        # Motivo
-        row2 = tk.Frame(input_frame, bg=self.BG_CARD)
-        row2.pack(fill="x", pady=5)
-        
-        tk.Label(
-            row2, 
-            text="Motivo del bloqueo:", 
-            font=("Segoe UI", 11), 
-            bg=self.BG_CARD,
-            fg=self.WHITE,
-            width=20,
-            anchor="w"
-        ).pack(side="left", padx=5)
-        
-        self.stock_motivo_entry = tk.Entry(row2, font=("Segoe UI", 10), width=50, relief='solid', bd=1, 
-                                           bg=self.BG_DARK, fg=self.WHITE, insertbackground=self.WHITE)
-        self.stock_motivo_entry.insert(0, "Quiebre de stock")
-        self.stock_motivo_entry.pack(side="left", padx=5, fill="x", expand=True)
-        
-        # Botón agregar
-        tk.Button(
-            input_frame,
-            text="🚫 Bloquear Combinación",
-            font=("Segoe UI", 9, "bold"),
-            bg=self.ERROR,
-            fg=self.WHITE,
-            command=self.add_stock_block,
-            cursor="hand2",
-            padx=12,
-            pady=6,
-            relief="flat",
-            activebackground=self.WARNING
-        ).pack(pady=10)
-        
-        # Lista de bloqueos existentes
-        list_frame = tk.LabelFrame(
-            self.tab_stock, 
-            text="📋 Bloqueos Activos", 
-            font=("Segoe UI", 12, "bold"),
-            bg=self.BG_CARD,
-            fg=self.WHITE,
-            padx=10,
-            pady=10
-        )
-        list_frame.pack(fill="both", expand=True, padx=10, pady=10)
-        
-        # Treeview
-        columns = ("SKU", "Proveedor", "Motivo", "Fecha Creación")
-        self.stock_tree = ttk.Treeview(
-            list_frame, 
-            columns=columns, 
-            show="headings",
-            height=12,
-            style='StockBlocks.Treeview'
-        )
-        
-        # Configurar columnas
-        self.stock_tree.heading("SKU", text="Código SKU")
-        self.stock_tree.heading("Proveedor", text="Código Proveedor Bloqueado")
-        self.stock_tree.heading("Motivo", text="Motivo del Bloqueo")
-        self.stock_tree.heading("Fecha Creación", text="Fecha Creación")
-        
-        self.stock_tree.column("SKU", width=140, anchor="center")
-        self.stock_tree.column("Proveedor", width=180, anchor="center")
-        self.stock_tree.column("Motivo", width=280, anchor="w")
-        self.stock_tree.column("Fecha Creación", width=150, anchor="center")
-        
-        # Configurar tags de filas alternadas
-        self.stock_tree.tag_configure('oddrow', background='#F5F5F5')
-        self.stock_tree.tag_configure('evenrow', background='white')
-        
-        # Scrollbar
-        scrollbar = ttk.Scrollbar(list_frame, orient="vertical", command=self.stock_tree.yview)
-        self.stock_tree.configure(yscrollcommand=scrollbar.set)
-        
-        self.stock_tree.pack(side="left", fill="both", expand=True)
-        scrollbar.pack(side="right", fill="y")
-        
-        # Botón eliminar
-        tk.Button(
-            list_frame,
-            text="✅ Desbloquear Seleccionado",
-            font=("Segoe UI", 9, "bold"),
-            bg=self.SUCCESS,
-            fg=self.WHITE,
-            command=self.remove_stock_block,
-            cursor="hand2",
-            padx=12,
-            pady=6
-        ).pack(pady=5)
+                self._show_message("info", "Exito", "Regla eliminada")
+                # Diferir refresh para DESPUÉS del ciclo de eventos
+                self.window.after(50, self.refresh_local_rules)
     
     def add_stock_block(self):
-        """Agrega un nuevo bloqueo de stock"""
         sku = self.stock_sku_entry.get().strip().upper()
         proveedor = self.stock_prov_entry.get().strip()
         motivo = self.stock_motivo_entry.get().strip()
         
         if not sku or not proveedor:
-            messagebox.showwarning(
-                "⚠️ Campos Incompletos",
-                "Por favor ingrese el código SKU y el código de Proveedor."
-            , parent=self.window)
+            self._show_message("warning", "Campos Incompletos", "Complete SKU y Proveedor")
             return
         
         if self.rules_manager.add_stock_block(sku, proveedor, motivo):
-            messagebox.showinfo(
-                "✅ Éxito",
-                f"Bloqueo agregado:\nSKU {sku} + Proveedor {proveedor}\n\n"
-                f"Este proveedor no generará órdenes para este SKU."
-            , parent=self.window)
+            self._show_message("info", "Exito", f"Bloqueo agregado: SKU {sku}")
             
-            # Limpiar campos
+            # Limpiar campos DESPUÉS del messagebox
             self.stock_sku_entry.delete(0, tk.END)
             self.stock_prov_entry.delete(0, tk.END)
             self.stock_motivo_entry.delete(0, tk.END)
             self.stock_motivo_entry.insert(0, "Quiebre de stock")
             
-            self.refresh_stock_blocks()
-            self.refresh_stats()
+            # Diferir refresh para DESPUÉS del ciclo de eventos
+            self.window.after(50, self.refresh_stock_blocks)
         else:
-            messagebox.showerror(
-                "❌ Error",
-                f"No se pudo agregar el bloqueo.\n"
-                f"Posiblemente ya existe un bloqueo para SKU {sku} + Proveedor {proveedor}."
-            , parent=self.window)
+            self._show_message("error", "Error", "No se pudo agregar el bloqueo")
     
     def remove_stock_block(self):
-        """Elimina el bloqueo de stock seleccionado"""
         selection = self.stock_tree.selection()
         if not selection:
-            messagebox.showwarning(
-                "⚠️ Sin Selección",
-                "Por favor seleccione un bloqueo para eliminar."
-            , parent=self.window)
+            self._show_message("warning", "Sin Seleccion", "Seleccione un bloqueo")
             return
         
         item = self.stock_tree.item(selection[0])
         sku = item["values"][0]
         proveedor = item["values"][1]
         
-        if messagebox.askyesno(
-            "✅ Confirmar Desbloqueo",
-            f"¿Está seguro que desea desbloquear?\n\nSKU: {sku}\nProveedor: {proveedor}"
-        , parent=self.window):
+        if self._show_message("yesno", "Confirmar", f"Eliminar bloqueo SKU {sku}?"):
             if self.rules_manager.remove_stock_block(sku, proveedor):
-                messagebox.showinfo(
-                    "✅ Éxito", 
-                    f"Bloqueo eliminado:\nSKU {sku} + Proveedor {proveedor}"
-                , parent=self.window)
-                self.refresh_stock_blocks()
-                self.refresh_stats()
-            else:
-                messagebox.showerror("❌ Error", "No se pudo eliminar el bloqueo.", parent=self.window)
+                self._show_message("info", "Exito", "Bloqueo eliminado")
+                self.refresh_stock_blocks()  # DESPUÉS del messagebox
     
-    def refresh_stock_blocks(self):
-        """Actualiza la lista de bloqueos de stock"""
-        # Limpiar
+    def _clear_placeholder(self, entry, placeholder):
+        """Limpia el placeholder al hacer foco"""
+        if entry.get() == placeholder:
+            entry.delete(0, tk.END)
+            entry.config(fg=self.TEXT_PRIMARY)
+    
+    def _restore_placeholder(self, entry, placeholder):
+        """Restaura el placeholder si está vacío"""
+        if not entry.get():
+            entry.insert(0, placeholder)
+            entry.config(fg=self.TEXT_MUTED)
+    
+    def _clear_search(self, entry, placeholder, refresh_func):
+        """Limpia el campo de búsqueda y refresca"""
+        entry.delete(0, tk.END)
+        entry.insert(0, placeholder)
+        entry.config(fg=self.TEXT_MUTED)
+        refresh_func()
+    
+    def filter_local_rules(self):
+        """Filtra las reglas locales según el texto de búsqueda"""
+        search_text = self.local_search_entry.get().lower()
+        if search_text == "buscar por local, sku o proveedor...":
+            search_text = ""
+        
+        for item in self.local_tree.get_children():
+            self.local_tree.delete(item)
+        
+        rules = self.rules_manager.get_local_rules()
+        for rule in rules:
+            local = str(rule.get("local", "")).lower()
+            sku = str(rule.get("sku", "N/A")).lower()
+            proveedor = str(rule.get("proveedor", "")).lower()
+            descripcion = str(rule.get("descripcion", "")).lower()
+            
+            if (not search_text or 
+                search_text in local or 
+                search_text in sku or 
+                search_text in proveedor or
+                search_text in descripcion):
+                
+                fecha = rule.get("created", "N/A")
+                if "T" in fecha:
+                    fecha = fecha.split("T")[0]
+                
+                self.local_tree.insert("", "end", values=(
+                    rule["local"],
+                    rule.get("sku", "N/A"),
+                    rule["proveedor"],
+                    rule.get("descripcion", ""),
+                    fecha
+                ))
+    
+    def filter_stock_blocks(self):
+        """Filtra los bloqueos de stock según el texto de búsqueda"""
+        search_text = self.stock_search_entry.get().lower()
+        if search_text == "buscar por sku o proveedor...":
+            search_text = ""
+        
         for item in self.stock_tree.get_children():
             self.stock_tree.delete(item)
         
-        # Cargar bloqueos
         blocks = self.rules_manager.get_stock_blocks()
         for block in blocks:
-            fecha = block.get("created", "N/A")
-            if "T" in fecha:
-                fecha = fecha.split("T")[0]  # Solo fecha, sin hora
+            sku = str(block.get("sku", "")).lower()
+            proveedor = str(block.get("proveedor", "")).lower()
+            motivo = str(block.get("motivo", "")).lower()
             
-            # Determinar tag de fila alternada
-            num_items = len(self.stock_tree.get_children())
-            tag_fila = 'evenrow' if num_items % 2 == 0 else 'oddrow'
-            
-            self.stock_tree.insert(
-                "", 
-                "end", 
-                values=(
+            if (not search_text or 
+                search_text in sku or 
+                search_text in proveedor or
+                search_text in motivo):
+                
+                fecha = block.get("created", "N/A")
+                if "T" in fecha:
+                    fecha = fecha.split("T")[0]
+                
+                self.stock_tree.insert("", "end", values=(
                     block["sku"],
                     block["proveedor"],
                     block.get("motivo", ""),
                     fecha
-                ),
-                tags=(tag_fila,)
+                ))
+    
+    def refresh_local_rules(self):
+        """Refresca la tabla de reglas locales - SIMPLE COMO PRODUCTS_DIALOG"""
+        # Limpiar tabla
+        for item in self.local_tree.get_children():
+            self.local_tree.delete(item)
+        
+        # Cargar reglas
+        rules = self.rules_manager.get_local_rules()
+        
+        for idx, rule in enumerate(rules):
+            fecha = rule.get("created", "N/A")
+            if "T" in fecha:
+                fecha = fecha.split("T")[0]
+            
+            tag_fila = 'evenrow' if idx % 2 == 0 else 'oddrow'
+            self.local_tree.insert("", "end", values=(
+                rule["local"],
+                rule.get("sku", "N/A"),
+                rule["proveedor"],
+                rule.get("descripcion", ""),
+                fecha
+            ), tags=(tag_fila,))
+    
+    def refresh_stock_blocks(self):
+        """Refresca la tabla de bloqueos de stock - SIMPLE COMO PRODUCTS_DIALOG"""
+        # Limpiar tabla
+        for item in self.stock_tree.get_children():
+            self.stock_tree.delete(item)
+        
+        # Cargar bloques
+        blocks = self.rules_manager.get_stock_blocks()
+        
+        for idx, block in enumerate(blocks):
+            fecha = block.get("created", "N/A")
+            if "T" in fecha:
+                fecha = fecha.split("T")[0]
+            
+            tag_fila = 'evenrow' if idx % 2 == 0 else 'oddrow'
+            self.stock_tree.insert("", "end", values=(
+                block["sku"],
+                block["proveedor"],
+                block.get("motivo", ""),
+                fecha
+            ), tags=(tag_fila,))    
+    def refresh_all(self):
+        """Refresca todas las vistas"""
+        self.refresh_local_rules()
+        self.refresh_stock_blocks()
+    
+    def import_from_excel(self):
+        """Importa reglas desde un archivo Excel"""
+        filename = filedialog.askopenfilename(
+            title="Importar Reglas desde Excel",
+            filetypes=[("Excel files", "*.xlsx"), ("All files", "*.*")],
+            parent=self.window
+        )
+        
+        if not filename:
+            return
+        
+        # Preguntar si quiere fusionar o reemplazar
+        merge = messagebox.askyesno(
+            "📥 Modo de Importación",
+            "¿Desea FUSIONAR las reglas del Excel con las existentes?\n\n"
+            "• SÍ: Agregar nuevas reglas sin eliminar las actuales\n"
+            "• NO: REEMPLAZAR todas las reglas (se perderán las actuales)\n\n"
+            "¿Fusionar reglas?",
+            parent=self.window
+        )
+        
+        # Confirmación adicional si va a reemplazar
+        if not merge:
+            if not messagebox.askyesno(
+                "⚠️ Confirmar Reemplazo",
+                "ATENCIÓN: Se eliminarán TODAS las reglas actuales.\n\n"
+                "¿Está completamente seguro?",
+                parent=self.window
+            ):
+                return
+        
+        stats = self.rules_manager.import_from_excel(filename, merge=merge)
+        
+        if "error" in stats:
+            messagebox.showerror(
+                "❌ Error",
+                f"No se pudieron importar las reglas:\n\n{stats['error']}\n\n"
+                "Asegúrese de que pandas y openpyxl están instalados.",
+                parent=self.window
             )
-    
-    # --- TAB 3: ESTADÍSTICAS ---
-    
-    def setup_stats_tab(self):
-        """Configura el tab de estadísticas"""
-        # Frame principal
-        main_frame = tk.Frame(self.tab_stats, bg=self.BG_CARD)
-        main_frame.pack(fill="both", expand=True, padx=20, pady=20)
-        
-        # Título
-        tk.Label(
-            main_frame,
-            text="📊 Estadísticas del Sistema de Reglas",
-            font=("Segoe UI", 14, "bold"),
-            bg=self.BG_CARD,
-            fg=self.PRIMARY
-        ).pack(pady=10)
-        
-        # Stats display
-        self.stats_text = scrolledtext.ScrolledText(
-            main_frame,
-            height=15,
-            font=("Consolas", 10),
-            bg=self.BG_DARK,
-            fg=self.WHITE,
-            insertbackground=self.WHITE,
-            relief="solid",
-            bd=1
-        )
-        self.stats_text.pack(fill="both", expand=True, pady=10)
-        
-        # Botones
-        btn_frame = tk.Frame(main_frame, bg=self.BG_CARD)
-        btn_frame.pack(pady=10)
-        
-        tk.Button(
-            btn_frame,
-            text="📊 Exportar a Excel",
-            font=("Segoe UI", 9, "bold"),
-            bg=self.SUCCESS,
-            fg=self.WHITE,
-            command=self.export_to_excel,
-            cursor="hand2",
-            padx=12,
-            pady=6,
-            relief="flat",
-            activebackground=self.PRIMARY
-        ).pack(side="left", padx=5)
-        
-        tk.Button(
-            btn_frame,
-            text="📄 Importar Template",
-            font=("Segoe UI", 9, "bold"),
-            bg=self.WARNING,
-            fg=self.WHITE,
-            command=self.import_from_excel,
-            cursor="hand2",
-            padx=12,
-            pady=6,
-            relief="flat",
-            activebackground=self.PRIMARY
-        ).pack(side="left", padx=5)
-        
-        tk.Button(
-            btn_frame,
-            text="📄 Descargar Template",
-            font=("Segoe UI", 9, "bold"),
-            bg="#ef6c00",
-            fg=self.WHITE,
-            command=self.descargar_template,
-            cursor="hand2",
-            padx=12,
-            pady=6
-        ).pack(side="left", padx=5)
-        
-        # Separador visual
-        tk.Frame(btn_frame, width=20, bg=self.WHITE).pack(side="left")
-        
-        tk.Button(
-            btn_frame,
-            text="🗑️ Limpiar Todas las Reglas",
-            font=("Segoe UI", 9, "bold"),
-            bg=self.ERROR,
-            fg=self.WHITE,
-            command=self.clear_all_rules,
-            cursor="hand2",
-            padx=12,
-            pady=6
-        ).pack(side="left", padx=5)
-    
-    def refresh_stats(self):
-        """Actualiza las estadísticas"""
-        stats = self.rules_manager.get_stats()
-        local_rules = self.rules_manager.get_local_rules()
-        stock_blocks = self.rules_manager.get_stock_blocks()
-        
-        self.stats_text.config(state="normal")
-        self.stats_text.delete(1.0, tk.END)
-        
-        output = "=" * 60 + "\n"
-        output += "📊 ESTADÍSTICAS DEL SISTEMA DE REGLAS ESPECIALES\n"
-        output += "=" * 60 + "\n\n"
-        
-        output += "📍 REGLAS DE LOCAL → PROVEEDOR:\n"
-        output += f"   • Total de reglas: {stats['total_local_rules']}\n"
-        output += f"   • Reglas activas: {stats['active_local_rules']}\n\n"
-        
-        if local_rules:
-            output += "   Detalle de reglas:\n"
-            for rule in local_rules:
-                sku = rule.get('sku', 'N/A')
-                output += f"   • LOCAL {rule['local']} + SKU {sku} → Proveedor {rule['proveedor']}\n"
-                if rule.get('descripcion'):
-                    output += f"     Descripción: {rule['descripcion']}\n"
-        
-        output += "\n" + "-" * 60 + "\n\n"
-        
-        output += "🚫 BLOQUEOS POR QUIEBRE DE STOCK:\n"
-        output += f"   • Total de bloqueos: {stats['total_stock_blocks']}\n"
-        output += f"   • Bloqueos activos: {stats['active_stock_blocks']}\n\n"
-        
-        if stock_blocks:
-            output += "   Detalle de bloqueos:\n"
-            for block in stock_blocks:
-                output += f"   • SKU {block['sku']} + Proveedor {block['proveedor']}\n"
-                if block.get('motivo'):
-                    output += f"     Motivo: {block['motivo']}\n"
-        
-        output += "\n" + "=" * 60 + "\n"
-        
-        self.stats_text.insert(1.0, output)
-        self.stats_text.config(state="disabled")
-    
-    def export_rules(self):
-        """Exporta las reglas a un archivo"""
-        from tkinter import filedialog
-        
-        filename = filedialog.asksaveasfilename(
-            title="Exportar Reglas",
-            defaultextension=".json",
-            filetypes=[("JSON files", "*.json"), ("All files", "*.*")]
-        )
-        
-        if filename:
-            if self.rules_manager.export_rules(filename):
-                messagebox.showinfo(
-                    "✅ Éxito",
-                    f"Reglas exportadas exitosamente a:\n{filename}"
-                , parent=self.window)
-            else:
-                messagebox.showerror(
-                    "❌ Error",
-                    "No se pudieron exportar las reglas."
-                , parent=self.window)
+        else:
+            # Mostrar resumen
+            msg = "✅ Importación completada:\n\n"
+            msg += f"📍 Reglas LOCAL + SKU:\n"
+            msg += f"   • Agregadas: {stats['local_rules_added']}\n"
+            msg += f"   • Omitidas (duplicadas): {stats['local_rules_skipped']}\n\n"
+            msg += f"🚫 Bloqueos de Stock:\n"
+            msg += f"   • Agregados: {stats['stock_blocks_added']}\n"
+            msg += f"   • Omitidos (duplicados): {stats['stock_blocks_skipped']}\n"
+            
+            if stats['errors']:
+                msg += f"\n⚠️ Errores encontrados: {len(stats['errors'])}\n"
+                msg += "Revise la consola para más detalles."
+            
+            messagebox.showinfo("✅ Importación Completada", msg, parent=self.window)
+            self.refresh_all()  # DESPUÉS del messagebox
     
     def export_to_excel(self):
         """Exporta las reglas a Excel para edición masiva"""
-        from tkinter import filedialog
-        
         filename = filedialog.asksaveasfilename(
             title="Exportar Reglas a Excel",
             defaultextension=".xlsx",
             filetypes=[("Excel files", "*.xlsx"), ("All files", "*.*")],
-            initialfile="reglas_especiales.xlsx"
+            initialfile="reglas_especiales.xlsx",
+            parent=self.window
         )
         
-        if filename:
-            if self.rules_manager.export_to_excel(filename):
-                messagebox.showinfo(
-                    "✅ Éxito",
-                    f"Reglas exportadas a Excel exitosamente:\n{filename}\n\n"
-                    f"El archivo contiene:\n"
-                    f"• Hoja 'LOCAL_SKU_Rules': Reglas de LOCAL + SKU\n"
-                    f"• Hoja 'Stock_Blocks': Bloqueos de stock\n"
-                    f"• Hoja 'INSTRUCCIONES': Guía de edición\n\n"
-                    f"Después de editar, use 'Importar Template' para cargar los cambios."
-                , parent=self.window)
-            else:
-                messagebox.showerror(
-                    "❌ Error",
-                    "No se pudieron exportar las reglas a Excel.\n\n"
-                    "Asegúrese de que pandas y openpyxl están instalados."
-                , parent=self.window)
-    
-    def import_from_excel(self):
-        """Importa reglas desde un archivo Excel"""
-        from tkinter import filedialog
+        if not filename:
+            return
         
-        filename = filedialog.askopenfilename(
-            title="Importar Reglas desde Excel",
-            filetypes=[("Excel files", "*.xlsx"), ("All files", "*.*")]
-        )
-        
-        if filename:
-            # Preguntar si quiere fusionar o reemplazar
-            merge = messagebox.askyesno(
-                "📥 Modo de Importación",
-                "¿Desea FUSIONAR las reglas del Excel con las existentes?\n\n"
-                "• SÍ: Agregar nuevas reglas sin eliminar las actuales\n"
-                "• NO: REEMPLAZAR todas las reglas (se perderán las actuales, parent=self.window)\n\n"
-                "¿Fusionar reglas?"
+        if self.rules_manager.export_to_excel(filename):
+            messagebox.showinfo(
+                "✅ Éxito",
+                f"Reglas exportadas a Excel exitosamente:\n{filename}\n\n"
+                f"El archivo contiene:\n"
+                f"• Hoja 'LOCAL_SKU_Rules': Reglas de LOCAL + SKU\n"
+                f"• Hoja 'Stock_Blocks': Bloqueos de stock\n"
+                f"• Hoja 'INSTRUCCIONES': Guía de edición\n\n"
+                f"Después de editar, use 'Importar Template' para cargar los cambios.",
+                parent=self.window
             )
-            
-            # Confirmación adicional si va a reemplazar
-            if not merge:
-                if not messagebox.askyesno(
-                    "⚠️ Confirmar Reemplazo",
-                    "ATENCIÓN: Se eliminarán TODAS las reglas actuales.\n\n"
-                    "¿Está completamente seguro?"
-                , parent=self.window):
-                    return
-            
-            stats = self.rules_manager.import_from_excel(filename, merge=merge)
-            
-            if "error" in stats:
-                messagebox.showerror(
-                    "❌ Error",
-                    f"No se pudieron importar las reglas:\n\n{stats['error']}\n\n"
-                    "Asegúrese de que pandas y openpyxl están instalados."
-                , parent=self.window)
-            else:
-                # Mostrar resumen
-                msg = "✅ Importación completada:\n\n"
-                msg += f"📍 Reglas LOCAL + SKU:\n"
-                msg += f"   • Agregadas: {stats['local_rules_added']}\n"
-                msg += f"   • Omitidas (duplicadas): {stats['local_rules_skipped']}\n\n"
-                msg += f"🚫 Bloqueos de Stock:\n"
-                msg += f"   • Agregados: {stats['stock_blocks_added']}\n"
-                msg += f"   • Omitidos (duplicados): {stats['stock_blocks_skipped']}\n"
-                
-                if stats['errors']:
-                    msg += f"\n⚠️ Errores encontrados: {len(stats['errors'])}\n"
-                    msg += "Revise la consola para más detalles."
-                
-                messagebox.showinfo("✅ Importación Completada", msg, parent=self.window)
-                
-                # Actualizar todas las vistas
-                self.refresh_all()
+        else:
+            messagebox.showerror(
+                "❌ Error",
+                "No se pudieron exportar las reglas a Excel.\n\n"
+                "Asegúrese de que pandas y openpyxl están instalados.",
+                parent=self.window
+            )
     
     def descargar_template(self):
         """Descarga un template de Excel con la estructura esperada para las reglas"""
-        from tkinter import filedialog
-        import pandas as pd
-        
-        # Pedir ubicación de guardado
         filename = filedialog.asksaveasfilename(
             title="Guardar Template",
             defaultextension=".xlsx",
             filetypes=[("Excel files", "*.xlsx"), ("All files", "*.*")],
-            initialfile="Reglas_Template.xlsx"
+            initialfile="Reglas_Template.xlsx",
+            parent=self.window
         )
         
         if not filename:
@@ -1045,60 +960,33 @@ class RulesDialog:
     
     def clear_all_rules(self):
         """Limpia todas las reglas del sistema con doble confirmación"""
-        # Primera confirmación
         if not messagebox.askyesno(
-            "⚠️ Limpiar Todas las Reglas",
-            "¿Está seguro que desea eliminar TODAS las reglas?\n\n"
-            "Esto incluye:\n"
-            "• Todas las reglas de LOCAL + SKU → Proveedor\n"
-            "• Todos los bloqueos por quiebre de stock\n\n"
-            "Esta acción NO se puede deshacer."
-        , parent=self.window):
+            "⚠️ Confirmar Eliminación", 
+            "¿Eliminar TODAS las reglas especiales?\n\n"
+            "Esta acción NO se puede deshacer.",
+            parent=self.window
+        ):
             return
         
-        # Segunda confirmación más fuerte
-        if not messagebox.askyesno(
-            "🚨 CONFIRMACIÓN FINAL",
-            "ÚLTIMA ADVERTENCIA:\n\n"
-            "Se eliminarán TODAS las reglas del sistema.\n"
-            "Se perderán TODOS los datos de reglas.\n\n"
+        if messagebox.askyesno(
+            "🔴 CONFIRMACIÓN FINAL", 
             "¿Está COMPLETAMENTE seguro?\n\n"
-            "TIP: Use 'Exportar a Excel' o 'Exportar JSON'\n"
-            "antes de limpiar para tener un respaldo."
-        , parent=self.window):
-            return
-        
-        # Obtener estadísticas antes de limpiar
-        stats = self.rules_manager.get_stats()
-        total_rules = stats['total_local_rules'] + stats['total_stock_blocks']
-        
-        # Limpiar todas las reglas
-        self.rules_manager.clear_all_rules()
-        
-        # Actualizar todas las vistas
-        self.refresh_all()
-        
-        messagebox.showinfo(
-            "✅ Reglas Eliminadas",
-            f"Se eliminaron exitosamente todas las reglas:\n\n"
-            f"• {stats['total_local_rules']} reglas de LOCAL + SKU\n"
-            f"• {stats['total_stock_blocks']} bloqueos de stock\n"
-            f"• Total: {total_rules} reglas eliminadas\n\n"
-            f"El sistema está ahora limpio."
-        , parent=self.window)
-    
-    def refresh_all(self):
-        """Actualiza todas las vistas"""
-        self.refresh_local_rules()
-        self.refresh_stock_blocks()
-        self.refresh_stats()
+            "Se eliminarán:\n"
+            "• Todas las reglas LOCAL + SKU\n"
+            "• Todos los bloqueos de stock",
+            parent=self.window
+        ):
+            self.rules_manager.clear_all_rules()
+            messagebox.showinfo(
+                "✅ Completado", 
+                "Todas las reglas han sido eliminadas.",
+                parent=self.window
+            )
+            self.refresh_all()  # DESPUÉS del messagebox
 
-
-# Función de prueba
+# Test
 if __name__ == "__main__":
     root = tk.Tk()
-    root.withdraw()  # Ocultar ventana principal
-    
+    root.withdraw()
     dialog = RulesDialog(root)
     root.mainloop()
-

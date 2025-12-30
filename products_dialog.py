@@ -35,6 +35,10 @@ class ProductsDialog:
         self.window = tk.Toplevel()
         self.window.title("📦 Maestra C.Calzada")
         
+        # IMPORTANTE: Forzar theme 'default' para SOBREESCRIBIR el 'clam' de gui_moderna_v2
+        self.style = ttk.Style(self.window)
+        self.style.theme_use('default')
+        
         # Adaptar altura a la pantalla del usuario
         screen_height = self.window.winfo_screenheight()
         window_height = int(screen_height * 0.85)  # 85% de la altura de pantalla
@@ -60,35 +64,33 @@ class ProductsDialog:
         self.BG_SURFACE = "#242837"   # BG_SURFACE
         self.LIGHT_GRAY = "#e5e7eb"   # TEXT_SECONDARY
         
-        # Inicializar estilos
-        self.style = ttk.Style()
-        self.style.theme_use('default')
+        # Configurar estilos de tabla
         self.configure_table_style()
         
         self.setup_ui()
         self.refresh_products()
     
     def configure_table_style(self):
-        """Configura el estilo de la tabla con tema moderno"""
-        self.style.configure('Products.Treeview',
-            background=self.WHITE,        # Fondo blanco para legibilidad
-            foreground='#2c3e50',         # Texto azul oscuro
-            fieldbackground=self.WHITE,   # Campo blanco
-            bordercolor='#bdc3c7',        # Borde gris claro
-            borderwidth=2,                # Borde más grueso
-            rowheight=35,                 # Filas más altas
-            font=('Segoe UI', 12)         # Fuente más grande
+        """Configura el estilo de la tabla EXACTO de agenda_dialog.py"""
+        self.style.configure('Bordered.Treeview',
+            background='white',
+            foreground='black',
+            fieldbackground='white',
+            bordercolor='black',
+            borderwidth=1,
+            rowheight=28,
+            font=('Segoe UI', 9)
         )
-        self.style.configure('Products.Treeview.Heading',
-            background=self.PRIMARY,      # Header con color primario
-            foreground=self.WHITE,        # Texto blanco en header
-            borderwidth=2,                # Borde más grueso
-            font=('Segoe UI', 13, 'bold'), # Header más grande
-            relief='flat'                 # Sin relieve
+        self.style.configure('Bordered.Treeview.Heading',
+            background='#E3F2FD',
+            foreground='#1976D2',
+            borderwidth=1,
+            font=('Segoe UI', 9, 'bold'),
+            relief='solid'
         )
-        self.style.map('Products.Treeview',
-            background=[('selected', self.PRIMARY)], # Selección con color primario
-            foreground=[('selected', self.WHITE)]   # Texto blanco al seleccionar
+        self.style.map('Bordered.Treeview',
+            background=[('selected', '#BBDEFB')],
+            foreground=[('selected', 'black')]
         )
     
     def setup_ui(self):
@@ -388,7 +390,7 @@ class ProductsDialog:
             columns=columns, 
             show="headings",
             height=15,
-            style='Products.Treeview'
+            style='Bordered.Treeview'
         )
         
         # Configurar columnas
@@ -412,33 +414,25 @@ class ProductsDialog:
         # Bind doble click para cargar en campos de edición
         self.products_tree.bind('<Double-Button-1>', self.load_selected_to_edit)
         
-        # Botones de acción
+        # Botón de acción centrado
         btn_frame = tk.Frame(list_frame, bg=self.WHITE)
         btn_frame.pack(fill="x", pady=5)
         
+        # Frame centrador
+        center_frame = tk.Frame(btn_frame, bg=self.WHITE)
+        center_frame.pack(expand=True)
+        
         tk.Button(
-            btn_frame,
+            center_frame,
             text="🗑️ Eliminar Seleccionado",
-            font=("Segoe UI", 9, "bold"),
+            font=("Segoe UI", 10, "bold"),
             bg=self.ERROR,
             fg=self.WHITE,
             command=self.delete_selected,
             cursor="hand2",
-            padx=12,
-            pady=6
-        ).pack(side="left", padx=5)
-        
-        tk.Button(
-            btn_frame,
-            text="🔄 Recargar Lista",
-            font=("Segoe UI", 9, "bold"),
-            bg=self.SECONDARY,
-            fg=self.WHITE,
-            command=self.refresh_products,
-            cursor="hand2",
-            padx=12,
-            pady=6
-        ).pack(side="left", padx=5)
+            padx=20,
+            pady=8
+        ).pack()
     
     def create_stats_panel(self, parent):
         """Crea el panel de estadísticas"""

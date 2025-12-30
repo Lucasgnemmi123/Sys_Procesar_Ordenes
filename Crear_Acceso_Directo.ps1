@@ -1,45 +1,24 @@
-# Script para crear un acceso directo con icono personalizado
-Write-Host "=" -repeat 70 -ForegroundColor Cyan
-Write-Host "CREADOR DE ACCESO DIRECTO CON ICONO" -ForegroundColor Yellow
-Write-Host "=" -repeat 70 -ForegroundColor Cyan
-Write-Host ""
+$ScriptDir = Split-Path -Parent $MyInvocation.MyCommand.Path
+$VbsFile = Join-Path $ScriptDir "Iniciar_Sistema.vbs"
+$IconFile = Join-Path $ScriptDir "launcher_icon.ico"
+# CREAR EN EL DIRECTORIO DE LA APP, no en el escritorio
+$ShortcutPath = Join-Path $ScriptDir "Sistema Procesar Pedidos.lnk"
 
-$scriptDir = Split-Path -Parent $MyInvocation.MyCommand.Path
-$batPath = Join-Path $scriptDir "EXE_Procesar_Ordenes.bat"
-$iconPath = Join-Path $scriptDir "launcher_icon.ico"
-$shortcutPath = Join-Path $scriptDir "Procesar Pedidos DHL.lnk"
+Write-Host "Creando acceso directo en el directorio de la app..." -ForegroundColor Cyan
 
-# Crear objeto Shell
-$WScriptShell = New-Object -ComObject WScript.Shell
-
-# Crear acceso directo
-$Shortcut = $WScriptShell.CreateShortcut($shortcutPath)
-$Shortcut.TargetPath = $batPath
-$Shortcut.WorkingDirectory = $scriptDir
-$Shortcut.Description = "Sistema de Procesamiento de Pedidos DHL"
-
-# Asignar icono si existe
-if (Test-Path $iconPath) {
-    $Shortcut.IconLocation = $iconPath
-    Write-Host "Icono asignado: launcher_icon.ico" -ForegroundColor Green
-} else {
-    Write-Host "No se encontro el icono, usando icono predeterminado" -ForegroundColor Yellow
-}
-
+$WshShell = New-Object -ComObject WScript.Shell
+$Shortcut = $WshShell.CreateShortcut($ShortcutPath)
+$Shortcut.TargetPath = $VbsFile
+$Shortcut.WorkingDirectory = $ScriptDir
+$Shortcut.Description = "Sistema de Procesamiento de Pedidos v3.0"
+$Shortcut.WindowStyle = 1
+if (Test-Path $IconFile) { $Shortcut.IconLocation = $IconFile }
 $Shortcut.Save()
 
 Write-Host ""
 Write-Host "Acceso directo creado exitosamente!" -ForegroundColor Green
-Write-Host "Ubicacion: $shortcutPath" -ForegroundColor Cyan
+Write-Host "Ubicacion: $ShortcutPath" -ForegroundColor White
 Write-Host ""
-Write-Host "Ahora puedes:" -ForegroundColor Yellow
-Write-Host "   1. Hacer doble clic en el acceso directo" -ForegroundColor White
-Write-Host "   2. Moverlo al Escritorio si lo deseas" -ForegroundColor White
-Write-Host "   3. Anclarlo a la barra de tareas" -ForegroundColor White
+Write-Host "Ahora puedes copiar este acceso directo al escritorio o donde quieras" -ForegroundColor Yellow
 Write-Host ""
-
-# Cleanup
-[System.Runtime.Interopservices.Marshal]::ReleaseComObject($WScriptShell) | Out-Null
-
-Write-Host "Presiona Enter para salir..." -ForegroundColor Gray
-$null = Read-Host
+Start-Process "explorer.exe" $ScriptDir

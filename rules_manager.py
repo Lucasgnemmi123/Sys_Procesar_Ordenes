@@ -47,7 +47,7 @@ class RulesManager:
             }
     
     def save_rules(self, rules=None):
-        """Guarda las reglas en el archivo JSON"""
+        """Guarda las reglas en el archivo JSON y recarga"""
         if rules is None:
             rules = self.rules
         
@@ -58,6 +58,15 @@ class RulesManager:
                 json.dump(rules, f, indent=4, ensure_ascii=False)
             
             print(f"✅ Rules saved successfully to {self.rules_file}")
+            
+            # Recargar para asegurar que self.rules está actualizado
+            if os.path.exists(self.rules_file):
+                try:
+                    with open(self.rules_file, 'r', encoding='utf-8') as f:
+                        self.rules = json.load(f)
+                except:
+                    pass
+            
             return True
         except Exception as e:
             print(f"❌ Error saving rules: {e}")

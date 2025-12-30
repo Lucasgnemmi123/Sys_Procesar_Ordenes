@@ -1702,11 +1702,6 @@
       "created": "2025-12-18T15:22:24.636436"
     },
     {
-      "sku": "A002431",
-      "descripcion": "SKU-VACUNO LOMO LISO CONG KG",
-      "created": "2025-12-18T15:22:24.642438"
-    },
-    {
       "sku": "A296120",
       "descripcion": "SKU-CARNE MOLIDA 5% CONGELADO KILO",
       "created": "2025-12-18T15:22:24.648978"
@@ -2911,8 +2906,8 @@
     }
   ],
   "metadata": {
-    "total_count": 581,
-    "last_updated": "2025-12-18T17:06:12.701455",
+    "total_count": 580,
+    "last_updated": "2025-12-30T11:04:40.612304",
     "version": "1.0"
   }
 }

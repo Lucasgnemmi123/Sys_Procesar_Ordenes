@@ -158,8 +158,8 @@ class ModernGUI:
         self.root.grid_columnconfigure(0, weight=1)
         self.root.grid_rowconfigure(1, weight=1)
         
-        # Configurar estilo TTK moderno (para Treeview)
-        self.style = ttk.Style()
+        # Configurar estilo TTK moderno (para Treeview) - ATADO A self.root
+        self.style = ttk.Style(self.root)
         self.style.theme_use('clam')
         self._configure_styles()
         
@@ -252,10 +252,14 @@ class ModernGUI:
         )
         title.pack(side="left")
         
+        # Contenedor derecho para versión y botón de actualización
+        right_container = ctk.CTkFrame(content, fg_color="transparent")
+        right_container.pack(side="right")
+        
         # Badge de versión con acento
-        version_frame = ctk.CTkFrame(content, fg_color=self.theme.PRIMARY, 
+        version_frame = ctk.CTkFrame(right_container, fg_color=self.theme.PRIMARY, 
                                      corner_radius=20, height=36)
-        version_frame.pack(side="right")
+        version_frame.pack(side="left", padx=(0, 10))
         
         version = ctk.CTkLabel(
             version_frame,
@@ -264,6 +268,22 @@ class ModernGUI:
             text_color="#2c3e50"  # Azul oscuro en lugar de negro
         )
         version.pack(padx=18, pady=6)
+        
+        # Botón de actualización con logo de GitHub
+        update_btn = ctk.CTkButton(
+            right_container,
+            text="⬇ Actualizar",
+            command=self.verificar_actualizaciones,
+            fg_color=self.theme.SECONDARY,
+            text_color=self.theme.TEXT_PRIMARY,
+            font=(self.theme.FONT_FAMILY, 12, "bold"),
+            corner_radius=20,
+            height=36,
+            width=130,
+            hover_color=self._darken_color(self.theme.SECONDARY),
+            border_width=0
+        )
+        update_btn.pack(side="left")
 
         
     def _create_main_layout(self):
@@ -1107,8 +1127,7 @@ class ModernGUI:
             dialog = RulesDialog(self.root)
             self.ventana_reglas = dialog.window
             self.ventana_reglas.lift()
-            self.ventana_reglas.attributes('-topmost', True)
-            self.ventana_reglas.after(100, lambda: self.ventana_reglas.attributes('-topmost', False))
+            # NO usar -topmost porque interfiere con messageboxes
             self.ventana_reglas.focus_force()
             self.log("✅ Rules Manager opened successfully")
         except Exception as e:
@@ -1182,6 +1201,201 @@ class ModernGUI:
             messagebox.showerror(
                 "❌ Error", 
                 f"Cannot open Agenda Manager:\n\n{str(e)}",
+                parent=self.root
+            )
+    
+    def verificar_actualizaciones(self):
+        """Verificar si hay actualizaciones disponibles en GitHub"""
+        self.log("🔄 Verificando actualizaciones en GitHub...")
+        
+        try:
+            import subprocess
+            
+            # Verificar si estamos en un repositorio Git
+            git_check = subprocess.run(
+                ["git", "rev-parse", "--git-dir"],
+                cwd=self.BASE_DIR,
+                capture_output=True,
+                text=True,
+                timeout=5
+            )
+            
+            if git_check.returncode != 0:
+                self.log("❌ No se detectó repositorio Git")
+                messagebox.showinfo(
+                    "Sin Repositorio Git",
+                    "Este sistema no está vinculado a un repositorio Git.\n\n"
+                    "Para habilitar actualizaciones automáticas, clona el repositorio desde GitHub.",
+                    parent=self.root
+                )
+                return
+            
+            # Obtener commit local actual
+            local_result = subprocess.run(
+                ["git", "rev-parse", "HEAD"],
+                cwd=self.BASE_DIR,
+                capture_output=True,
+                text=True,
+                timeout=5
+            )
+            
+            if local_result.returncode != 0:
+                raise Exception("No se pudo obtener commit local")
+            
+            local_commit = local_result.stdout.strip()
+            self.log(f"📌 Commit local: {local_commit[:8]}")
+            
+            # Obtener información de la rama actual
+            branch_result = subprocess.run(
+                ["git", "branch", "--show-current"],
+                cwd=self.BASE_DIR,
+                capture_output=True,
+                text=True,
+                timeout=5
+            )
+            
+            branch = branch_result.stdout.strip() if branch_result.returncode == 0 else "main"
+            self.log(f"🌿 Rama actual: {branch}")
+            
+            # Fetch desde GitHub (sin merge)
+            self.log("🔍 Consultando GitHub...")
+            fetch_result = subprocess.run(
+                ["git", "fetch", "origin", branch],
+                cwd=self.BASE_DIR,
+                capture_output=True,
+                text=True,
+                timeout=15
+            )
+            
+            if fetch_result.returncode != 0:
+                raise Exception(f"Error al consultar GitHub: {fetch_result.stderr}")
+            
+            # Obtener commit remoto
+            remote_result = subprocess.run(
+                ["git", "rev-parse", f"origin/{branch}"],
+                cwd=self.BASE_DIR,
+                capture_output=True,
+                text=True,
+                timeout=5
+            )
+            
+            if remote_result.returncode != 0:
+                raise Exception("No se pudo obtener commit remoto")
+            
+            remote_commit = remote_result.stdout.strip()
+            self.log(f"☁️ Commit remoto: {remote_commit[:8]}")
+            
+            # Comparar commits
+            if local_commit == remote_commit:
+                self.log("✅ El sistema está actualizado")
+                messagebox.showinfo(
+                    "✅ Sistema Actualizado",
+                    f"Tu sistema está actualizado con la última versión.\n\n"
+                    f"Commit actual: {local_commit[:8]}\n"
+                    f"Rama: {branch}",
+                    parent=self.root
+                )
+            else:
+                # Obtener lista de cambios
+                changes_result = subprocess.run(
+                    ["git", "log", f"{local_commit}..{remote_commit}", "--oneline", "--no-decorate"],
+                    cwd=self.BASE_DIR,
+                    capture_output=True,
+                    text=True,
+                    timeout=10
+                )
+                
+                changes = changes_result.stdout.strip() if changes_result.returncode == 0 else "No disponible"
+                num_commits = len(changes.split('\n')) if changes else 0
+                
+                self.log(f"📥 Hay {num_commits} actualizaciones disponibles")
+                self.log("Cambios disponibles:")
+                for line in changes.split('\n')[:10]:  # Mostrar máximo 10 commits
+                    if line.strip():
+                        self.log(f"  • {line}")
+                
+                # Preguntar si desea actualizar
+                response = messagebox.askyesno(
+                    "🔄 Actualizaciones Disponibles",
+                    f"Hay {num_commits} actualizaciones disponibles en GitHub.\n\n"
+                    f"Cambios recientes:\n{chr(10).join(['• ' + l for l in changes.split(chr(10))[:5]])}\n\n"
+                    f"¿Deseas actualizar ahora?\n\n"
+                    f"NOTA: Esto sobrescribirá cualquier cambio local no guardado.",
+                    parent=self.root
+                )
+                
+                if response:
+                    self.aplicar_actualizacion(branch)
+                else:
+                    self.log("ℹ️ Actualización cancelada por el usuario")
+        
+        except subprocess.TimeoutExpired:
+            self.log("⏱️ Timeout al consultar GitHub")
+            messagebox.showerror(
+                "Timeout",
+                "La consulta a GitHub tardó demasiado.\n\nVerifica tu conexión a Internet.",
+                parent=self.root
+            )
+        except FileNotFoundError:
+            self.log("❌ Git no está instalado")
+            messagebox.showerror(
+                "Git No Encontrado",
+                "Git no está instalado en tu sistema.\n\n"
+                "Descarga Git desde: https://git-scm.com/downloads",
+                parent=self.root
+            )
+        except Exception as e:
+            self.log(f"❌ Error al verificar actualizaciones: {e}")
+            messagebox.showerror(
+                "Error",
+                f"Error al verificar actualizaciones:\n\n{str(e)}",
+                parent=self.root
+            )
+    
+    def aplicar_actualizacion(self, branch="main"):
+        """Aplicar actualizaciones desde GitHub"""
+        self.log("📥 Aplicando actualizaciones...")
+        
+        try:
+            import subprocess
+            
+            # Pull desde GitHub
+            pull_result = subprocess.run(
+                ["git", "pull", "origin", branch, "--rebase"],
+                cwd=self.BASE_DIR,
+                capture_output=True,
+                text=True,
+                timeout=30
+            )
+            
+            if pull_result.returncode != 0:
+                error_msg = pull_result.stderr if pull_result.stderr else pull_result.stdout
+                raise Exception(f"Error al actualizar: {error_msg}")
+            
+            self.log("✅ Actualizaciones aplicadas correctamente")
+            self.log(pull_result.stdout)
+            
+            messagebox.showinfo(
+                "✅ Actualización Completada",
+                "El sistema se ha actualizado correctamente.\n\n"
+                "Se recomienda reiniciar la aplicación para aplicar todos los cambios.",
+                parent=self.root
+            )
+            
+        except subprocess.TimeoutExpired:
+            self.log("⏱️ Timeout al aplicar actualizaciones")
+            messagebox.showerror(
+                "Timeout",
+                "La actualización tardó demasiado.\n\nIntenta nuevamente.",
+                parent=self.root
+            )
+        except Exception as e:
+            self.log(f"❌ Error al aplicar actualizaciones: {e}")
+            messagebox.showerror(
+                "Error",
+                f"Error al aplicar actualizaciones:\n\n{str(e)}\n\n"
+                "Puedes intentar actualizar manualmente con:\n"
+                "git pull origin main",
                 parent=self.root
             )
             
