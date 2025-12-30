@@ -252,26 +252,9 @@ class ModernGUI:
         )
         title.pack(side="left")
         
-        # Contenedor derecho para versión y botón de actualización
-        right_container = ctk.CTkFrame(content, fg_color="transparent")
-        right_container.pack(side="right")
-        
-        # Badge de versión con acento
-        version_frame = ctk.CTkFrame(right_container, fg_color=self.theme.PRIMARY, 
-                                     corner_radius=20, height=36)
-        version_frame.pack(side="left", padx=(0, 10))
-        
-        version = ctk.CTkLabel(
-            version_frame,
-            text="v3.0 Modern",
-            font=(self.theme.FONT_FAMILY, 12, "bold"),
-            text_color=self.theme.SECONDARY  # Mismo color que botón actualizar
-        )
-        version.pack(padx=18, pady=6)
-        
         # Botón de actualización con logo de GitHub
         update_btn = ctk.CTkButton(
-            right_container,
+            content,
             text="⬇ Actualizar",
             command=self.verificar_actualizaciones,
             fg_color=self.theme.SECONDARY,
@@ -283,7 +266,7 @@ class ModernGUI:
             hover_color=self._darken_color(self.theme.SECONDARY),
             border_width=0
         )
-        update_btn.pack(side="left")
+        update_btn.pack(side="right")
 
         
     def _create_main_layout(self):
