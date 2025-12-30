@@ -1225,7 +1225,7 @@ class ModernGUI:
                 cwd=git_dir,
                 capture_output=True,
                 text=True,
-                timeout=5
+                timeout=10
             )
             
             if git_check.returncode != 0:
@@ -1244,7 +1244,7 @@ class ModernGUI:
                 cwd=git_dir,
                 capture_output=True,
                 text=True,
-                timeout=5
+                timeout=10
             )
             
             if local_result.returncode != 0:
@@ -1259,7 +1259,7 @@ class ModernGUI:
                 cwd=git_dir,
                 capture_output=True,
                 text=True,
-                timeout=5
+                timeout=10
             )
             
             branch = branch_result.stdout.strip() if branch_result.returncode == 0 else "main"
@@ -1272,7 +1272,7 @@ class ModernGUI:
                 cwd=git_dir,
                 capture_output=True,
                 text=True,
-                timeout=15
+                timeout=60
             )
             
             if fetch_result.returncode != 0:
@@ -1284,7 +1284,7 @@ class ModernGUI:
                 cwd=git_dir,
                 capture_output=True,
                 text=True,
-                timeout=5
+                timeout=10
             )
             
             if remote_result.returncode != 0:
@@ -1310,7 +1310,7 @@ class ModernGUI:
                     cwd=git_dir,
                     capture_output=True,
                     text=True,
-                    timeout=10
+                    timeout=20
                 )
                 
                 changes = changes_result.stdout.strip() if changes_result.returncode == 0 else "No disponible"
@@ -1380,7 +1380,7 @@ class ModernGUI:
                 cwd=git_dir,
                 capture_output=True,
                 text=True,
-                timeout=30
+                timeout=120
             )
             
             if pull_result.returncode != 0:
