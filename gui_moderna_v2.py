@@ -473,7 +473,7 @@ class ModernGUI:
             fg_color=color,
             text_color=self.theme.TEXT_PRIMARY, 
             font=(self.theme.FONT_FAMILY, 13, "bold"),
-            corner_radius=self.theme.CORNER_RADIUS,
+            corner_radius=20,
             height=38,
             hover_color=self._darken_color(color),
             border_width=0
@@ -505,8 +505,8 @@ class ModernGUI:
                 fg_color=color,
                 text_color=self.theme.TEXT_PRIMARY, 
                 font=(self.theme.FONT_FAMILY, 13, "bold"),
-                corner_radius=self.theme.CORNER_RADIUS,
-                height=40,
+                corner_radius=20,
+                height=34,
                 hover_color=self._darken_color(color),
                 border_width=0
             )
