@@ -373,13 +373,13 @@ class ModernGUI:
         # Paso 1: Abrir Full
         self._create_step_button(
             steps_container, "1", "📋 Abrir Full.xlsx", 
-            self.abrir_full_xlsx, "#9B59B6"
+            self.abrir_full_xlsx, "#c084fc"
         )
         
         # Paso 2: Gestión de Agenda
         self._create_step_button(
             steps_container, "2", "📅 Gestión de Agenda", 
-            self.abrir_gestion_agenda, "#3498DB"
+            self.abrir_gestion_agenda, "#60a5fa"
         )
         
         # Paso 3: Configurar región
@@ -493,9 +493,9 @@ class ModernGUI:
         quick_container.pack(fill="x", padx=10, pady=3)
         
         quick_buttons = [
-            ("⚙️ Reglas Especiales", self.abrir_reglas_especiales, self.theme.SECONDARY),
-            ("📦 Maestra C.Calzada", self.abrir_gestion_productos, self.theme.WARNING),
-            ("📁 Abrir Carpeta Salidas", self.abrir_carpeta_salidas, self.theme.SUCCESS),
+            ("⚙️ Reglas Especiales", self.abrir_reglas_especiales, "#c084fc"),
+            ("📦 Maestra C.Calzada", self.abrir_gestion_productos, "#fcd34d"),
+            ("📁 Abrir Carpeta Salidas", self.abrir_carpeta_salidas, "#4ade80"),
         ]
         for text, command, color in quick_buttons:
             btn = ctk.CTkButton(
@@ -784,12 +784,12 @@ class ModernGUI:
             main_container, 
             text="📂 Abrir Archivo de Pedidos", 
             command=self.abrir_archivo_pedidos,
-            fg_color="#27ae60",  # Verde oscuro
-            text_color="#ffffff",  # Blanco puro
+            fg_color="#4ade80",  # Verde luminoso
+            text_color="#000000",  # Negro
             font=(self.theme.FONT_FAMILY, 13, "bold"),
             corner_radius=self.theme.CORNER_RADIUS,
             height=40,
-            hover_color="#2ecc71",  # Verde hover
+            hover_color="#22c55e",  # Verde hover
             border_width=0
         )
         self.btn_abrir_excel.pack(fill="x", pady=(0, 15))
