@@ -1299,16 +1299,8 @@ class ModernGUI:
             
             self.log("✅ Repositorio clonado exitosamente")
             
-            # Crear backup del directorio actual
-            backup_name = f"backup_{datetime.now().strftime('%Y%m%d_%H%M%S')}"
-            parent_dir = os.path.dirname(git_dir)
-            backup_dir = os.path.join(parent_dir, backup_name)
-            
-            self.log(f"💾 Creando backup en: {backup_dir}")
-            
             # Copiar archivos importantes antes de reemplazar (Ordenes, Salidas, configs)
             archivos_importantes = ["Ordenes", "Salidas", "products.json", "rules.json", "agenda_config.json"]
-            archivos_backup = {}
             
             for archivo in archivos_importantes:
                 origen = os.path.join(git_dir, archivo)
@@ -1320,12 +1312,9 @@ class ModernGUI:
                         shutil.copy2(origen, destino)
                     self.log(f"  ✓ Preservado: {archivo}")
             
-            # Renombrar directorio actual a backup
-            try:
-                os.rename(git_dir, backup_dir)
-                self.log(f"✓ Backup creado: {backup_name}")
-            except Exception as e:
-                self.log(f"⚠️ No se pudo crear backup: {e}")
+            # Eliminar directorio actual
+            self.log("🗑️ Eliminando versión anterior...")
+            shutil.rmtree(git_dir, ignore_errors=True)
             
             # Mover el repositorio clonado a la ubicación original
             self.log("📦 Instalando nueva versión...")
@@ -1337,8 +1326,7 @@ class ModernGUI:
             response = messagebox.askyesno(
                 "✅ Actualización Completada",
                 "El sistema se ha actualizado correctamente.\n\n"
-                "¿Deseas reiniciar la aplicación ahora?\n\n"
-                f"Backup guardado en: {backup_name}",
+                "¿Deseas reiniciar la aplicación ahora?",
                 parent=self.root
             )
             
@@ -1356,8 +1344,7 @@ class ModernGUI:
             self.log(f"❌ Error al aplicar actualización: {e}")
             messagebox.showerror(
                 "Error",
-                f"Error al aplicar actualización:\n\n{str(e)}\n\n"
-                "Si el sistema está inestable, usa el backup creado.",
+                f"Error al aplicar actualización:\n\n{str(e)}",
                 parent=self.root
             )
     
