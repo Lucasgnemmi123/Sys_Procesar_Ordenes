@@ -1211,10 +1211,18 @@ class ModernGUI:
         try:
             import subprocess
             
+            # Determinar el directorio Git correcto
+            # Si es ejecutable, buscar el .git en el directorio del script
+            if getattr(sys, 'frozen', False):
+                git_dir = os.path.dirname(os.path.abspath(__file__))
+                self.log(f"📂 Ejecutable detectado, usando directorio: {git_dir}")
+            else:
+                git_dir = self.BASE_DIR
+            
             # Verificar si estamos en un repositorio Git
             git_check = subprocess.run(
                 ["git", "rev-parse", "--git-dir"],
-                cwd=self.BASE_DIR,
+                cwd=git_dir,
                 capture_output=True,
                 text=True,
                 timeout=5
@@ -1233,7 +1241,7 @@ class ModernGUI:
             # Obtener commit local actual
             local_result = subprocess.run(
                 ["git", "rev-parse", "HEAD"],
-                cwd=self.BASE_DIR,
+                cwd=git_dir,
                 capture_output=True,
                 text=True,
                 timeout=5
@@ -1248,7 +1256,7 @@ class ModernGUI:
             # Obtener información de la rama actual
             branch_result = subprocess.run(
                 ["git", "branch", "--show-current"],
-                cwd=self.BASE_DIR,
+                cwd=git_dir,
                 capture_output=True,
                 text=True,
                 timeout=5
@@ -1261,7 +1269,7 @@ class ModernGUI:
             self.log("🔍 Consultando GitHub...")
             fetch_result = subprocess.run(
                 ["git", "fetch", "origin", branch],
-                cwd=self.BASE_DIR,
+                cwd=git_dir,
                 capture_output=True,
                 text=True,
                 timeout=15
@@ -1273,7 +1281,7 @@ class ModernGUI:
             # Obtener commit remoto
             remote_result = subprocess.run(
                 ["git", "rev-parse", f"origin/{branch}"],
-                cwd=self.BASE_DIR,
+                cwd=git_dir,
                 capture_output=True,
                 text=True,
                 timeout=5
@@ -1299,7 +1307,7 @@ class ModernGUI:
                 # Obtener lista de cambios
                 changes_result = subprocess.run(
                     ["git", "log", f"{local_commit}..{remote_commit}", "--oneline", "--no-decorate"],
-                    cwd=self.BASE_DIR,
+                    cwd=git_dir,
                     capture_output=True,
                     text=True,
                     timeout=10
@@ -1325,7 +1333,7 @@ class ModernGUI:
                 )
                 
                 if response:
-                    self.aplicar_actualizacion(branch)
+                    self.aplicar_actualizacion(branch, git_dir)
                 else:
                     self.log("ℹ️ Actualización cancelada por el usuario")
         
@@ -1352,9 +1360,16 @@ class ModernGUI:
                 parent=self.root
             )
     
-    def aplicar_actualizacion(self, branch="main"):
+    def aplicar_actualizacion(self, branch="main", git_dir=None):
         """Aplicar actualizaciones desde GitHub"""
         self.log("📥 Aplicando actualizaciones...")
+        
+        # Si no se proporciona git_dir, usar BASE_DIR o detectar
+        if git_dir is None:
+            if getattr(sys, 'frozen', False):
+                git_dir = os.path.dirname(os.path.abspath(__file__))
+            else:
+                git_dir = self.BASE_DIR
         
         try:
             import subprocess
@@ -1362,7 +1377,7 @@ class ModernGUI:
             # Pull desde GitHub
             pull_result = subprocess.run(
                 ["git", "pull", "origin", branch, "--rebase"],
-                cwd=self.BASE_DIR,
+                cwd=git_dir,
                 capture_output=True,
                 text=True,
                 timeout=30
