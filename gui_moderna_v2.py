@@ -1205,14 +1205,13 @@ class ModernGUI:
             )
     
     def verificar_actualizaciones(self):
-        """Verificar si hay actualizaciones disponibles en GitHub"""
+        """Verificar si hay actualizaciones disponibles en GitHub y clonar de nuevo"""
         self.log("🔄 Verificando actualizaciones en GitHub...")
         
         try:
             import subprocess
             
             # Determinar el directorio Git correcto
-            # Si es ejecutable, buscar el .git en el directorio del script
             if getattr(sys, 'frozen', False):
                 git_dir = os.path.dirname(os.path.abspath(__file__))
                 self.log(f"📂 Ejecutable detectado, usando directorio: {git_dir}")
@@ -1238,104 +1237,34 @@ class ModernGUI:
                 )
                 return
             
-            # Obtener commit local actual
-            local_result = subprocess.run(
-                ["git", "rev-parse", "HEAD"],
+            # Obtener URL del repositorio remoto
+            remote_url_result = subprocess.run(
+                ["git", "config", "--get", "remote.origin.url"],
                 cwd=git_dir,
                 capture_output=True,
                 text=True,
                 timeout=10
             )
             
-            if local_result.returncode != 0:
-                raise Exception("No se pudo obtener commit local")
+            if remote_url_result.returncode != 0:
+                raise Exception("No se pudo obtener URL del repositorio remoto")
             
-            local_commit = local_result.stdout.strip()
-            self.log(f"📌 Commit local: {local_commit[:8]}")
+            repo_url = remote_url_result.stdout.strip()
+            self.log(f"📦 Repositorio: {repo_url}")
             
-            # Obtener información de la rama actual
-            branch_result = subprocess.run(
-                ["git", "branch", "--show-current"],
-                cwd=git_dir,
-                capture_output=True,
-                text=True,
-                timeout=10
+            # Preguntar si desea actualizar
+            response = messagebox.askyesno(
+                "🔄 Actualizar Sistema",
+                f"¿Deseas actualizar a la última versión desde GitHub?\n\n"
+                f"Repositorio: {repo_url}\n\n"
+                f"NOTA: Se clonará de nuevo el repositorio completo y se reiniciará la aplicación.",
+                parent=self.root
             )
             
-            branch = branch_result.stdout.strip() if branch_result.returncode == 0 else "main"
-            self.log(f"🌿 Rama actual: {branch}")
-            
-            # Fetch desde GitHub (sin merge)
-            self.log("🔍 Consultando GitHub...")
-            fetch_result = subprocess.run(
-                ["git", "fetch", "origin", branch],
-                cwd=git_dir,
-                capture_output=True,
-                text=True,
-                timeout=60
-            )
-            
-            if fetch_result.returncode != 0:
-                raise Exception(f"Error al consultar GitHub: {fetch_result.stderr}")
-            
-            # Obtener commit remoto
-            remote_result = subprocess.run(
-                ["git", "rev-parse", f"origin/{branch}"],
-                cwd=git_dir,
-                capture_output=True,
-                text=True,
-                timeout=10
-            )
-            
-            if remote_result.returncode != 0:
-                raise Exception("No se pudo obtener commit remoto")
-            
-            remote_commit = remote_result.stdout.strip()
-            self.log(f"☁️ Commit remoto: {remote_commit[:8]}")
-            
-            # Comparar commits
-            if local_commit == remote_commit:
-                self.log("✅ El sistema está actualizado")
-                messagebox.showinfo(
-                    "✅ Sistema Actualizado",
-                    f"Tu sistema está actualizado con la última versión.\n\n"
-                    f"Commit actual: {local_commit[:8]}\n"
-                    f"Rama: {branch}",
-                    parent=self.root
-                )
+            if response:
+                self.aplicar_actualizacion_completa(git_dir, repo_url)
             else:
-                # Obtener lista de cambios
-                changes_result = subprocess.run(
-                    ["git", "log", f"{local_commit}..{remote_commit}", "--oneline", "--no-decorate"],
-                    cwd=git_dir,
-                    capture_output=True,
-                    text=True,
-                    timeout=20
-                )
-                
-                changes = changes_result.stdout.strip() if changes_result.returncode == 0 else "No disponible"
-                num_commits = len(changes.split('\n')) if changes else 0
-                
-                self.log(f"📥 Hay {num_commits} actualizaciones disponibles")
-                self.log("Cambios disponibles:")
-                for line in changes.split('\n')[:10]:  # Mostrar máximo 10 commits
-                    if line.strip():
-                        self.log(f"  • {line}")
-                
-                # Preguntar si desea actualizar
-                response = messagebox.askyesno(
-                    "🔄 Actualizaciones Disponibles",
-                    f"Hay {num_commits} actualizaciones disponibles en GitHub.\n\n"
-                    f"Cambios recientes:\n{chr(10).join(['• ' + l for l in changes.split(chr(10))[:5]])}\n\n"
-                    f"¿Deseas actualizar ahora?\n\n"
-                    f"NOTA: Esto sobrescribirá cualquier cambio local no guardado.",
-                    parent=self.root
-                )
-                
-                if response:
-                    self.aplicar_actualizacion(branch, git_dir)
-                else:
-                    self.log("ℹ️ Actualización cancelada por el usuario")
+                self.log("ℹ️ Actualización cancelada por el usuario")
         
         except subprocess.TimeoutExpired:
             self.log("⏱️ Timeout al consultar GitHub")
@@ -1357,6 +1286,129 @@ class ModernGUI:
             messagebox.showerror(
                 "Error",
                 f"Error al verificar actualizaciones:\n\n{str(e)}",
+                parent=self.root
+            )
+    
+    def aplicar_actualizacion_completa(self, git_dir, repo_url):
+        """Clonar de nuevo el repositorio completo y reiniciar la aplicación"""
+        self.log("📥 Preparando actualización completa...")
+        
+        try:
+            import subprocess
+            import tempfile
+            from datetime import datetime
+            
+            # Crear directorio temporal para clonar
+            temp_dir = tempfile.mkdtemp(prefix="dhl_update_")
+            self.log(f"📂 Directorio temporal: {temp_dir}")
+            
+            # Clonar el repositorio en el directorio temporal
+            self.log("🔄 Clonando repositorio desde GitHub...")
+            clone_result = subprocess.run(
+                ["git", "clone", repo_url, temp_dir],
+                capture_output=True,
+                text=True,
+                timeout=120
+            )
+            
+            if clone_result.returncode != 0:
+                raise Exception(f"Error al clonar repositorio: {clone_result.stderr}")
+            
+            self.log("✅ Repositorio clonado exitosamente")
+            
+            # Crear backup del directorio actual
+            backup_name = f"backup_{datetime.now().strftime('%Y%m%d_%H%M%S')}"
+            parent_dir = os.path.dirname(git_dir)
+            backup_dir = os.path.join(parent_dir, backup_name)
+            
+            self.log(f"💾 Creando backup en: {backup_dir}")
+            
+            # Copiar archivos importantes antes de reemplazar (Ordenes, Salidas, configs)
+            archivos_importantes = ["Ordenes", "Salidas", "products.json", "rules.json", "agenda_config.json"]
+            archivos_backup = {}
+            
+            for archivo in archivos_importantes:
+                origen = os.path.join(git_dir, archivo)
+                if os.path.exists(origen):
+                    destino = os.path.join(temp_dir, archivo)
+                    if os.path.isdir(origen):
+                        shutil.copytree(origen, destino, dirs_exist_ok=True)
+                    else:
+                        shutil.copy2(origen, destino)
+                    self.log(f"  ✓ Preservado: {archivo}")
+            
+            # Renombrar directorio actual a backup
+            try:
+                os.rename(git_dir, backup_dir)
+                self.log(f"✓ Backup creado: {backup_name}")
+            except Exception as e:
+                self.log(f"⚠️ No se pudo crear backup: {e}")
+            
+            # Mover el repositorio clonado a la ubicación original
+            self.log("📦 Instalando nueva versión...")
+            shutil.move(temp_dir, git_dir)
+            
+            self.log("✅ Actualización completada exitosamente")
+            
+            # Preguntar si desea reiniciar ahora
+            response = messagebox.askyesno(
+                "✅ Actualización Completada",
+                "El sistema se ha actualizado correctamente.\n\n"
+                "¿Deseas reiniciar la aplicación ahora?\n\n"
+                f"Backup guardado en: {backup_name}",
+                parent=self.root
+            )
+            
+            if response:
+                self.reiniciar_aplicacion()
+            
+        except subprocess.TimeoutExpired:
+            self.log("⏱️ Timeout al clonar repositorio")
+            messagebox.showerror(
+                "Timeout",
+                "La clonación tardó demasiado.\n\nIntenta nuevamente.",
+                parent=self.root
+            )
+        except Exception as e:
+            self.log(f"❌ Error al aplicar actualización: {e}")
+            messagebox.showerror(
+                "Error",
+                f"Error al aplicar actualización:\n\n{str(e)}\n\n"
+                "Si el sistema está inestable, usa el backup creado.",
+                parent=self.root
+            )
+    
+    def reiniciar_aplicacion(self):
+        """Reiniciar la aplicación"""
+        self.log("🔄 Reiniciando aplicación...")
+        
+        try:
+            import subprocess
+            
+            # Obtener el ejecutable o script actual
+            if getattr(sys, 'frozen', False):
+                # Si es ejecutable
+                ejecutable = sys.executable
+                self.log(f"Reiniciando ejecutable: {ejecutable}")
+                subprocess.Popen([ejecutable])
+            else:
+                # Si es script Python
+                python_exe = sys.executable
+                script = os.path.abspath(__file__)
+                self.log(f"Reiniciando script: {script}")
+                subprocess.Popen([python_exe, script])
+            
+            # Cerrar la aplicación actual
+            self.root.quit()
+            self.root.destroy()
+            sys.exit(0)
+            
+        except Exception as e:
+            self.log(f"❌ Error al reiniciar: {e}")
+            messagebox.showerror(
+                "Error",
+                f"Error al reiniciar la aplicación:\n\n{str(e)}\n\n"
+                "Por favor, cierra y abre la aplicación manualmente.",
                 parent=self.root
             )
     
