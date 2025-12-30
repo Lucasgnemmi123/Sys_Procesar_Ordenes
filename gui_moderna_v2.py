@@ -257,13 +257,13 @@ class ModernGUI:
             content,
             text="⬇ Actualizar",
             command=self.verificar_actualizaciones,
-            fg_color=self.theme.SECONDARY,
-            text_color=self.theme.TEXT_PRIMARY,
+            fg_color=self.theme.WARNING,
+            text_color="#000000",
             font=(self.theme.FONT_FAMILY, 12, "bold"),
             corner_radius=20,
             height=36,
             width=130,
-            hover_color=self._darken_color(self.theme.SECONDARY),
+            hover_color=self._darken_color(self.theme.WARNING),
             border_width=0
         )
         update_btn.pack(side="right")
