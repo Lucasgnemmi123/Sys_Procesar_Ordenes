@@ -1281,14 +1281,31 @@ class ModernGUI:
             import tempfile
             from datetime import datetime
             
-            # Crear directorio temporal para clonar
-            temp_dir = tempfile.mkdtemp(prefix="dhl_update_")
-            self.log(f"📂 Directorio temporal: {temp_dir}")
+            # Guardar archivos importantes antes de eliminar
+            archivos_importantes = ["Ordenes", "Salidas", "products.json", "rules.json", "agenda_config.json"]
+            temp_backup = {}
             
-            # Clonar el repositorio en el directorio temporal
+            self.log("💾 Guardando archivos importantes...")
+            for archivo in archivos_importantes:
+                origen = os.path.join(git_dir, archivo)
+                if os.path.exists(origen):
+                    temp_dir_backup = tempfile.mkdtemp(prefix=f"dhl_backup_{archivo}_")
+                    destino = os.path.join(temp_dir_backup, archivo)
+                    if os.path.isdir(origen):
+                        shutil.copytree(origen, destino)
+                    else:
+                        shutil.copy2(origen, destino)
+                    temp_backup[archivo] = destino
+                    self.log(f"  ✓ Guardado: {archivo}")
+            
+            # Eliminar directorio actual
+            self.log("🗑️ Eliminando versión anterior...")
+            shutil.rmtree(git_dir, ignore_errors=True)
+            
+            # Clonar el repositorio directamente en la ubicación final
             self.log("🔄 Clonando repositorio desde GitHub...")
             clone_result = subprocess.run(
-                ["git", "clone", repo_url, temp_dir],
+                ["git", "clone", repo_url, git_dir],
                 capture_output=True,
                 text=True,
                 timeout=120
@@ -1299,26 +1316,20 @@ class ModernGUI:
             
             self.log("✅ Repositorio clonado exitosamente")
             
-            # Copiar archivos importantes antes de reemplazar (Ordenes, Salidas, configs)
-            archivos_importantes = ["Ordenes", "Salidas", "products.json", "rules.json", "agenda_config.json"]
+            # Restaurar archivos importantes
+            self.log("📦 Restaurando archivos importantes...")
+            for archivo, origen in temp_backup.items():
+                destino = os.path.join(git_dir, archivo)
+                if os.path.isdir(origen):
+                    shutil.copytree(origen, destino, dirs_exist_ok=True)
+                else:
+                    shutil.copy2(origen, destino)
+                self.log(f"  ✓ Restaurado: {archivo}")
             
-            for archivo in archivos_importantes:
-                origen = os.path.join(git_dir, archivo)
-                if os.path.exists(origen):
-                    destino = os.path.join(temp_dir, archivo)
-                    if os.path.isdir(origen):
-                        shutil.copytree(origen, destino, dirs_exist_ok=True)
-                    else:
-                        shutil.copy2(origen, destino)
-                    self.log(f"  ✓ Preservado: {archivo}")
-            
-            # Eliminar directorio actual
-            self.log("🗑️ Eliminando versión anterior...")
-            shutil.rmtree(git_dir, ignore_errors=True)
-            
-            # Mover el repositorio clonado a la ubicación original
-            self.log("📦 Instalando nueva versión...")
-            shutil.move(temp_dir, git_dir)
+            # Limpiar backups temporales
+            for archivo, ruta in temp_backup.items():
+                parent = os.path.dirname(ruta)
+                shutil.rmtree(parent, ignore_errors=True)
             
             self.log("✅ Actualización completada exitosamente")
             
