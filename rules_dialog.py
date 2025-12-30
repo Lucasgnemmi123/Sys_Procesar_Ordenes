@@ -313,8 +313,9 @@ class RulesDialog:
             font=("Segoe UI", 9),
             relief="flat",
             padx=10,
-            pady=4,
-            cursor="hand2"
+            pady=2,
+            cursor="hand2",
+            bd=0
         ).pack(side="left", padx=5)
         
         # Tabla con estilo moderno
@@ -389,11 +390,15 @@ class RulesDialog:
             font=("Segoe UI", 10, "bold"),
             relief="flat",
             padx=15,
-            pady=8,
+            pady=6,
             cursor="hand2",
             activebackground=bg_color,
-            activeforeground=self.TEXT_PRIMARY
+            activeforeground=self.TEXT_PRIMARY,
+            bd=0,
+            highlightthickness=0
         )
+        # Aplicar esquinas redondeadas mediante estilo
+        btn.configure(borderwidth=0)
         return btn
     
     def setup_stock_section(self, parent):
