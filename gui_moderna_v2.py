@@ -1188,82 +1188,48 @@ class ModernGUI:
             )
     
     def verificar_actualizaciones(self):
-        """Verificar si hay actualizaciones disponibles en GitHub y clonar de nuevo"""
-        self.log("🔄 Verificando actualizaciones en GitHub...")
+        """Verificar si hay actualizaciones disponibles en GitHub"""
+        self.log("🔍 Verificando actualizaciones...")
         
         try:
             import subprocess
             
-            # Determinar el directorio Git correcto
+            # Detectar directorio correcto
             if getattr(sys, 'frozen', False):
-                git_dir = os.path.dirname(os.path.abspath(__file__))
-                self.log(f"📂 Ejecutable detectado, usando directorio: {git_dir}")
+                base_dir = os.path.dirname(sys.executable)
+                self.log(f"📂 Ejecutable detectado, usando directorio: {base_dir}")
             else:
-                git_dir = self.BASE_DIR
+                base_dir = self.BASE_DIR
             
-            # Verificar si estamos en un repositorio Git
-            git_check = subprocess.run(
-                ["git", "rev-parse", "--git-dir"],
-                cwd=git_dir,
-                capture_output=True,
-                text=True,
-                timeout=10
-            )
+            # Usar el nuevo script de actualización directa (no requiere Git)
+            script_path = os.path.join(base_dir, "scripts", "Actualizar_Directo.ps1")
             
-            if git_check.returncode != 0:
-                self.log("❌ No se detectó repositorio Git")
-                messagebox.showinfo(
-                    "Sin Repositorio Git",
-                    "Este sistema no está vinculado a un repositorio Git.\n\n"
-                    "Para habilitar actualizaciones automáticas, clona el repositorio desde GitHub.",
+            if not os.path.exists(script_path):
+                self.log(f"❌ Script no encontrado: {script_path}")
+                messagebox.showerror(
+                    "Error",
+                    f"No se encontró el script de actualización:\n{script_path}\n\n"
+                    "Verifica que el sistema esté correctamente instalado.",
                     parent=self.root
                 )
                 return
             
-            # Obtener URL del repositorio remoto
-            remote_url_result = subprocess.run(
-                ["git", "config", "--get", "remote.origin.url"],
-                cwd=git_dir,
-                capture_output=True,
-                text=True,
-                timeout=10
-            )
-            
-            if remote_url_result.returncode != 0:
-                raise Exception("No se pudo obtener URL del repositorio remoto")
-            
-            repo_url = remote_url_result.stdout.strip()
-            self.log(f"📦 Repositorio: {repo_url}")
-            
             # Preguntar si desea actualizar
             response = messagebox.askyesno(
                 "🔄 Actualizar Sistema",
-                f"¿Deseas actualizar a la última versión desde GitHub?\n\n"
-                f"Repositorio: {repo_url}\n\n"
-                f"NOTA: Se clonará de nuevo el repositorio completo y se reiniciará la aplicación.",
+                "¿Deseas actualizar a la última versión desde GitHub?\n\n"
+                "Repositorio: Lucasgnemmi123/Sys_Procesar_Ordenes\n\n"
+                "• Se descargarán los archivos actualizados\n"
+                "• Tus configuraciones se preservarán\n"
+                "• No se requiere Git instalado",
                 parent=self.root
             )
             
             if response:
-                self.aplicar_actualizacion_completa(git_dir, repo_url)
+                self.aplicar_actualizacion_directa(base_dir, script_path)
             else:
                 self.log("ℹ️ Actualización cancelada por el usuario")
         
-        except subprocess.TimeoutExpired:
-            self.log("⏱️ Timeout al consultar GitHub")
-            messagebox.showerror(
-                "Timeout",
-                "La consulta a GitHub tardó demasiado.\n\nVerifica tu conexión a Internet.",
-                parent=self.root
-            )
-        except FileNotFoundError:
-            self.log("❌ Git no está instalado")
-            messagebox.showerror(
-                "Git No Encontrado",
-                "Git no está instalado en tu sistema.\n\n"
-                "Descarga Git desde: https://git-scm.com/downloads",
-                parent=self.root
-            )
         except Exception as e:
             self.log(f"❌ Error al verificar actualizaciones: {e}")
             messagebox.showerror(
@@ -1272,83 +1238,49 @@ class ModernGUI:
                 parent=self.root
             )
     
-    def aplicar_actualizacion_completa(self, git_dir, repo_url):
-        """Clonar de nuevo el repositorio completo y reiniciar la aplicación"""
-        self.log("📥 Preparando actualización completa...")
+    def aplicar_actualizacion_directa(self, base_dir, script_path):
+        """Ejecutar script de actualización PowerShell"""
+        self.log("📥 Iniciando actualización...")
         
         try:
             import subprocess
-            import tempfile
-            from datetime import datetime
             
-            # Guardar archivos importantes antes de eliminar
-            archivos_importantes = ["Ordenes", "Salidas", "products.json", "rules.json", "agenda_config.json"]
-            temp_backup = {}
+            # Ejecutar script PowerShell en modo automático
+            self.log("🔄 Ejecutando script de actualización...")
             
-            self.log("💾 Guardando archivos importantes...")
-            for archivo in archivos_importantes:
-                origen = os.path.join(git_dir, archivo)
-                if os.path.exists(origen):
-                    temp_dir_backup = tempfile.mkdtemp(prefix=f"dhl_backup_{archivo}_")
-                    destino = os.path.join(temp_dir_backup, archivo)
-                    if os.path.isdir(origen):
-                        shutil.copytree(origen, destino)
-                    else:
-                        shutil.copy2(origen, destino)
-                    temp_backup[archivo] = destino
-                    self.log(f"  ✓ Guardado: {archivo}")
-            
-            # Eliminar directorio actual
-            self.log("🗑️ Eliminando versión anterior...")
-            shutil.rmtree(git_dir, ignore_errors=True)
-            
-            # Clonar el repositorio directamente en la ubicación final
-            self.log("🔄 Clonando repositorio desde GitHub...")
-            clone_result = subprocess.run(
-                ["git", "clone", repo_url, git_dir],
+            result = subprocess.run(
+                ["powershell", "-NoProfile", "-ExecutionPolicy", "Bypass", 
+                 "-File", script_path, "-Automatico"],
+                cwd=base_dir,
                 capture_output=True,
                 text=True,
-                timeout=120
+                timeout=300
             )
             
-            if clone_result.returncode != 0:
-                raise Exception(f"Error al clonar repositorio: {clone_result.stderr}")
-            
-            self.log("✅ Repositorio clonado exitosamente")
-            
-            # Restaurar archivos importantes
-            self.log("📦 Restaurando archivos importantes...")
-            for archivo, origen in temp_backup.items():
-                destino = os.path.join(git_dir, archivo)
-                if os.path.isdir(origen):
-                    shutil.copytree(origen, destino, dirs_exist_ok=True)
-                else:
-                    shutil.copy2(origen, destino)
-                self.log(f"  ✓ Restaurado: {archivo}")
-            
-            # Limpiar backups temporales
-            for archivo, ruta in temp_backup.items():
-                parent = os.path.dirname(ruta)
-                shutil.rmtree(parent, ignore_errors=True)
-            
-            self.log("✅ Actualización completada exitosamente")
-            
-            # Preguntar si desea reiniciar ahora
-            response = messagebox.askyesno(
-                "✅ Actualización Completada",
-                "El sistema se ha actualizado correctamente.\n\n"
-                "¿Deseas reiniciar la aplicación ahora?",
-                parent=self.root
-            )
-            
-            if response:
-                self.reiniciar_aplicacion()
-            
+            if result.returncode == 0:
+                self.log("✅ Actualización completada exitosamente")
+                
+                # Preguntar si desea reiniciar
+                if messagebox.askyesno(
+                    "✅ Actualización Completada", 
+                    "El sistema se ha actualizado correctamente.\n\n¿Reiniciar la aplicación ahora?",
+                    parent=self.root
+                ):
+                    self.reiniciar_aplicacion()
+            else:
+                error_msg = result.stderr if result.stderr else "Error desconocido"
+                self.log(f"❌ Error en actualización: {error_msg}")
+                messagebox.showerror(
+                    "Error",
+                    f"Error durante la actualización:\n\n{error_msg}",
+                    parent=self.root
+                )
+        
         except subprocess.TimeoutExpired:
-            self.log("⏱️ Timeout al clonar repositorio")
+            self.log("⏱️ Timeout al actualizar")
             messagebox.showerror(
                 "Timeout",
-                "La clonación tardó demasiado.\n\nIntenta nuevamente.",
+                "La actualización tardó demasiado.\n\nIntenta nuevamente.",
                 parent=self.root
             )
         except Exception as e:
