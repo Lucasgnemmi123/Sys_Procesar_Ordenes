@@ -6,7 +6,8 @@
 # ====================================================================
 
 param(
-    [switch]$SoloVerificar
+    [switch]$SoloVerificar,
+    [switch]$Automatico
 )
 
 $ErrorActionPreference = "Continue"
@@ -42,7 +43,9 @@ try {
 catch {
     Write-Host "  [X] No hay conexion a Internet" -ForegroundColor Red
     Write-Host ""
-    Read-Host "Presiona Enter para salir"
+    if (-not $Automatico) {
+        Read-Host "Presiona Enter para salir"
+    }
     exit 1
 }
 
@@ -57,7 +60,9 @@ catch {
     Write-Host "  [X] No se puede acceder al repositorio" -ForegroundColor Red
     Write-Host "  Error: $($_.Exception.Message)" -ForegroundColor Yellow
     Write-Host ""
-    Read-Host "Presiona Enter para salir"
+    if (-not $Automatico) {
+        Read-Host "Presiona Enter para salir"
+    }
     exit 1
 }
 
@@ -65,7 +70,9 @@ if ($SoloVerificar) {
     Write-Host ""
     Write-Host "  [OK] Verificacion completada - Listo para actualizar" -ForegroundColor Green
     Write-Host ""
-    Read-Host "Presiona Enter para salir"
+    if (-not $Automatico) {
+        Read-Host "Presiona Enter para salir"
+    }
     exit 0
 }
 
@@ -87,7 +94,9 @@ catch {
     Write-Host "  [X] Error al descargar: $($_.Exception.Message)" -ForegroundColor Red
     Remove-Item $tempDir -Recurse -Force -ErrorAction SilentlyContinue
     Write-Host ""
-    Read-Host "Presiona Enter para salir"
+    if (-not $Automatico) {
+        Read-Host "Presiona Enter para salir"
+    }
     exit 1
 }
 
@@ -102,7 +111,9 @@ catch {
     Write-Host "  [X] Error al extraer: $($_.Exception.Message)" -ForegroundColor Red
     Remove-Item $tempDir -Recurse -Force -ErrorAction SilentlyContinue
     Write-Host ""
-    Read-Host "Presiona Enter para salir"
+    if (-not $Automatico) {
+        Read-Host "Presiona Enter para salir"
+    }
     exit 1
 }
 
@@ -114,7 +125,9 @@ if (-not (Test-Path $repoFolder)) {
     Write-Host "  [X] No se encontro la carpeta del repositorio" -ForegroundColor Red
     Remove-Item $tempDir -Recurse -Force -ErrorAction SilentlyContinue
     Write-Host ""
-    Read-Host "Presiona Enter para salir"
+    if (-not $Automatico) {
+        Read-Host "Presiona Enter para salir"
+    }
     exit 1
 }
 
@@ -211,4 +224,9 @@ Write-Host ""
 Write-Host "  Sistema actualizado a la ultima version de GitHub" -ForegroundColor Green
 Write-Host ""
 
-Read-Host "Presiona Enter para salir"
+if (-not $Automatico) {
+    Read-Host "Presiona Enter para salir"
+} else {
+    Write-Host "  Cerrando en 3 segundos..." -ForegroundColor Gray
+    Start-Sleep -Seconds 3
+}
