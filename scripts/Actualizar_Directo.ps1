@@ -11,7 +11,7 @@ param(
 )
 
 $ErrorActionPreference = "Continue"
-$scriptDir = Split-Path -Parent $MyInvocation.MyCommand.Path
+$scriptDir = Split-Path -Parent (Split-Path -Parent $MyInvocation.MyCommand.Path)
 Set-Location $scriptDir
 
 # Configuración
