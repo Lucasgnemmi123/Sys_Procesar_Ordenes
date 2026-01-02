@@ -252,18 +252,18 @@ class ModernGUI:
         )
         title.pack(side="left")
         
-        # Botón de actualización con color verde llamativo
+        # Botón de actualización con color amarillo
         update_btn = ctk.CTkButton(
             content,
             text="🔄 Actualizar",
             command=self.verificar_actualizaciones,
-            fg_color="#10B981",  # Verde vibrante
-            text_color="#FFFFFF",
+            fg_color="#FFA500",  # Amarillo/naranja vibrante
+            text_color="#000000",
             font=(self.theme.FONT_FAMILY, 12, "bold"),
             corner_radius=20,
             height=36,
             width=130,
-            hover_color="#059669",  # Verde más oscuro al pasar el mouse
+            hover_color="#FF8C00",  # Naranja oscuro al pasar el mouse
             border_width=0
         )
         update_btn.pack(side="right")
