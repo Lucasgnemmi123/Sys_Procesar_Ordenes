@@ -11,7 +11,12 @@ param(
 )
 
 $ErrorActionPreference = "Continue"
-$scriptDir = Split-Path -Parent (Split-Path -Parent $MyInvocation.MyCommand.Path)
+# Obtener directorio raíz del proyecto (un nivel arriba de scripts/)
+$scriptLocation = $PSScriptRoot
+if (-not $scriptLocation) {
+    $scriptLocation = Split-Path -Parent $MyInvocation.MyCommand.Path
+}
+$scriptDir = Split-Path -Parent $scriptLocation
 Set-Location $scriptDir
 
 # Configuración
