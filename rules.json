@@ -23,6 +23,14 @@
             "descripcion": "Regla ejemplo 3",
             "created": "2025-12-30T15:09:46.159521",
             "active": true
+        },
+        {
+            "local": "30798",
+            "sku": "A312262",
+            "proveedor": "1000411",
+            "descripcion": "Regla especial",
+            "created": "2026-01-06T12:40:22.345056",
+            "active": true
         }
     ],
     "stock_blocks": [
@@ -46,11 +54,18 @@
             "motivo": "Descontinuado por proveedor",
             "created": "2025-12-30T14:58:23.582048",
             "active": true
+        },
+        {
+            "sku": "A312261",
+            "proveedor": "100041",
+            "motivo": "Quiebre de stock",
+            "created": "2026-01-06T12:40:45.595429",
+            "active": true
         }
     ],
     "metadata": {
         "created": "2025-12-17T10:18:26.072957",
         "version": "1.0",
-        "last_updated": "2025-12-30T15:23:12.325185"
+        "last_updated": "2026-01-06T12:40:45.595453"
     }
 }

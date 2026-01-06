@@ -1481,10 +1481,21 @@ class ModernGUI:
             archivo_salida = self.get_nombre_archivo_salida()
             nombre_archivo = os.path.basename(archivo_salida)
             
+            # Limpiar columnas internas antes de guardar
+            columnas_internas = ['_REGLA_ESPECIAL', '_SRC_FILE']
+            df_final_limpio = df_final.copy()
+            df_errores_limpio = df_errores.copy()
+            
+            for col in columnas_internas:
+                if col in df_final_limpio.columns:
+                    df_final_limpio = df_final_limpio.drop(columns=[col])
+                if col in df_errores_limpio.columns:
+                    df_errores_limpio = df_errores_limpio.drop(columns=[col])
+            
             with pd.ExcelWriter(archivo_salida, engine="openpyxl") as writer:
-                df_final.to_excel(writer, sheet_name="PEDIDOS_CD", index=False)
-                if not df_errores.empty:
-                    df_errores.to_excel(writer, sheet_name="Errors", index=False)
+                df_final_limpio.to_excel(writer, sheet_name="PEDIDOS_CD", index=False)
+                if not df_errores_limpio.empty:
+                    df_errores_limpio.to_excel(writer, sheet_name="Errors", index=False)
                     
             self.log(f"✅ Archivo guardado: {nombre_archivo}")
             

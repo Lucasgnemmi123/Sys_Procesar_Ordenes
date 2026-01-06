@@ -498,9 +498,11 @@ def mapear_proveedor_por_sku(df, full_xlsx, region="099", apply_rules=True):
             # REGLA 1: Verificar si hay regla de LOCAL + SKU → Proveedor forzado
             # MÁXIMA PRIORIDAD - Esta regla sobrescribe todo lo demás
             proveedor_forzado = None
+            tiene_regla_especial = False
             if rules_manager:
                 proveedor_forzado = rules_manager.get_proveedor_for_local_sku(local, sku)
                 if proveedor_forzado:
+                    tiene_regla_especial = True
                     # Normalizar código de proveedor forzado (eliminar .0 si existe)
                     proveedor_forzado_norm = proveedor_forzado.replace('.0', '') if proveedor_forzado.endswith('.0') else proveedor_forzado
                     
@@ -512,17 +514,21 @@ def mapear_proveedor_por_sku(df, full_xlsx, region="099", apply_rules=True):
                         print(f"   ⚙️ LOCAL+SKU rule applied: LOCAL {local} + SKU {sku} → Proveedor {proveedor_forzado_norm} (FORCED)")
                     else:
                         # El proveedor forzado NO está en Full.xlsx para este SKU
-                        # IMPORTANTE: Agregar el proveedor aunque no esté en Full.xlsx
-                        # porque la regla LOCAL+SKU tiene máxima prioridad
-                        warnings.append(f"⚠️ LOCAL+SKU rule: Proveedor {proveedor_forzado_norm} not in Full.xlsx for SKU {sku}, but forcing it anyway")
-                        proveedores_disponibles = [proveedor_forzado_norm]
-                        reglas_aplicadas_local += 1
-                        print(f"   ⚙️ LOCAL+SKU rule FORCED (not in Full.xlsx): LOCAL {local} + SKU {sku} → Proveedor {proveedor_forzado_norm}")
+                        # NO SE PUEDE CUMPLIR LA REGLA → Enviar a errores
+                        row_error = row.copy()
+                        row_error["OBSERVACION"] = (
+                            str(row.get("CENTRO_COSTO", "")) + 
+                            f"//REGLA ESPECIAL NO CUMPLIDA: Proveedor {proveedor_forzado_norm} no existe en Full.xlsx para SKU {sku}//" + 
+                            str(row.get("NOMBRE_LUGAR", ""))
+                        )
+                        df_errors.append(row_error)
+                        print(f"   ❌ LOCAL+SKU rule FAILED: LOCAL {local} + SKU {sku} → Proveedor {proveedor_forzado_norm} NOT in Full.xlsx")
+                        continue
             
             # REGLA 2: Aplicar bloqueos por quiebre de stock
             # Solo si NO hay regla LOCAL+SKU forzada (si proveedor_forzado existe, ya se aplicó)
             if rules_manager and not proveedor_forzado and len(proveedores_disponibles) > 1:
-                # Solo aplicar bloqueos si hay más de 1 proveedor y NO hay regla forzada
+                # Solo aplicar bloqueos si hay más de 1 proveedor
                 proveedores_bloqueados = rules_manager.get_blocked_proveedores_for_sku(sku)
                 
                 if proveedores_bloqueados:
@@ -561,6 +567,8 @@ def mapear_proveedor_por_sku(df, full_xlsx, region="099", apply_rules=True):
             
             row_mapped = row.copy()
             row_mapped["PROVEEDOR"] = proveedor_final
+            # Marcar si viene de regla especial para errores posteriores
+            row_mapped["_REGLA_ESPECIAL"] = tiene_regla_especial
             df_mapped.append(row_mapped)
         
         df_mapped = pd.DataFrame(df_mapped) if df_mapped else pd.DataFrame(columns=df.columns.tolist() + ["PROVEEDOR"])
@@ -717,7 +725,13 @@ def rellenar_fecha_entrega_y_observacion_con_agenda_manager(df, fecha_pedido=Non
                     row_copy = row.copy()
                     centro_costo = str(row.get('CENTRO_COSTO', '')).strip()
                     nombre_lugar = str(row.get('NOMBRE_LUGAR', '')).strip()
-                    row_copy['OBSERVACION'] = f"{centro_costo}//Falta Agenda//{nombre_lugar}"
+                    
+                    # Verificar si viene de regla especial
+                    tiene_regla = row.get('_REGLA_ESPECIAL', False)
+                    if tiene_regla:
+                        row_copy['OBSERVACION'] = f"{centro_costo}//REGLA ESPECIAL NO CUMPLIDA: Proveedor {codigo_prov} no está configurado en Agenda//{nombre_lugar}"
+                    else:
+                        row_copy['OBSERVACION'] = f"{centro_costo}//Falta Agenda//{nombre_lugar}"
                     df_err_list.append(row_copy)
             else:
                 # Sin código de proveedor - va a errores
@@ -1191,6 +1205,9 @@ def asignar_id_final(df):
     print("🏷️ Assigning final IDs and consolidating duplicates...")
     
     df = df.copy()
+    
+    # NO eliminar _REGLA_ESPECIAL aquí - se necesita para errores de agenda
+    # Se eliminará justo antes de guardar el Excel
     
     # Validar columnas requeridas
     columnas_requeridas = ["LOCAL", "SKU", "PROVEEDOR", "FECHA_ENTREGA", "OBSERVACION", "CANTIDAD"]
