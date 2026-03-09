@@ -514,7 +514,7 @@ def mapear_proveedor_por_sku(df, full_xlsx, region="099", apply_rules=True):
                         print(f"   ⚙️ LOCAL+SKU rule applied: LOCAL {local} + SKU {sku} → Proveedor {proveedor_forzado_norm} (FORCED)")
                     else:
                         # El proveedor forzado NO está en Full.xlsx para este SKU
-                        # NO SE PUEDE CUMPLIR LA REGLA → Enviar a errores
+                        # NO SE PUEDE CUMPLIR LA REGLA → No debe surtirse de ningún otro proveedor
                         row_error = row.copy()
                         row_error["OBSERVACION"] = (
                             str(row.get("CENTRO_COSTO", "")) + 
@@ -522,6 +522,7 @@ def mapear_proveedor_por_sku(df, full_xlsx, region="099", apply_rules=True):
                             str(row.get("NOMBRE_LUGAR", ""))
                         )
                         df_errors.append(row_error)
+                        reglas_aplicadas_local += 1  # Contar como regla aplicada (aunque falló)
                         print(f"   ❌ LOCAL+SKU rule FAILED: LOCAL {local} + SKU {sku} → Proveedor {proveedor_forzado_norm} NOT in Full.xlsx")
                         continue
             
@@ -1584,3 +1585,69 @@ if __name__ == "__main__":
     print("🚚 DHL Order Processing System - Processing Module v2.0")
     print("💻 Created by Lucas Gnemmi")
     print("📝 This module contains optimized functions for order processing")
+
+
+def ajustar_cantidades_formato_minimo(df):
+    """
+    Ajusta las cantidades según el formato de empaque definido en cada SKU
+    Calcula múltiplos del formato (ej: formato 60, pido 100 = 2*60 = 120)
+    
+    Args:
+        df: DataFrame con columnas SKU y CANTIDAD
+        
+    Returns:
+        DataFrame con cantidades ajustadas y registro de cambios
+    """
+    print("🔧 Applying packaging format adjustments...")
+    
+    # Verificar que existan las columnas necesarias
+    if 'SKU' not in df.columns or 'CANTIDAD' not in df.columns:
+        print("⚠️ SKU or CANTIDAD columns not found, skipping format adjustment")
+        return df
+    
+    # Importar ProductsManager
+    try:
+        from products_manager import ProductsManager
+    except ImportError:
+        print("⚠️ ProductsManager not available, skipping format adjustment")
+        return df
+    
+    # Inicializar ProductsManager
+    products_manager = ProductsManager()
+    df_adjusted = df.copy()
+    adjustments_count = 0
+    
+    import math
+    
+    for index, row in df_adjusted.iterrows():
+        sku = str(row['SKU']).strip().upper()
+        cantidad_original = row['CANTIDAD']
+        
+        try:
+            # Verificar si el SKU tiene formato de empaque
+            formato_empaque = products_manager.get_formato_minimo(sku)
+            
+            if formato_empaque is not None and formato_empaque > 0:
+                # Convertir cantidad a float para cálculo
+                cantidad_float = float(cantidad_original)
+                
+                # Calcular formatos necesarios y cantidad final
+                formatos_necesarios = math.ceil(cantidad_float / formato_empaque)
+                cantidad_ajustada = formatos_necesarios * formato_empaque
+                
+                # Aplicar ajuste si es diferente
+                if cantidad_ajustada != cantidad_float:
+                    df_adjusted.at[index, 'CANTIDAD'] = cantidad_ajustada
+                    adjustments_count += 1
+                    print(f"   📦 SKU {sku}: {cantidad_original} → {cantidad_ajustada} ({formatos_necesarios} x {formato_empaque})")
+                    
+        except (ValueError, TypeError) as e:
+            print(f"   ⚠️ Error processing SKU {sku}: {e}")
+            continue
+    
+    if adjustments_count > 0:
+        print(f"✅ Applied {adjustments_count} packaging format adjustments")
+    else:
+        print("✅ No format adjustments needed")
+    
+    return df_adjusted

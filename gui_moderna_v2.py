@@ -16,8 +16,8 @@ script_dir = os.path.dirname(os.path.abspath(__file__))
 if script_dir not in sys.path:
     sys.path.insert(0, script_dir)
 
-# Agregar carpeta libs al path para importar librerías empaquetadas
-libs_path = os.path.join(script_dir, 'libs')
+# Agregar carpeta libs al path para importar librerías empaquetadas (cuando sea necesario)
+libs_path = os.path.join(script_dir, 'libs', 'libs')
 if os.path.exists(libs_path) and libs_path not in sys.path:
     sys.path.insert(0, libs_path)
 
@@ -38,7 +38,8 @@ from procesamiento_v2 import (
     rellenar_fecha_entrega_y_observacion,
     asignar_id_final,
     formatear_excel_salida,
-    obtener_nombre_archivo_salida
+    obtener_nombre_archivo_salida,
+    ajustar_cantidades_formato_minimo
 )
 from agenda_manager import AgendaManager
 from rules_dialog import RulesDialog
@@ -124,6 +125,7 @@ class ModernGUI:
             "Mapeando proveedores...",
             "Procesando fechas...",
             "Asignando IDs finales...",
+            "Ajustando formato de empaque...",
             "Formateando archivo Excel...",
             "Guardando resultados...",
             "¡Procesamiento completado!"
@@ -252,21 +254,21 @@ class ModernGUI:
         )
         title.pack(side="left")
         
-        # Botón de actualización con color amarillo
-        update_btn = ctk.CTkButton(
-            content,
-            text="🔄 Actualizar",
-            command=self.verificar_actualizaciones,
-            fg_color="#FFA500",  # Amarillo/naranja vibrante
-            text_color="#000000",
-            font=(self.theme.FONT_FAMILY, 12, "bold"),
-            corner_radius=20,
-            height=36,
-            width=130,
-            hover_color="#FF8C00",  # Naranja oscuro al pasar el mouse
-            border_width=0
-        )
-        update_btn.pack(side="right")
+        # Botón de actualización con color amarillo - DESHABILITADO TEMPORALMENTE
+        # update_btn = ctk.CTkButton(
+        #     content,
+        #     text="🔄 Actualizar",
+        #     command=self.verificar_actualizaciones,
+        #     fg_color="#FFA500",  # Amarillo/naranja vibrante
+        #     text_color="#000000",
+        #     font=(self.theme.FONT_FAMILY, 12, "bold"),
+        #     corner_radius=20,
+        #     height=36,
+        #     width=130,
+        #     hover_color="#FF8C00",  # Naranja oscuro al pasar el mouse
+        #     border_width=0
+        # )
+        # update_btn.pack(side="right")
 
         
     def _create_main_layout(self):
@@ -1474,16 +1476,21 @@ class ModernGUI:
             self.log("🏷️ Paso 5: Asignando IDs finales...")
             df_final = asignar_id_final(df_final_valid)
             
-            # Paso 6: Guardando resultados
+            # Paso 6: Ajustar cantidades con formato de empaque
             self.siguiente_paso()
-            self.log("💾 Paso 6: Guardando resultados en Excel...")
+            self.log("🔧 Paso 6: Aplicando ajustes de formato de empaque...")
+            df_final_adjusted = ajustar_cantidades_formato_minimo(df_final)
+            
+            # Paso 7: Guardando resultados
+            self.siguiente_paso()
+            self.log("💾 Paso 7: Guardando resultados en Excel...")
             # Obtener nombre dinámico del archivo
             archivo_salida = self.get_nombre_archivo_salida()
             nombre_archivo = os.path.basename(archivo_salida)
             
             # Limpiar columnas internas antes de guardar
             columnas_internas = ['_REGLA_ESPECIAL', '_SRC_FILE']
-            df_final_limpio = df_final.copy()
+            df_final_limpio = df_final_adjusted.copy()  # Usar DataFrame ajustado
             df_errores_limpio = df_errores.copy()
             
             for col in columnas_internas:
@@ -1499,18 +1506,18 @@ class ModernGUI:
                     
             self.log(f"✅ Archivo guardado: {nombre_archivo}")
             
-            # Paso 7: Formato profesional
+            # Paso 8: Formato profesional
             self.siguiente_paso()
-            self.log("🎨 Paso 7: Aplicando formato profesional...")
+            self.log("🎨 Paso 8: Aplicando formato profesional...")
             formatear_excel_salida(archivo_salida)
             
-            # Paso 8: Completado
+            # Paso 9: Completado
             self.siguiente_paso()
             
             # Mostrar resumen
             self.log("=" * 80)
             self.log("📊 RESUMEN DEL PROCESAMIENTO:")
-            self.log(f"   • Total de registros procesados: {len(df_final)}")
+            self.log(f"   • Total de registros procesados: {len(df_final_adjusted)}")
             self.log(f"   • Total de errores: {len(df_errores)}")
             self.log(f"   • Archivo de salida: {nombre_archivo}")
             self.log(f"   • Completado el: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
@@ -1518,17 +1525,17 @@ class ModernGUI:
             self.log("=" * 80)
             
             # Mostrar vista previa
-            self.mostrar_salida(df_final)
+            self.mostrar_salida(df_final_adjusted)
             
             # Actualizar barra de estado
             self.status_bar.configure(
-                text=f"✅ Procesamiento completado: {len(df_final)} registros, {len(df_errores)} errores • Creado por Lucas Gnemmi"
+                text=f"✅ Procesamiento completado: {len(df_final_adjusted)} registros, {len(df_errores)} errores • Creado por Lucas Gnemmi"
             )
             
             # Mostrar mensaje de éxito
             result_msg = (
                 f"🎉 ¡Procesamiento completado exitosamente!\n\n"
-                f"📊 Registros procesados: {len(df_final)}\n"
+                f"📊 Registros procesados: {len(df_final_adjusted)}\n"
                 f"❌ Errores encontrados: {len(df_errores)}\n"
                 f"📁 Archivo guardado: {nombre_archivo}\n\n"
                 f"¿Desea abrir el archivo de resultados?"

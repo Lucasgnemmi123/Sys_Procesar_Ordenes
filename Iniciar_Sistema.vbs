@@ -18,32 +18,42 @@ If Not FSO.FileExists(MainFile) Then
     WScript.Quit 1
 End If
 
-' Buscar Python en el sistema
-PythonCmd = ""
+' Usar Python empaquetado (prioridad 1 - incluye todas las librerías)
+PythonCmd = ScriptDir & "\python\python\pythonw.exe"
 
-' Intentar pythonw.exe primero (sin consola)
-On Error Resume Next
-PythonCmd = WshShell.RegRead("HKEY_CURRENT_USER\Software\Python\PythonCore\3.12\InstallPath\")
-If PythonCmd <> "" Then
-    PythonCmd = PythonCmd & "pythonw.exe"
-    If Not FSO.FileExists(PythonCmd) Then
-        PythonCmd = ""
-    End If
+If Not FSO.FileExists(PythonCmd) Then
+    ' Fallback: Python empaquetado con python.exe
+    PythonCmd = ScriptDir & "\python\python\python.exe"
 End If
-On Error Goto 0
 
-' Si no encontró Python 3.12, buscar cualquier versión
-If PythonCmd = "" Then
+If Not FSO.FileExists(PythonCmd) Then
+    ' Buscar Python en el sistema (menos probable que funcione)
+    PythonCmd = ""
+    
+    ' Intentar pythonw.exe primero (sin consola)
     On Error Resume Next
-    PythonCmd = WshShell.RegRead("HKEY_CURRENT_USER\Software\Python\PythonCore\3.11\InstallPath\")
-    If PythonCmd <> "" Then PythonCmd = PythonCmd & "pythonw.exe"
+    PythonCmd = WshShell.RegRead("HKEY_CURRENT_USER\Software\Python\PythonCore\3.12\InstallPath\")
+    If PythonCmd <> "" Then
+        PythonCmd = PythonCmd & "pythonw.exe"
+        If Not FSO.FileExists(PythonCmd) Then
+            PythonCmd = ""
+        End If
+    End If
     On Error Goto 0
-End If
 
-' Buscar en PATH como último recurso
-If PythonCmd = "" Or Not FSO.FileExists(PythonCmd) Then
-    ' Probar pythonw.exe directamente (debe estar en PATH)
-    PythonCmd = "pythonw.exe"
+    ' Si no encontró Python 3.12, buscar cualquier versión
+    If PythonCmd = "" Then
+        On Error Resume Next
+        PythonCmd = WshShell.RegRead("HKEY_CURRENT_USER\Software\Python\PythonCore\3.11\InstallPath\")
+        If PythonCmd <> "" Then PythonCmd = PythonCmd & "pythonw.exe"
+        On Error Goto 0
+    End If
+
+    ' Buscar en PATH como último recurso
+    If PythonCmd = "" Or Not FSO.FileExists(PythonCmd) Then
+        ' Probar pythonw.exe directamente (debe estar en PATH)
+        PythonCmd = "pythonw.exe"
+    End If
 End If
 
 ' Ejecutar el sistema

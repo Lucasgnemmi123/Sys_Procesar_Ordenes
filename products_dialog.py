@@ -190,6 +190,32 @@ class ProductsDialog:
                                    bg=self.BG_DARK, fg=self.WHITE, insertbackground=self.WHITE)
         self.desc_entry.pack(side="left", padx=5, fill="x", expand=True)
         
+        # Row 2: Formato Mínimo
+        row2 = tk.Frame(input_frame, bg=self.BG_CARD)
+        row2.pack(fill="x", pady=5)
+        
+        tk.Label(
+            row2, 
+            text="Formato Empaque:", 
+            font=("Segoe UI", 11, 'bold'),  # Fuente moderna
+            bg=self.BG_CARD,                # Fondo del card
+            fg=self.WHITE,                  # Texto blanco
+            width=15,
+            anchor="w"
+        ).pack(side="left", padx=5)
+        
+        self.formato_minimo_entry = tk.Entry(row2, font=("Segoe UI", 11), width=15, relief='solid', bd=1, 
+                                            bg=self.BG_DARK, fg=self.WHITE, insertbackground=self.WHITE)
+        self.formato_minimo_entry.pack(side="left", padx=5)
+        
+        tk.Label(
+            row2, 
+            text="(Ej: 60 = se despacha en formatos de 60 unidades)", 
+            font=("Segoe UI", 9, 'italic'),  # Fuente más pequeña e itálica
+            bg=self.BG_CARD,                 # Fondo del card
+            fg=self.LIGHT_GRAY              # Color gris claro 
+        ).pack(side="left", padx=(10, 5))
+        
         # Botones
         btn_frame = tk.Frame(input_frame, bg=self.BG_CARD)
         btn_frame.pack(pady=10)
@@ -258,7 +284,7 @@ class ProductsDialog:
         # Instrucciones
         tk.Label(
             bulk_frame,
-            text="📋 El archivo Excel debe tener 2 columnas: SKU y DESCRIPCION (o CODIGO/CODE y DESC/NOMBRE/NAME)",
+            text="📋 El archivo Excel debe tener 3 columnas: SKU, DESCRIPCION y FORMATO_MINIMO (formato de empaque)",
             font=("Segoe UI", 10),
             bg=self.BG_CARD,
             fg=self.WARNING,
@@ -384,7 +410,7 @@ class ProductsDialog:
         self.search_result_label.pack(side="left", padx=10)
         
         # Treeview
-        columns = ("SKU", "Descripción")
+        columns = ("SKU", "Descripción", "Formato Mínimo")
         self.products_tree = ttk.Treeview(
             list_frame, 
             columns=columns, 
@@ -396,9 +422,11 @@ class ProductsDialog:
         # Configurar columnas
         self.products_tree.heading("SKU", text="Código SKU")
         self.products_tree.heading("Descripción", text="Descripción del Producto")
+        self.products_tree.heading("Formato Mínimo", text="Formato Empaque")
         
         self.products_tree.column("SKU", width=150, anchor="center")
-        self.products_tree.column("Descripción", width=600, anchor="w")
+        self.products_tree.column("Descripción", width=500, anchor="w")
+        self.products_tree.column("Formato Mínimo", width=110, anchor="center")
         
         # Configurar tags de filas alternadas
         self.products_tree.tag_configure('oddrow', background='#F5F5F5')
@@ -453,6 +481,7 @@ class ProductsDialog:
         """Agrega un nuevo producto"""
         sku = self.sku_entry.get().strip().upper()
         descripcion = self.desc_entry.get().strip()
+        formato_minimo_text = self.formato_minimo_entry.get().strip()
         
         if not sku or not descripcion:
             messagebox.showwarning(
@@ -462,16 +491,37 @@ class ProductsDialog:
             )
             return
         
-        if self.products_manager.add_product(sku, descripcion):
+        # Procesar formato_minimo
+        formato_minimo = None
+        if formato_minimo_text:
+            try:
+                formato_minimo = float(formato_minimo_text)
+                if formato_minimo <= 0:
+                    messagebox.showwarning(
+                        "⚠️ Formato Inválido",
+                        "El formato de empaque debe ser un número positivo.",
+                        parent=self.window
+                    )
+                    return
+            except ValueError:
+                messagebox.showwarning(
+                    "⚠️ Formato Inválido",
+                    "El formato de empaque debe ser un número válido.",
+                    parent=self.window
+                )
+                return
+        
+        if self.products_manager.add_product(sku, descripcion, formato_minimo):
             messagebox.showinfo(
                 "✅ Éxito",
-                f"Producto agregado:\nSKU: {sku}\nDescripción: {descripcion}",
+                f"Producto agregado:\nSKU: {sku}\nDescripción: {descripcion}\nFormato Empaque: {formato_minimo or 'Normal'}",
                 parent=self.window
             )
             
             # Limpiar campos
             self.sku_entry.delete(0, tk.END)
             self.desc_entry.delete(0, tk.END)
+            self.formato_minimo_entry.delete(0, tk.END)
             
             self.refresh_products()
         else:
@@ -485,6 +535,7 @@ class ProductsDialog:
         """Actualiza el producto usando los campos del formulario"""
         sku = self.sku_entry.get().strip().upper()
         nueva_descripcion = self.desc_entry.get().strip()
+        formato_minimo_text = self.formato_minimo_entry.get().strip()
         
         if not sku or not nueva_descripcion:
             messagebox.showwarning(
@@ -494,7 +545,27 @@ class ProductsDialog:
             )
             return
         
-        if self.products_manager.update_product(sku, nueva_descripcion):
+        # Procesar formato_minimo
+        formato_minimo = None
+        if formato_minimo_text:
+            try:
+                formato_minimo = float(formato_minimo_text)
+                if formato_minimo <= 0:
+                    messagebox.showwarning(
+                        "⚠️ Formato Inválido",
+                        "El formato de empaque debe ser un número positivo.",
+                        parent=self.window
+                    )
+                    return
+            except ValueError:
+                messagebox.showwarning(
+                    "⚠️ Formato Inválido",
+                    "el formato de empaque debe ser un número válido.",
+                    parent=self.window
+                )
+                return
+        
+        if self.products_manager.update_product(sku, nueva_descripcion, formato_minimo):
             messagebox.showinfo(
                 "✅ Éxito",
                 f"Producto actualizado:\nSKU: {sku}",
@@ -504,6 +575,7 @@ class ProductsDialog:
             # Limpiar campos
             self.sku_entry.delete(0, tk.END)
             self.desc_entry.delete(0, tk.END)
+            self.formato_minimo_entry.delete(0, tk.END)
             
             self.refresh_products()
         else:
@@ -529,11 +601,15 @@ class ProductsDialog:
         
         if producto:
             # El producto existe - mostrar información
+            formato_minimo = producto.get('formato_minimo')
+            formato_texto = f"Formato Empaque: {formato_minimo}" if formato_minimo else "Sin formato de empaque"
+            
             messagebox.showinfo(
                 "✅ Producto Encontrado",
                 f"El SKU ya existe en el sistema:\n\n"
                 f"SKU: {producto['sku']}\n"
                 f"Descripción: {producto['descripcion']}\n"
+                f"{formato_texto}\n"
                 f"Creado: {producto.get('created', 'N/A')}\n"
                 f"Última actualización: {producto.get('updated', 'N/A')}",
                 parent=self.window
@@ -563,6 +639,7 @@ class ProductsDialog:
         """Limpia todos los campos del formulario"""
         self.sku_entry.delete(0, tk.END)
         self.desc_entry.delete(0, tk.END)
+        self.formato_minimo_entry.delete(0, tk.END)
         self.sku_entry.focus_set()
     
     def delete_selected(self):
@@ -599,12 +676,17 @@ class ProductsDialog:
         item = self.products_tree.item(selection[0])
         sku = item["values"][0]
         descripcion = item["values"][1]
+        formato_minimo = item["values"][2] if len(item["values"]) > 2 else ""
         
         self.sku_entry.delete(0, tk.END)
         self.sku_entry.insert(0, sku)
         
         self.desc_entry.delete(0, tk.END)
         self.desc_entry.insert(0, descripcion)
+        
+        self.formato_minimo_entry.delete(0, tk.END)
+        if formato_minimo and formato_minimo != "":
+            self.formato_minimo_entry.insert(0, str(formato_minimo))
     
     def search_products(self):
         """Busca productos según el texto de búsqueda"""
@@ -624,10 +706,11 @@ class ProductsDialog:
         
         for idx, product in enumerate(results):
             tag_fila = 'evenrow' if idx % 2 == 0 else 'oddrow'
+            formato_minimo = product.get("formato_minimo", "")
             self.products_tree.insert(
                 "", 
                 "end", 
-                values=(product["sku"], product["descripcion"]),
+                values=(product["sku"], product["descripcion"], formato_minimo),
                 tags=(tag_fila,)
             )
         
@@ -653,10 +736,11 @@ class ProductsDialog:
         
         for idx, product in enumerate(products):
             tag_fila = 'evenrow' if idx % 2 == 0 else 'oddrow'
+            formato_minimo = product.get("formato_minimo", "")
             self.products_tree.insert(
                 "", 
                 "end", 
-                values=(product["sku"], product["descripcion"]),
+                values=(product["sku"], product["descripcion"], formato_minimo),
                 tags=(tag_fila,)
             )
         
@@ -748,9 +832,10 @@ class ProductsDialog:
                 "SKU": ["EJEMPLO001", "EJEMPLO002", "EJEMPLO003"],
                 "DESCRIPCION": [
                     "Producto de ejemplo 1",
-                    "Producto de ejemplo 2",
-                    "Producto de ejemplo 3"
-                ]
+                    "Producto de ejemplo 2 sin formato",
+                    "Producto de ejemplo 3 con formato"
+                ],
+                "FORMATO_MINIMO": [5, "", 12]  # Ejemplos: 5 unidades por formato, sin formato, 12 unidades por formato
             })
             
             df.to_excel(file_path, index=False, engine='openpyxl')

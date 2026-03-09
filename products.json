@@ -2903,11 +2903,35 @@
       "sku": "A002677",
       "descripcion": "ASD",
       "created": "2025-12-18T17:06:12.701455"
+    },
+    {
+      "sku": "EJEMPLO_FORMATO",
+      "descripcion": "Producto con formato mínimo",
+      "created": "2026-03-09T09:24:21.762508",
+      "formato_minimo": 10.0
+    },
+    {
+      "sku": "A002431",
+      "descripcion": "PRUEBA",
+      "created": "2026-03-09T09:32:04.171856",
+      "formato_minimo": 60.0
+    },
+    {
+      "sku": "CEMENTO25KG",
+      "descripcion": "Cemento en sacos de 25kg",
+      "created": "2026-03-09T09:36:32.907581",
+      "formato_minimo": 25.0
+    },
+    {
+      "sku": "ACEITE60L",
+      "descripcion": "Aceite en bidones de 60L",
+      "created": "2026-03-09T09:36:32.915422",
+      "formato_minimo": 60.0
     }
   ],
   "metadata": {
-    "total_count": 580,
-    "last_updated": "2025-12-30T11:04:40.612304",
+    "total_count": 584,
+    "last_updated": "2026-03-09T09:36:32.915457",
     "version": "1.0"
   }
 }

@@ -1,71 +1,9 @@
 {
-    "local_rules": [
-        {
-            "local": "12345",
-            "sku": "A12345",
-            "proveedor": "77300",
-            "descripcion": "Regla ejemplo 1",
-            "created": "2025-12-30T15:09:46.158519",
-            "active": true
-        },
-        {
-            "local": "67890",
-            "sku": "B67890",
-            "proveedor": "77301",
-            "descripcion": "Regla ejemplo 2",
-            "created": "2025-12-30T15:09:46.159521",
-            "active": true
-        },
-        {
-            "local": "11111",
-            "sku": "C11111",
-            "proveedor": "77302",
-            "descripcion": "Regla ejemplo 3",
-            "created": "2025-12-30T15:09:46.159521",
-            "active": true
-        },
-        {
-            "local": "30798",
-            "sku": "A312262",
-            "proveedor": "1000411",
-            "descripcion": "Regla especial",
-            "created": "2026-01-06T12:40:22.345056",
-            "active": true
-        }
-    ],
-    "stock_blocks": [
-        {
-            "sku": "A12345",
-            "proveedor": "77300",
-            "motivo": "Quiebre de stock temporal",
-            "created": "2025-12-30T14:58:23.582048",
-            "active": true
-        },
-        {
-            "sku": "B67890",
-            "proveedor": "77301",
-            "motivo": "Calidad deficiente",
-            "created": "2025-12-30T14:58:23.582048",
-            "active": true
-        },
-        {
-            "sku": "C11111",
-            "proveedor": "77302",
-            "motivo": "Descontinuado por proveedor",
-            "created": "2025-12-30T14:58:23.582048",
-            "active": true
-        },
-        {
-            "sku": "A312261",
-            "proveedor": "100041",
-            "motivo": "Quiebre de stock",
-            "created": "2026-01-06T12:40:45.595429",
-            "active": true
-        }
-    ],
+    "local_rules": [],
+    "stock_blocks": [],
     "metadata": {
         "created": "2025-12-17T10:18:26.072957",
         "version": "1.0",
-        "last_updated": "2026-01-06T12:40:45.595453"
+        "last_updated": "2026-03-09T09:07:54.509416"
     }
 }

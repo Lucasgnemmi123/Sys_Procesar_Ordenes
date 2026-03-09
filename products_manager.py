@@ -71,13 +71,14 @@ class ProductsManager:
             print(f"Error saving products: {e}")
             return False
     
-    def add_product(self, sku, descripcion):
+    def add_product(self, sku, descripcion, formato_minimo=None):
         """
         Agrega un nuevo producto
         
         Args:
             sku: Código SKU del producto
             descripcion: Descripción del producto
+            formato_minimo: Formato mínimo de cantidad (opcional)
             
         Returns:
             bool: True si se agregó correctamente, False si ya existe
@@ -99,17 +100,27 @@ class ProductsManager:
             "created": datetime.now().isoformat()
         }
         
+        # Agregar formato_minimo si se proporciona
+        if formato_minimo is not None:
+            try:
+                formato_minimo = float(formato_minimo)
+                if formato_minimo > 0:
+                    product["formato_minimo"] = formato_minimo
+            except (ValueError, TypeError):
+                pass  # Ignorar valores inválidos
+        
         self.products["products"].append(product)
         self.save_products()
         return True
     
-    def update_product(self, sku, nueva_descripcion):
+    def update_product(self, sku, nueva_descripcion, formato_minimo=None):
         """
-        Actualiza la descripción de un producto existente
+        Actualiza un producto existente
         
         Args:
             sku: Código SKU del producto
             nueva_descripcion: Nueva descripción
+            formato_minimo: Nuevo formato mínimo (opcional, None para mantener actual)
             
         Returns:
             bool: True si se actualizó correctamente
@@ -120,6 +131,20 @@ class ProductsManager:
             if product["sku"] == sku:
                 product["descripcion"] = nueva_descripcion.strip()
                 product["updated"] = datetime.now().isoformat()
+                
+                # Actualizar formato_minimo si se proporciona
+                if formato_minimo is not None:
+                    try:
+                        formato_minimo = float(formato_minimo)
+                        if formato_minimo > 0:
+                            product["formato_minimo"] = formato_minimo
+                        else:
+                            # Remover formato_minimo si es 0 o negativo
+                            product.pop("formato_minimo", None)
+                    except (ValueError, TypeError):
+                        # Remover formato_minimo si es inválido
+                        product.pop("formato_minimo", None)
+                
                 self.save_products()
                 return True
         
@@ -222,7 +247,7 @@ class ProductsManager:
         Importación masiva de productos
         
         Args:
-            products_list: Lista de tuplas (sku, descripcion)
+            products_list: Lista de tuplas (sku, descripcion) o (sku, descripcion, formato_minimo)
             
         Returns:
             dict: Estadísticas de la importación
@@ -235,8 +260,18 @@ class ProductsManager:
             "errors": []
         }
         
-        for sku, descripcion in products_list:
+        for item in products_list:
             try:
+                # Manejar tuplas de 2 o 3 elementos
+                if len(item) == 2:
+                    sku, descripcion = item
+                    formato_minimo = None
+                elif len(item) == 3:
+                    sku, descripcion, formato_minimo = item
+                else:
+                    stats["skipped"] += 1
+                    continue
+                
                 sku = str(sku).strip().upper()
                 descripcion = str(descripcion).strip()
                 
@@ -246,17 +281,17 @@ class ProductsManager:
                 
                 if self.product_exists(sku):
                     # Actualizar existente
-                    self.update_product(sku, descripcion)
+                    self.update_product(sku, descripcion, formato_minimo)
                     stats["updated"] += 1
                 else:
                     # Agregar nuevo
-                    if self.add_product(sku, descripcion):
+                    if self.add_product(sku, descripcion, formato_minimo):
                         stats["added"] += 1
                     else:
                         stats["skipped"] += 1
                         
             except Exception as e:
-                stats["errors"].append(f"Error with SKU {sku}: {str(e)}")
+                stats["errors"].append(f"Error with item {str(item)[:50]}: {str(e)}")
         
         return stats
     
@@ -274,8 +309,17 @@ class ProductsManager:
             import pandas as pd
             
             df = pd.DataFrame(self.products["products"])
-            df = df[["sku", "descripcion"]]  # Solo columnas relevantes
-            df.columns = ["SKU", "DESCRIPCION"]
+            
+            # Asegurar que todas las columnas estén presentes
+            if "formato_minimo" not in df.columns:
+                df["formato_minimo"] = None
+            
+            # Seleccionar y renombrar columnas
+            df = df[["sku", "descripcion", "formato_minimo"]]
+            df.columns = ["SKU", "DESCRIPCION", "FORMATO_MINIMO"]
+            
+            # Convertir formato_minimo a string para mejor visualización
+            df["FORMATO_MINIMO"] = df["FORMATO_MINIMO"].fillna("")
             
             df.to_excel(output_path, index=False, engine='openpyxl')
             return True
@@ -300,15 +344,18 @@ class ProductsManager:
             df = pd.read_excel(excel_path, dtype=str)
             df.columns = df.columns.str.strip().str.upper()
             
-            # Buscar columnas SKU y DESCRIPCION
+            # Buscar columnas SKU, DESCRIPCION y FORMATO_MINIMO
             sku_col = None
             desc_col = None
+            formato_col = None
             
             for col in df.columns:
                 if col in ['SKU', 'CODIGO', 'CODE']:
                     sku_col = col
                 if col in ['DESCRIPCION', 'DESCRIPTION', 'DESC', 'NOMBRE', 'NAME']:
                     desc_col = col
+                if col in ['FORMATO_MINIMO', 'FORMATO', 'MIN_QTY', 'MINIMO']:
+                    formato_col = col
             
             if not sku_col or not desc_col:
                 return {
@@ -320,7 +367,10 @@ class ProductsManager:
                 }
             
             # Preparar lista de productos
-            products_list = list(zip(df[sku_col], df[desc_col]))
+            if formato_col:
+                products_list = list(zip(df[sku_col], df[desc_col], df[formato_col]))
+            else:
+                products_list = list(zip(df[sku_col], df[desc_col]))
             
             # Importar masivamente
             return self.bulk_import(products_list)
@@ -352,3 +402,46 @@ class ProductsManager:
             "last_updated": self.products["metadata"].get("last_updated", "N/A"),
             "version": self.products["metadata"].get("version", "1.0")
         }
+    
+    def get_formato_minimo(self, sku):
+        """
+        Obtiene el formato mínimo de un SKU específico
+        
+        Args:
+            sku: Código SKU del producto
+            
+        Returns:
+            float or None: Formato mínimo del SKU o None si no tiene
+        """
+        product = self.get_product(sku)
+        if product:
+            return product.get("formato_minimo")
+        return None
+    
+    def ajustar_cantidad_con_formato(self, sku, cantidad):
+        """
+        Ajusta una cantidad según el formato de empaque del SKU
+        Calcula múltiplos del formato (ej: formato 60, pido 100 = 2*60 = 120)
+        
+        Args:
+            sku: Código SKU del producto
+            cantidad: Cantidad original
+            
+        Returns:
+            float: Cantidad ajustada (múltiplo del formato de empaque)
+        """
+        try:
+            cantidad_float = float(cantidad)
+            formato_empaque = self.get_formato_minimo(sku)
+            
+            if formato_empaque is not None and formato_empaque > 0:
+                import math
+                # Calcular cuántos formatos necesita
+                formatos_necesarios = math.ceil(cantidad_float / formato_empaque)
+                # Calcular cantidad final
+                return formatos_necesarios * formato_empaque
+            
+            return cantidad_float
+        except (ValueError, TypeError):
+            # Si hay error de conversión, devolver cantidad original
+            return cantidad
